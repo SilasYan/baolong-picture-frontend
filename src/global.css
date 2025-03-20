@@ -1,0 +1,24 @@
+/* 全局样式文件 */
+
+/* 为所有 inline 布局表单添加间隙 */
+.ant-form-inline {
+  gap: 16px;
+  row-gap: 16px;
+}
+
+/* 自定义 div 的样式 */
+.custom-div {
+  margin-bottom: 20px !important;
+}
+
+/* 标题区域 */
+.title-region {
+}
+
+/* 搜索区域 */
+.search-region {
+}
+
+/* 数据区域 */
+.data-region {
+}

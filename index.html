@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>暴龙图库</title>
+  <script>
+    // 禁用右键菜单
+    document.addEventListener('contextmenu', function(event) {
+      event.preventDefault()
+    })
+
+    // 检测F12和开发者工具
+    // document.addEventListener('keydown', function(event) {
+    //   // 检测F12
+    //   if (event.key === 'F12' || event.keyCode === 123) {
+    //     event.preventDefault()
+    //     alert('开发者工具已被禁用')
+    //   }
+    //
+    //   // 检测Ctrl+Shift+I (Windows/Linux) 或 Cmd+Option+I (Mac)
+    //   if ((event.ctrlKey && event.shiftKey && event.key === 'I') ||
+    //     (event.metaKey && event.altKey && event.key === 'I')) {
+    //     event.preventDefault()
+    //     alert('开发者工具已被禁用')
+    //   }
+    //
+    //   // 检测Ctrl+U (查看源代码)
+    //   if ((event.ctrlKey && event.key === 'u') ||
+    //     (event.metaKey && event.key === 'u')) {
+    //     event.preventDefault()
+    //     alert('查看源代码已被禁用')
+    //   }
+    // })
+    //
+    // // 检测开发者工具是否被打开
+    // setInterval(function() {
+    //   const devToolsOpened = /./.test.toString().length !== 33
+    //   if (devToolsOpened) {
+    //     alert('请关闭开发者工具')
+    //     window.location.reload() // 刷新页面
+    //   }
+    // }, 1000)
+  </script>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
