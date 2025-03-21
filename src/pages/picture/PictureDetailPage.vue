@@ -125,12 +125,15 @@
                 </a-descriptions-item>
               </a-descriptions>
               <!-- 操作按钮 -->
-              <template #actions v-if="loginUserStore.loginUser.id === pictureDetailInfo.userId">
-                <div @click="doEditPicture(pictureDetailInfo.id)">
+              <template
+                #actions
+                v-if="loginUserStore.loginUser.userId === pictureDetailInfo.userId"
+              >
+                <div @click="doEditPicture(pictureDetailInfo.pictureId)">
                   <EditOutlined />
                   编辑
                 </div>
-                <div @click="doDeletePicture(pictureDetailInfo.id)">
+                <div @click="doDeletePicture(pictureDetailInfo.pictureId)">
                   <DeleteOutlined />
                   删除
                 </div>
@@ -211,12 +214,15 @@
                 </a-descriptions-item>
               </a-descriptions>
               <!-- 操作按钮 -->
-              <template #actions v-if="loginUserStore.loginUser.id === pictureDetailInfo.userId">
-                <div @click="doEditPicture(pictureDetailInfo.id)">
+              <template
+                #actions
+                v-if="loginUserStore.loginUser.userId === pictureDetailInfo.userId"
+              >
+                <div @click="doEditPicture(pictureDetailInfo.pictureId)">
                   <EditOutlined />
                   编辑
                 </div>
-                <div @click="doDeletePicture(pictureDetailInfo.id)">
+                <div @click="doDeletePicture(pictureDetailInfo.pictureId)">
                   <DeleteOutlined />
                   删除
                 </div>
@@ -304,7 +310,7 @@ const encryptData = ref<string>('')
 /**
  * 使用 defineProps 声明 props 并指定类型
  */
-const props = defineProps<{ id: string | number }>()
+const props = defineProps<{ pictureId: string | number }>()
 
 /**
  * 图片详情加载中
@@ -337,7 +343,7 @@ const pictureDetailInfo = ref<API.PictureDetailVO>({})
  */
 const getPictureDetail = async () => {
   const res = await getPictureDetailByIdUsingGet({
-    id: props.id,
+    pictureId: props.pictureId,
   })
   if (res.code === 0 && res.data) {
     pictureDetailInfo.value = res.data
@@ -390,9 +396,9 @@ const doLike = async (picture: API.PictureDetailVO) => {
     return
   }
   const res = await pictureLikeOrCollectUsingPost({
-    id: picture.id,
-    type: PIC_INTERACTION_TYPE_ENUM.LIKE,
-    change: picture.loginUserIsLike ? 1 : 0,
+    pictureId: picture.pictureId,
+    interactionType: PIC_INTERACTION_TYPE_ENUM.LIKE,
+    interactionStatus: picture.loginUserIsLike ? 1 : 0,
   })
   if (res.code === 0 && res.data) {
     message.success(`${picture.loginUserIsLike ? '取消点赞！' : '点赞成功！'}`)
@@ -420,9 +426,9 @@ const doCollect = async (picture: API.PictureDetailVO) => {
     return
   }
   const res = await pictureLikeOrCollectUsingPost({
-    id: picture.id,
-    type: PIC_INTERACTION_TYPE_ENUM.COLLECT,
-    change: picture.loginUserIsCollect ? 1 : 0,
+    pictureId: picture.pictureId,
+    interactionType: PIC_INTERACTION_TYPE_ENUM.COLLECT,
+    interactionStatus: picture.loginUserIsCollect ? 1 : 0,
   })
   if (res.code === 0 && res.data) {
     message.success(`${picture.loginUserIsCollect ? '取消收藏！' : '收藏成功！'}`)
@@ -450,7 +456,7 @@ const doDownload = async (picture: API.PictureDetailVO) => {
     message.warn('重复下载！')
     return
   }
-  const res = await pictureDownloadUsingPost({ id: picture.id })
+  const res = await pictureDownloadUsingPost({ pictureId: picture.pictureId })
   if (res.code === 0 && res.data) {
     await downloadImage(res.data, picture.picName)
     message.success('下载成功！')
@@ -484,10 +490,10 @@ const doSharePicture = async (picture: API.PictureDetailVO) => {
     message.warn('已分享！')
     return
   }
-  const id = picture.id
-  const res = await pictureShareUsingPost({ id })
+  const pictureId = picture.pictureId
+  const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
     if (shareModal.value) {
       shareModal.value.openModal()
     }
@@ -502,14 +508,14 @@ const doSharePicture = async (picture: API.PictureDetailVO) => {
 /**
  * 编辑图片
  */
-const doEditPicture = (id: number) => {
-  if (!id) {
+const doEditPicture = (pictureId: number) => {
+  if (!pictureId) {
     return
   }
   router.push({
     path: '/picture/addEdit',
     query: {
-      id: id,
+      pId: pictureId,
       sid: pictureDetailInfo.value.spaceId,
       t: pictureDetailInfo.value.spaceType,
       n: pictureDetailInfo.value.spaceName,
@@ -521,8 +527,8 @@ const doEditPicture = (id: number) => {
 /**
  * 删除图片
  */
-const doDeletePicture = async (id: number) => {
-  if (!id) {
+const doDeletePicture = async (pictureId: number) => {
+  if (!pictureId) {
     return
   }
   // 确认弹窗
@@ -533,7 +539,7 @@ const doDeletePicture = async (id: number) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await deletePictureUsingPost({ id })
+        const res = await deletePictureUsingPost({ id: pictureId })
         if (res.code === 0) {
           message.success('删除成功！')
           if (encryptData.value) {

@@ -16,7 +16,7 @@
       <a-tab-pane key="ALL" tab="全部图片" />
       <a-tab-pane
         v-for="category in homeCategoryList"
-        :key="category.id"
+        :key="category.categoryId"
         :tab="`${category.name}（${category.useNum}）`"
       />
     </a-tabs>
@@ -156,9 +156,9 @@ const doHomeSearch = () => {
   searchParams.current = 1
   // 处理分类
   if (selectedCategory.value !== 'ALL') {
-    searchParams.category = selectedCategory.value
+    searchParams.categoryId = selectedCategory.value
   } else {
-    searchParams.category = undefined
+    searchParams.categoryId = undefined
   }
   loadingFinish.value = false
   showBottomLine.value = false

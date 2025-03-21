@@ -125,7 +125,7 @@ const handleImageCrop = () => {
       const fileName = (props.picture?.picName || 'image') + '.png'
       const file = new File([blob], fileName, { type: blob.type })
       // 发送上传图片请求
-      const params = props.picture ? { id: props.picture.id } : {}
+      const params = props.picture ? { pictureId: props.picture.pictureId } : {}
       params.spaceId = props.spaceId
       const res = await uploadPictureByFileUsingPost(params, {}, file)
       if (res.code === 0 && res.data) {

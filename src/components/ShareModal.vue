@@ -26,7 +26,7 @@ interface Props {
  */
 const props = withDefaults(defineProps<Props>(), {
   title: () => '分享',
-  link: () => 'https://blog.baolong.icu/',
+  link: () => 'https://www.baolong.icu/',
 })
 
 // 是否可见

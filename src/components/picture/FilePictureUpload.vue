@@ -47,7 +47,7 @@ const beforeUploadPicture = (file: File) => imageValidator(file, { maxSizeMB: In
 const handleUploadPicture = async ({ file }: any) => {
   uploadLoading.value = true
   try {
-    const params = props.picture ? { id: props.picture.id } : {}
+    const params = props.picture ? { pictureId: props.picture.pictureId } : {}
     params.spaceId = props.spaceId
     const res = await uploadPictureByFileUsingPost(params, {}, file)
     if (res.code === 0 && res.data) {

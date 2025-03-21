@@ -256,7 +256,7 @@ const userAvatar = ref<string>('')
 const fetchUserInfo = async () => {
   userInfoLoading.value = true
   const res = await getUserDetailByIdUsingGet({
-    id: loginUserStore.loginUser.id,
+    userId: loginUserStore.loginUser.userId,
   })
   if (res.code === 0 && res.data) {
     userInfo.value = res.data
@@ -270,7 +270,7 @@ const editUserInfoModal = ref<boolean>(false)
 //打开编辑用户信息弹出框
 const openEditUserInfoModal = () => {
   editUserInfoModal.value = true
-  userInfoForm.id = userInfo.value.id
+  userInfoForm.userId = userInfo.value.userId
   userInfoForm.userEmail = userInfo.value.userEmail
   userInfoForm.userAccount = userInfo.value.userAccount
   userInfoForm.userName = userInfo.value.userName
@@ -284,7 +284,7 @@ const userInfoForm = reactive<API.UserUpdateRequest>({})
  * 提交编辑用户信息表单
  */
 const editUserInfoSubmit = async () => {
-  const userId = userInfoForm.id
+  const userId = userInfoForm.userId
   if (!userId) {
     return
   }
@@ -312,7 +312,6 @@ const handleUploadAvatar = async ({ file }: any) => {
   userInfoLoading.value = true
   try {
     const res = await uploadAvatarUsingPost({}, file)
-    console.log(res)
     if (res.code === 0 && res.data) {
       message.success('头像上传成功!')
       userAvatar.value = res.data

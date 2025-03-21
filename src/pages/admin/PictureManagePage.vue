@@ -96,7 +96,7 @@
         @change="handlePictureTableChange"
         :scroll="{ x: 'max-content', y: 800 }"
         :loading="pictureListLoading"
-        :rowKey="(record) => record.id"
+        :rowKey="(record) => record.pictureId"
         :row-selection="rowSelection"
         v-model:selectedRows="selectedRowKeys"
       >
@@ -105,9 +105,9 @@
           <template v-if="column.dataIndex === 'id'">
             <a-tooltip placement="right">
               <template #title>
-                <span>{{ record.id }}</span>
+                <span>{{ record.pictureId }}</span>
               </template>
-              <a-button @click="copyToClipboard(record.id)">复制</a-button>
+              <a-button @click="copyToClipboard(record.pictureId)">复制</a-button>
             </a-tooltip>
           </template>
           <!-- 图片名称 -->
@@ -164,7 +164,7 @@
               <div
                 style="display: flex; flex-direction: column; line-height: 1.2; text-align: left"
               >
-                <span>ID：{{ record.userInfo.id }}</span>
+                <span>ID：{{ record.userInfo.userId }}</span>
                 <span>昵称：{{ record.userInfo.userName }}</span>
               </div>
             </div>
@@ -198,7 +198,7 @@
               <a-button
                 v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS"
                 type="link"
-                @click="handleReview(record.id, PIC_REVIEW_STATUS_ENUM.PASS)"
+                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.PASS)"
               >
                 通过
               </a-button>
@@ -206,14 +206,17 @@
                 v-if="record.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
                 type="link"
                 danger
-                @click="handleReview(record.id, PIC_REVIEW_STATUS_ENUM.REJECT)"
+                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
               >
                 下架
               </a-button>
-              <a-button type="link" :href="`/picture/addEdit?id=${record.id}`" target="_blank"
+              <a-button
+                type="link"
+                :href="`/picture/addEdit?id=${record.pictureId}`"
+                target="_blank"
                 >编辑
               </a-button>
-              <a-button type="link" danger @click="handleDelete(record.id)">删除</a-button>
+              <a-button type="link" danger @click="handleDelete(record.pictureId)">删除</a-button>
             </a-space>
           </template>
         </template>
@@ -256,7 +259,7 @@ onMounted(() => {
 const pictureColumns = [
   {
     title: '图片 ID',
-    dataIndex: 'id',
+    dataIndex: 'pictureId',
     fixed: 'left',
     align: 'center',
     width: 80,
@@ -525,7 +528,7 @@ const getCategoryListData = async () => {
   if (res.code === 0 && res.data) {
     categoryList.value = (res.data ?? []).map((data: API.CategoryVO) => {
       return {
-        value: data.id,
+        value: data.categoryId,
         label: data.name,
       }
     })
@@ -536,11 +539,11 @@ const getCategoryListData = async () => {
 
 /**
  * 处理审核
- * @param id
+ * @param pictureId
  * @param reviewStatus
  */
-const handleReview = async (id: string, reviewStatus: number) => {
-  if (!id) {
+const handleReview = async (pictureId: string, reviewStatus: number) => {
+  if (!pictureId) {
     return
   }
   const flag = reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS
@@ -553,7 +556,7 @@ const handleReview = async (id: string, reviewStatus: number) => {
     onOk: async () => {
       try {
         const res = await reviewPictureUsingPost({
-          id: id,
+          pictureId: pictureId,
           reviewStatus: reviewStatus,
           reviewMessage: flag ? '审核通过' : '审核不通过',
         })
@@ -576,10 +579,10 @@ const handleReview = async (id: string, reviewStatus: number) => {
 
 /**
  * 处理删除
- * @param id
+ * @param pictureId
  */
-const handleDelete = async (id: string) => {
-  if (!id) {
+const handleDelete = async (pictureId: string) => {
+  if (!pictureId) {
     return
   }
   // 确认弹窗
@@ -590,7 +593,7 @@ const handleDelete = async (id: string) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await deletePictureUsingPost({ id })
+        const res = await deletePictureUsingPost({ id: pictureId })
         if (res.code === 0) {
           message.success('删除成功！')
         } else {

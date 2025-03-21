@@ -23,7 +23,7 @@
       <!-- 右侧头像 -->
       <a-col flex="120px">
         <div class="user-login-status">
-          <div v-if="loginUserStore.loginUser.id">
+          <div v-if="loginUserStore.loginUser.userId">
             <a-dropdown>
               <ASpace>
                 <a-avatar :src="loginUserStore.loginUser.userAvatar" />
@@ -33,7 +33,7 @@
                 <a-menu>
                   <a-menu-item>
                     <router-link to="/picture/addEdit">
-                      <CloudUploadOutlined />
+                      <SendOutlined />
                       发布图片
                     </router-link>
                   </a-menu-item>
@@ -64,7 +64,7 @@
 import { computed, h, ref } from 'vue'
 import {
   BoldOutlined,
-  CloudUploadOutlined,
+  SendOutlined,
   LogoutOutlined,
   PictureOutlined,
   ThunderboltOutlined,

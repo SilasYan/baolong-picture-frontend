@@ -2,18 +2,6 @@
 /* eslint-disable */
 import request from '@/request'
 
-/** addUser POST /api/user/add */
-export async function addUserUsingPost(body: API.UserAddRequest, options?: { [key: string]: any }) {
-  return request<API.BaseResponseBoolean_>('/api/user/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
-}
-
 /** deleteUser POST /api/user/delete */
 export async function deleteUserUsingPost(
   body: API.DeleteRequest,
@@ -74,21 +62,6 @@ export async function editUserUsingPost(
   })
 }
 
-/** getUserInfoById GET /api/user/info */
-export async function getUserInfoByIdUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getUserInfoByIdUsingGETParams,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseUser_>('/api/user/info', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  })
-}
-
 /** userLogin POST /api/user/login */
 export async function userLoginUsingPost(
   body: API.UserLoginRequest,
@@ -140,7 +113,7 @@ export async function userRegisterUsingPost(
   body: API.UserRegisterRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseLong_>('/api/user/register', {
+  return request<API.BaseResponseBoolean_>('/api/user/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

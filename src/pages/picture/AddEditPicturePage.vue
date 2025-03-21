@@ -2,9 +2,9 @@
   <div id="add-picture-page">
     <!-- 顶部标题 -->
     <div class="custom-div">
-      <div v-if="!id">
+      <div v-if="!pictureId">
         <a-typography-title :level="3">
-          <CloudUploadOutlined />
+          <SendOutlined />
           发布图片
         </a-typography-title>
         <a-typography-paragraph v-if="spaceId && spaceId != 0" type="secondary">
@@ -71,15 +71,15 @@
 
       <!-- 操作按钮 -->
       <template #actions v-if="pictureInfo">
-        <div @click="(e) => handleImageCropper(picture, e)" style="color: #118ab2">
+        <div @click="(e) => handleImageCropper()" style="color: #118ab2">
           <EditOutlined />
           编辑图片
         </div>
-        <div @click="(e) => doImagePainting(picture, e)" style="color: #118ab2">
+        <div @click="(e) => doImagePainting()" style="color: #118ab2">
           <FullscreenOutlined />
           AI 扩图
         </div>
-        <div @click="(e) => doImagePainting1(picture, e)" style="color: #118ab2">
+        <div @click="(e) => doImagePainting1()" style="color: #118ab2">
           <SmileOutlined />
           高清修复
         </div>
@@ -170,7 +170,7 @@
 
       <a-form-item>
         <a-button type="primary" html-type="submit" size="large" style="width: 100%">
-          {{ route.query?.id ? '修改' : '保存' }}
+          {{ pictureId ? '修改' : '保存' }}
         </a-button>
       </a-form-item>
     </a-form>
@@ -205,10 +205,9 @@ import {
   EditOutlined,
   FullscreenOutlined,
   SmileOutlined,
-  UserOutlined,
+  SendOutlined,
 } from '@ant-design/icons-vue'
 import ImageOutPainting from '@/components/ImageOutPainting.vue'
-import { getSpaceVoByIdUsingGet } from '@/api2/spaceController'
 import { decrypt, formatPictureSize, toHexColor } from '@/utils'
 import { getCategoryListAsHomeUsingGet } from '@/api/categoryController'
 import { editPictureUsingPost, getPictureDetailByIdUsingGet } from '@/api/pictureController'
@@ -228,7 +227,7 @@ onMounted(() => {
 /**
  * 图片 ID
  */
-const id = computed(() => route.query?.id)
+const pictureId = computed(() => route.query?.pId)
 /**
  * 空间 ID
  */
@@ -263,9 +262,9 @@ const pictureInfo = ref<API.PictureDetailVO>()
  * 获取老图片数据
  */
 const getOldPictureInfo = async () => {
-  const pictureId = route.query?.id
+  const pictureId = route.query?.pId
   if (!pictureId) return
-  const res = await getPictureDetailByIdUsingGet({ id: pictureId })
+  const res = await getPictureDetailByIdUsingGet({ pictureId: pictureId })
   if (res.code === 0 && res.data) {
     const data = res.data
     pictureInfo.value = data
@@ -288,7 +287,7 @@ const getCategoryListData = async () => {
   if (res.code === 0 && res.data) {
     categoryList.value = (res.data ?? []).map((data: API.CategoryVO) => {
       return {
-        value: data.id,
+        value: data.categoryId,
         label: data.name,
       }
     })
@@ -306,19 +305,19 @@ const pictureEditForm = reactive<API.PictureEditRequest>({})
  * @param values
  */
 const handlePictureEditSubmit = async (values: any) => {
-  const pictureId = pictureInfo.value.id
+  const pictureId = pictureInfo.value.pictureId
   if (!pictureId) {
     return
   }
   const res = await editPictureUsingPost({
-    id: pictureId,
+    pictureId: pictureId,
     spaceId: spaceId.value,
     ...values,
   })
   if (res.code === 0 && res.data) {
     message.success('保存成功!')
     // 如果当前是新增逻辑，则跳转到图片详情页，否则需要跳转回上一个页面
-    if (!id) {
+    if (!pictureId) {
       await router.push({
         path: `/picture/detail/${pictureId}`,
       })
@@ -331,7 +330,7 @@ const handlePictureEditSubmit = async (values: any) => {
         await router.push({
           path: `${data[0]}`,
           query: {
-            id: pictureId.value,
+            pictureId: pictureId.value,
             ed: data[1],
           },
         })

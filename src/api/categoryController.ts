@@ -45,7 +45,7 @@ export async function getCategoryPageListAsManageUsingPost(
   body: API.CategoryQueryRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponsePageVOCategory_>('/api/category/manage/page', {
+  return request<API.BaseResponsePageVOCategoryVO_>('/api/category/manage/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

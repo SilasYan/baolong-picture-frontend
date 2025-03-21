@@ -7,22 +7,7 @@ export async function activateSpaceUsingPost(
   body: API.SpaceActivateRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseLong_>('/api/space/activate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
-}
-
-/** addSpace POST /api/space/add */
-export async function addSpaceUsingPost(
-  body: API.SpaceAddRequest,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseLong_>('/api/space/add', {
+  return request<API.BaseResponseBoolean_>('/api/space/activate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -47,21 +32,6 @@ export async function deleteSpaceUsingPost(
   })
 }
 
-/** getSpaceDetailById GET /api/space/detail */
-export async function getSpaceDetailByIdUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getSpaceDetailByIdUsingGETParams,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseSpaceDetailVO_>('/api/space/detail', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  })
-}
-
 /** editSpace POST /api/space/edit */
 export async function editSpaceUsingPost(
   body: API.SpaceEditRequest,
@@ -73,29 +43,6 @@ export async function editSpaceUsingPost(
       'Content-Type': 'application/json',
     },
     data: body,
-    ...(options || {}),
-  })
-}
-
-/** getSpaceLevelList GET /api/space/level */
-export async function getSpaceLevelListUsingGet(options?: { [key: string]: any }) {
-  return request<API.BaseResponseListSpaceLevelVO_>('/api/space/level', {
-    method: 'GET',
-    ...(options || {}),
-  })
-}
-
-/** getSpaceListAsUser GET /api/space/list */
-export async function getSpaceListAsUserUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getSpaceListAsUserUsingGETParams,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseListSpaceDetailVO_>('/api/space/list', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
     ...(options || {}),
   })
 }

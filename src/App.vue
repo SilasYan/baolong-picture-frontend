@@ -15,15 +15,6 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 
 dayjs.locale('zh-cn')
-
-// const loginUserStore = useLoginUserStore()
-// // loginUserStore.fetchLoginUser()
-//
-// onMounted(() => {
-//
-//   const health =  getLoginUserDetailUsingGet()
-//   console.log(health)
-// })
 </script>
 
 <style scoped>

@@ -74,7 +74,7 @@
           <template v-if="column.key === 'action'">
             <a-space wrap>
               <a-button type="link" @click="editCategory(record)">编辑</a-button>
-              <a-button type="link" danger @click="deleteCategory(record.id)">删除</a-button>
+              <a-button type="link" danger @click="deleteCategory(record.categoryId)">删除</a-button>
             </a-space>
           </template>
         </template>
@@ -295,7 +295,7 @@ const updateCategoryForm = reactive<API.CategoryUpdateRequest>({})
  */
 const editCategory = (record: any) => {
   editCategoryDialog.value = true
-  updateCategoryForm.id = record.id
+  updateCategoryForm.categoryId = record.categoryId
   updateCategoryForm.name = record.name
 }
 /**
@@ -319,10 +319,10 @@ const handleEditCategory = async () => {
 
 /**
  * 删除分类
- * @param id
+ * @param categoryId
  */
-const deleteCategory = async (id: string) => {
-  if (!id) {
+const deleteCategory = async (categoryId: string) => {
+  if (!categoryId) {
     return
   }
   Modal.confirm({
@@ -332,7 +332,7 @@ const deleteCategory = async (id: string) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await deleteCategoryUsingPost({ id })
+        const res = await deleteCategoryUsingPost({ id: categoryId })
         if (res.code === 0) {
           message.success('删除成功！')
         } else {

@@ -10,31 +10,6 @@
             空间管理
           </a-typography-title>
         </a-typography>
-        <!-- 操作 -->
-        <!--<a-space>-->
-        <!--  <a-button size="large" ghost type="primary" href="/add_space" target="_blank">-->
-        <!--    <PlusCircleOutlined />-->
-        <!--    创建空间-->
-        <!--  </a-button>-->
-        <!--  &lt;!&ndash;<a-button&ndash;&gt;-->
-        <!--  &lt;!&ndash;  type="primary"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  ghost&ndash;&gt;-->
-        <!--  &lt;!&ndash;  href="/space_analyze?queryPublic=1"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  target="_blank"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  :icon="h(BarChartOutlined)"&ndash;&gt;-->
-        <!--  &lt;!&ndash;&gt;&ndash;&gt;-->
-        <!--  &lt;!&ndash;  分析公共图库&ndash;&gt;-->
-        <!--  &lt;!&ndash;</a-button>&ndash;&gt;-->
-        <!--  &lt;!&ndash;<a-button&ndash;&gt;-->
-        <!--  &lt;!&ndash;  type="primary"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  ghost&ndash;&gt;-->
-        <!--  &lt;!&ndash;  href="/space_analyze?queryAll=1"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  target="_blank"&ndash;&gt;-->
-        <!--  &lt;!&ndash;  :icon="h(BarChartOutlined)"&ndash;&gt;-->
-        <!--  &lt;!&ndash;&gt;&ndash;&gt;-->
-        <!--  &lt;!&ndash;  分析全空间&ndash;&gt;-->
-        <!--  &lt;!&ndash;</a-button>&ndash;&gt;-->
-        <!--</a-space>-->
       </a-flex>
     </div>
 
@@ -135,7 +110,7 @@
               <div
                 style="display: flex; flex-direction: column; line-height: 1.2; text-align: left"
               >
-                <span>ID：{{ record.userInfo.id }}</span>
+                <span>ID：{{ record.userInfo.userId }}</span>
                 <span>昵称：{{ record.userInfo.userName }}</span>
               </div>
             </div>
@@ -152,11 +127,11 @@
           <!-- 操作 -->
           <template v-else-if="column.key === 'action'">
             <a-space wrap>
-              <a-button type="link" :href="`/add_space?id=${record.id}`" target="_blank">
+              <a-button type="link" :href="`/add_space?id=${record.spaceId}`" target="_blank">
                 编辑
               </a-button>
-              <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
-              <a-button type="link" :href="`/space_analyze?spaceId=${record.id}`" target="_blank">
+              <a-button type="link" danger @click="doDelete(record.spaceId)">删除</a-button>
+              <a-button type="link" :href="`/space_analyze?spaceId=${record.spaceId}`" target="_blank">
                 分析
               </a-button>
             </a-space>
@@ -193,7 +168,7 @@ onMounted(() => {
 const spaceColumns = [
   {
     title: '空间 ID',
-    dataIndex: 'id',
+    dataIndex: 'spaceId',
     fixed: 'left',
     align: 'center',
     width: 80,

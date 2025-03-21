@@ -34,12 +34,12 @@ import {
   BlockOutlined,
   BugOutlined,
   ContactsOutlined,
-  MenuOutlined,
+  MenuOutlined, PicCenterOutlined,
   PictureOutlined,
   SettingOutlined,
   TeamOutlined,
   UnorderedListOutlined,
-  UserOutlined,
+  UserOutlined
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -106,8 +106,9 @@ function getItem(
  * 左侧原始菜单项
  */
 const siderOriginMenus: ItemType[] = reactive([
-  getItem('爬取图片', '/picture/grab', () => h(BugOutlined)),
+  getItem('发布列表', '/picture/list', () => h(PicCenterOutlined)),
   getItem('个人空间', '/space', () => h(BlockOutlined)),
+  getItem('爬取图片', '/picture/grab', () => h(BugOutlined)),
   getItem('团队空间', '/groupSpace', () => h(TeamOutlined)),
 
   { type: 'divider' },

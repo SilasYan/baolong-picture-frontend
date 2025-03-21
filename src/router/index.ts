@@ -9,15 +9,16 @@ import PictureDetailPage from '@/pages/picture/PictureDetailPage.vue'
 import CategoryManagePage from '@/pages/admin/CategoryManagePage.vue'
 import GrabPicturePage from '@/pages/picture/GrabPicturePage.vue'
 import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
-import AddSpacePage from '@/pages/space/AddSpacePage.vue'
+// import AddSpacePage from '@/pages/space/AddSpacePage.vue'
 import MySpacePage from '@/pages/space/SpacePage.vue'
 import SpacePage from '@/pages/space/SpacePage.vue'
-import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
-import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
-import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
-import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
+// import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
+// import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
+// import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
+// import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
 import UserProfilePage from '@/pages/user/UserProfilePage.vue'
 import PersonSpacePage from '@/pages/space/PersonSpacePage.vue'
+import PictureListPage from '@/pages/picture/PictureListPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,12 +50,17 @@ const router = createRouter({
       component: AddEditPicturePage,
     },
     {
+      path: '/picture/list',
+      name: '发布列表',
+      component: PictureListPage,
+    },
+    {
       path: '/picture/grab',
       name: '爬取图片',
       component: GrabPicturePage,
     },
     {
-      path: '/picture/detail/:id',
+      path: '/picture/detail/:pictureId',
       name: '图片详情',
       component: PictureDetailPage,
       props: true,
@@ -70,11 +76,11 @@ const router = createRouter({
       name: '个人空间',
       component: PersonSpacePage,
     },
-    {
-      path: '/add_space',
-      name: '创建空间',
-      component: AddSpacePage,
-    },
+    // {
+    //   path: '/add_space',
+    //   name: '创建空间',
+    //   component: AddSpacePage,
+    // },
     {
       path: '/my_space',
       name: '我的空间',
@@ -101,36 +107,28 @@ const router = createRouter({
       name: '空间管理',
       component: SpaceManagePage,
     },
-    {
-      path: '/space/:id',
-      name: '空间详情',
-      component: SpaceDetailPage,
-      props: true,
-    },
-    {
-      path: '/search_picture',
-      name: '图片搜索',
-      component: SearchPicturePage,
-    },
-    {
-      path: '/space_analyze',
-      name: '空间分析',
-      component: SpaceAnalyzePage,
-    },
-    {
-      path: '/spaceUserManage/:id',
-      name: '空间成员管理',
-      component: SpaceUserManagePage,
-      props: true,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
+    // {
+    //   path: '/space/:id',
+    //   name: '空间详情',
+    //   component: SpaceDetailPage,
+    //   props: true,
+    // },
+    // {
+    //   path: '/search_picture',
+    //   name: '图片搜索',
+    //   component: SearchPicturePage,
+    // },
+    // {
+    //   path: '/space_analyze',
+    //   name: '空间分析',
+    //   component: SpaceAnalyzePage,
+    // },
+    // {
+    //   path: '/spaceUserManage/:id',
+    //   name: '空间成员管理',
+    //   component: SpaceUserManagePage,
+    //   props: true,
+    // },
   ],
 })
 

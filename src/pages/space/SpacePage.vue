@@ -52,9 +52,8 @@ const existedPersonSpace = ref<boolean>(false)
  */
 const checkUserSpace = async () => {
   const res = await getSpaceDetailByLoginUserUsingGet()
-  console.log(res)
   if (res.code === 0 && res.data) {
-    if (res.data.id) {
+    if (res.data.spaceId) {
       await router.replace('/space/person')
     } else {
       existedPersonSpace.value = true

@@ -146,7 +146,7 @@ const breakpoints = ref({
 const doClickPicture = (picture) => {
   // 跳转路由
   const r = router.resolve({
-    path: `/picture/detail/${picture.id}`,
+    path: `/picture/detail/${picture.pictureId}`,
   })
   // 在新页面打开
   window.open(r.href, '_blank')
@@ -166,9 +166,9 @@ const doLike = async (picture: API.PictureHomeVO) => {
     return
   }
   const res = await pictureLikeOrCollectUsingPost({
-    id: picture.id,
-    type: PIC_INTERACTION_TYPE_ENUM.LIKE,
-    change: picture.loginUserIsLike ? 1 : 0,
+    pictureId: picture.pictureId,
+    interactionType: PIC_INTERACTION_TYPE_ENUM.LIKE,
+    interactionStatus: picture.loginUserIsLike ? 1 : 0,
   })
   if (res.code === 0 && res.data) {
     message.success(`${picture.loginUserIsLike ? '取消点赞！' : '点赞成功！'}`)
@@ -196,9 +196,9 @@ const doCollect = async (picture: API.PictureHomeVO) => {
     return
   }
   const res = await pictureLikeOrCollectUsingPost({
-    id: picture.id,
-    type: PIC_INTERACTION_TYPE_ENUM.COLLECT,
-    change: picture.loginUserIsCollect ? 1 : 0,
+    pictureId: picture.pictureId,
+    interactionType: PIC_INTERACTION_TYPE_ENUM.COLLECT,
+    interactionStatus: picture.loginUserIsCollect ? 1 : 0,
   })
   if (res.code === 0 && res.data) {
     message.success(`${picture.loginUserIsCollect ? '取消收藏！' : '收藏成功！'}`)
@@ -235,10 +235,10 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
     message.warn('已分享！')
     return
   }
-  const id = picture.id
-  const res = await pictureShareUsingPost({ id })
+  const pictureId = picture.pictureId
+  const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
     if (shareModal.value) {
       shareModal.value.openModal()
     }

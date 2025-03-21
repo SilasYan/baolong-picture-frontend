@@ -46,7 +46,7 @@ const handleUploadPicture = async () => {
   try {
     const params: API.PictureUploadRequest = { pictureUrl: pictureUrl.value }
     if (props.picture) {
-      params.id = props.picture.id
+      params.pictureId = props.picture.pictureId
     }
     if (props.spaceId) {
       params.spaceId = props.spaceId

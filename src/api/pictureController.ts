@@ -62,21 +62,6 @@ export async function editPictureUsingPost(
   })
 }
 
-/** editPictureBatch POST /api/picture/edit/batch */
-export async function editPictureBatchUsingPost(
-  body: API.PictureBatchEditRequest,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseBoolean_>('/api/picture/edit/batch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
-}
-
 /** grabPicture POST /api/picture/grab */
 export async function grabPictureUsingPost(
   body: API.PictureGrabRequest,
@@ -107,21 +92,6 @@ export async function getPicturePageListAsHomeUsingGet(
   })
 }
 
-/** getPictureInfoById GET /api/picture/info */
-export async function getPictureInfoByIdUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getPictureInfoByIdUsingGETParams,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponsePicture_>('/api/picture/info', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  })
-}
-
 /** pictureLikeOrCollect POST /api/picture/interaction */
 export async function pictureLikeOrCollectUsingPost(
   body: API.PictureInteractionRequest,
@@ -143,6 +113,21 @@ export async function getPicturePageListAsManageUsingPost(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponsePageVOPictureVO_>('/api/picture/manage/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** getPicturePageListAsPersonRelease POST /api/picture/personRelease/page */
+export async function getPicturePageListAsPersonReleaseUsingPost(
+  body: API.PictureQueryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageVOPictureVO_>('/api/picture/personRelease/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -188,21 +173,6 @@ export async function pictureShareUsingPost(
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/share', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
-}
-
-/** updatePicture POST /api/picture/update */
-export async function updatePictureUsingPost(
-  body: API.PictureUpdateRequest,
-  options?: { [key: string]: any }
-) {
-  return request<API.BaseResponseBoolean_>('/api/picture/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

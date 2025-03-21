@@ -13,8 +13,8 @@
         <!-- 操作 -->
         <a-space>
           <a-button size="large" ghost type="primary" @click="openAddEditPicture">
-            <PlusCircleOutlined />
-            上传图片
+            <CloudUploadOutlined />
+            上传图片到空间
           </a-button>
         </a-space>
       </a-flex>
@@ -140,6 +140,8 @@
       </a-form>
     </div>
 
+    <a-divider />
+
     <!-- 数据区域 -->
     <div class="custom-div data-region">
       <a-list
@@ -170,11 +172,11 @@
               </a-card-meta>
               <!-- 操作 -->
               <template #actions>
-                <div @click="(e) => doEditPicture(picture.id, e)">
+                <div @click="(e) => doEditPicture(picture.pictureId, e)">
                   <EditOutlined />
                   编辑
                 </div>
-                <div @click="(e) => doDeletePicture(picture.id, e)">
+                <div @click="(e) => doDeletePicture(picture.pictureId, e)">
                   <DeleteOutlined />
                   删除
                 </div>
@@ -208,7 +210,7 @@ import {
   BlockOutlined,
   DeleteOutlined,
   EditOutlined,
-  PlusCircleOutlined,
+  CloudUploadOutlined,
   SearchOutlined,
   ShareAltOutlined,
   SyncOutlined,
@@ -251,9 +253,9 @@ onMounted(() => {
  */
 const doClickPicture = (picture) => {
   router.push({
-    path: `/picture/detail/${picture.id}`,
+    path: `/picture/detail/${picture.pictureId}`,
     query: {
-      id: picture.id,
+      pId: picture.pictureId,
       ed: encodeURIComponent(encrypt(route.path + '=' + spaceDetail.value.spaceName, 'source')),
     },
   })
@@ -417,7 +419,7 @@ const getCategoryListData = async () => {
   if (res.code === 0 && res.data) {
     categoryList.value = (res.data ?? []).map((data: API.CategoryVO) => {
       return {
-        value: data.id,
+        value: data.categoryId,
         label: data.name,
       }
     })
@@ -433,7 +435,7 @@ const openAddEditPicture = () => {
   const r = router.push({
     path: '/picture/addEdit',
     query: {
-      sid: spaceDetail.value.id,
+      sid: spaceDetail.value.spaceId,
       t: spaceDetail.value.spaceType,
       n: spaceDetail.value.spaceName,
       ed: encodeURIComponent(encrypt(route.path, 'source')),
@@ -444,19 +446,19 @@ const openAddEditPicture = () => {
 /**
  * 编辑图片
  */
-const doEditPicture = (id: number, e: Event) => {
+const doEditPicture = (pictureId: number, e: Event) => {
   e.stopPropagation()
-  if (!id) {
+  if (!pictureId) {
     return
   }
   router.push({
     path: '/picture/addEdit',
     query: {
-      id: id,
-      sid: spaceDetail.value.id,
+      pId: pictureId,
+      sid: spaceDetail.value.spaceId,
       t: spaceDetail.value.spaceType,
       n: spaceDetail.value.spaceName,
-      ed: encodeURIComponent(encrypt(route.path + '=' + encryptData.value, 'source')),
+      ed: encodeURIComponent(encrypt(route.path + '=', 'source')),
     },
   })
 }
@@ -464,9 +466,9 @@ const doEditPicture = (id: number, e: Event) => {
 /**
  * 删除图片
  */
-const doDeletePicture = async (id: number, e: Event) => {
+const doDeletePicture = async (pictureId: number, e: Event) => {
   e.stopPropagation()
-  if (!id) {
+  if (!pictureId) {
     return
   }
   // 确认弹窗
@@ -477,7 +479,7 @@ const doDeletePicture = async (id: number, e: Event) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await deletePictureUsingPost({ id })
+        const res = await deletePictureUsingPost({ id: pictureId })
         if (res.code === 0) {
           message.success('删除成功！')
         } else {
@@ -520,10 +522,10 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
     message.warn('已分享！')
     return
   }
-  const id = picture.id
-  const res = await pictureShareUsingPost({ id })
+  const pictureId = picture.pictureId
+  const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.pictureId}`
     if (shareModal.value) {
       shareModal.value.openModal()
     }

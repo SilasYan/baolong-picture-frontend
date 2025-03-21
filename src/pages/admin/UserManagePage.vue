@@ -124,14 +124,14 @@
                 'active-switch': record.isDisabled === 0,
                 'disabled-switch': record.isDisabled === 1,
               }"
-              @change="(checked) => handleDisabled(record.id, checked)"
+              @change="(checked) => handleDisabled(record.userId, checked)"
             />
           </template>
           <!-- 操作 -->
           <template v-if="column.key === 'action'">
             <a-space>
-              <a-button type="link" @click="handleResetPassword(record.id)">密码重置</a-button>
-              <a-button type="link" danger @click="handleDelete(record.id)">删除</a-button>
+              <a-button type="link" @click="handleResetPassword(record.userId)">密码重置</a-button>
+              <a-button type="link" danger @click="handleDelete(record.userId)">删除</a-button>
             </a-space>
           </template>
         </template>
@@ -165,7 +165,7 @@ onMounted(() => {
 const userColumns = [
   {
     title: '用户 ID',
-    dataIndex: 'id',
+    dataIndex: 'userId',
     fixed: 'left',
     align: 'center',
     width: 80,
@@ -285,6 +285,8 @@ const userPagination = computed(() => {
 /**
  * 处理用户表格变化
  * @param page
+ * @param filters
+ * @param sorter
  */
 const handleUserTableChange = (page: any, filters: any, sorter: any) => {
   userSearchParams.current = page.current
@@ -351,8 +353,8 @@ const getUserListData = async () => {
 /**
  * 处理用户禁用
  */
-const handleDisabled = async (id: string, checked: boolean) => {
-  if (!id) {
+const handleDisabled = async (userId: string, checked: boolean) => {
+  if (!userId) {
     return
   }
   // 确认弹窗
@@ -363,7 +365,7 @@ const handleDisabled = async (id: string, checked: boolean) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await disabledUserUsingPost({ id: id, isDisabled: checked ? 0 : 1 })
+        const res = await disabledUserUsingPost({ userId: userId, isDisabled: checked ? 0 : 1 })
         if (res.code === 0) {
           message.success(`${checked ? '启用' : '禁用'}成功！`)
         } else {
@@ -385,10 +387,10 @@ const handleDisabled = async (id: string, checked: boolean) => {
 
 /**
  * 处理密码重置
- * @param id
+ * @param userId
  */
-const handleResetPassword = async (id: string) => {
-  if (!id) {
+const handleResetPassword = async (userId: string) => {
+  if (!userId) {
     return
   }
   // 确认弹窗
@@ -399,7 +401,7 @@ const handleResetPassword = async (id: string) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await resetPasswordUsingPost({ id })
+        const res = await resetPasswordUsingPost({ userId })
         if (res.code === 0) {
           message.success('重置成功！')
           resetPasswordSuccess(res.data) // 处理重置成功后的逻辑
@@ -444,10 +446,10 @@ const resetPasswordSuccess = (password) => {
 
 /**
  * 处理删除
- * @param id
+ * @param userId
  */
-const handleDelete = async (id: string) => {
-  if (!id) {
+const handleDelete = async (userId: string) => {
+  if (!userId) {
     return
   }
   // 确认弹窗
@@ -458,7 +460,7 @@ const handleDelete = async (id: string) => {
     cancelText: '取消',
     onOk: async () => {
       try {
-        const res = await deleteUserUsingPost({ id })
+        const res = await deleteUserUsingPost({ id: userId })
         if (res.code === 0) {
           message.success('删除成功！')
         } else {
