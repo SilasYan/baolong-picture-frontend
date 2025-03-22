@@ -223,6 +223,21 @@ export async function uploadPictureByFileUsingPost(
   })
 }
 
+/** uploadPictureByGrab POST /api/picture/upload/grab */
+export async function uploadPictureByGrabUsingPost(
+  body: API.PictureUploadRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/picture/upload/grab', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** uploadPictureByUrl POST /api/picture/upload/url */
 export async function uploadPictureByUrlUsingPost(
   body: API.PictureUploadRequest,

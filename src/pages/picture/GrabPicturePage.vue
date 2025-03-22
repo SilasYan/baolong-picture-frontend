@@ -104,14 +104,14 @@
       </div>
 
       <!-- 爬取图片列表部分 -->
-      <div class="list-card" style="background-color: #ececec; padding: 20px; min-height: 400px">
+      <div class="list-card" style="background-color: #ececec; padding: 20px; min-height: 350px">
         <a-spin
           v-if="requestSendStatus"
           tip="爬取中，请稍后..."
           :spinning="spinning"
           :style="{
             width: '100%',
-            height: '400px',
+            height: '350px',
           }"
         >
           <a-flex justify="flex-start" wrap="wrap" gap="small">
@@ -124,18 +124,18 @@
               :style="{ width: '320px', height: '350px', margin: '0 20px 20px 0' }"
             >
               <template #actions>
-                <!--<div>-->
-                <!--  <UploadOutlined />-->
-                <!--  上传到公共图库-->
-                <!--</div>-->
-                <div @click="(e) => doDownload(item)">
-                  <DownloadOutlined />
-                  直接下载
+                <div @click="(e) => uploadImage(item)">
+                  <CloudUploadOutlined />
+                  上传到公共图库
+                </div>
+                <div @click="(e) => openImage(item)">
+                  <ExportOutlined />
+                  图片源
                 </div>
               </template>
               <template #cover>
                 <a-image
-                  :src="item.imageUrl"
+                  :src="item.handleImageUrl"
                   fallback="data:image/png;base64,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"
                   :style="{
                     width: '100%',
@@ -161,9 +161,14 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { BugOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import { BugOutlined, ExportOutlined, CloudUploadOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { grabPictureUsingPost, pictureDownloadUsingPost } from '@/api/pictureController'
+import {
+  grabPictureUsingPost,
+  pictureDownloadUsingPost,
+  uploadPictureByGrabUsingPost,
+  uploadPictureByUrlUsingPost,
+} from '@/api/pictureController'
 import { downloadImage } from '@/utils'
 
 /**
@@ -227,39 +232,85 @@ const getGrabPictureListData = async () => {
 }
 
 /**
- * 处理下载
+ * 上传到公共图库
+ * @param picture
  */
-const doDownload = (picture: API.GrabPictureResult) => {
+const uploadImage = async (picture: API.GrabPictureResult) => {
+  spinning.value = true
   try {
-    downloadImage(picture.imageUrl, picture.imageName, true)
-    message.success('下载成功！')
-  } catch (e) {
-    message.error('下载失败！')
+    const res = await uploadPictureByGrabUsingPost({
+      pictureUrl: picture.handleImageUrl,
+      picName: picture.imageName,
+    })
+    if (res.code === 0 && res.data) {
+      message.success('图片上传成功!')
+    } else {
+      message.error('图片上传失败! ' + res.message)
+    }
+  } finally {
+    spinning.value = false
   }
+}
+/**
+ * 打开图片源
+ * @param picture
+ */
+const openImage = (picture: API.GrabPictureResult) => {
+  const link = document.createElement('a')
+  link.href = picture.imageUrl
+  link.download = picture.imageName || `download_${Date.now()}.jpg`
+  link.target = '_blank'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 </script>
 
 <style scoped>
 #grab-picture-page {
-  /* max-width: 800px; */
-  margin: 0 auto;
-}
-
-.bold-label ::v-deep(.ant-form-item-label > label) {
-  font-size: clamp(14px, 1.2vw, 16px); /* 自动缩放 */
-  font-weight: bold;
+  /* height: 100vh; */
+  display: flex;
+  flex-direction: column;
 }
 
 #grab-picture-page .content {
+  flex: 1;
+  min-height: 0; /* 关键：允许内容区域收缩 */
   display: flex;
 }
 
-#grab-picture-page .from-card {
-  width: 20%;
-  margin-right: 20px;
+#grab-picture-page .list-card {
+  flex: 1;
+  /* 动态计算高度 */
+  height: calc(100vh - 250px) !important;
+  overflow-y: auto; /* 添加垂直滚动 */
+  background-color: #ececec;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-#grab-picture-page .list-card {
-  width: 80%;
+/* 调整 Spin 容器高度 */
+.list-card >>> .ant-spin-nested-loading {
+  height: 100%;
+}
+
+.list-card >>> .ant-spin-container {
+  height: 100%;
+}
+
+/* 调整 Flex 容器高度 */
+.list-card >>> .ant-flex {
+  height: 100%;
+  align-content: flex-start;
+  overflow-y: auto;
+}
+
+/* 保持顶部和表单区域固定 */
+#grab-picture-page .from-card {
+  width: 20%;
+  min-width: 300px;
+  margin-right: 20px;
+  height: fit-content; /* 根据内容自适应高度 */
 }
 </style>

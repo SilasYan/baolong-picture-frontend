@@ -23,7 +23,7 @@
               </template>
               <!-- 图片 -->
               <div class="image-detail-content" @dragstart="handleDragStart">
-                <a-image :src="pictureDetailInfo.picUrl" :preview="false" />
+                <a-image :src="pictureDetailInfo.picUrl" />
               </div>
               <!-- 操作按钮 -->
               <template
@@ -276,7 +276,8 @@ import {
   PIC_INTERACTION_TYPE_ENUM,
   PIC_REVIEW_STATUS_ENUM,
   PIC_REVIEW_STATUS_MAP,
-  PIC_REVIEW_STATUS_OPTIONS, PIC_STATUS_TAG_COLOR
+  PIC_REVIEW_STATUS_OPTIONS,
+  PIC_STATUS_TAG_COLOR,
 } from '@/constants/picture'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
