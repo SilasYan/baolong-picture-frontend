@@ -121,9 +121,9 @@
           size="large"
         />
       </a-form-item>
-      <a-form-item label="标签" name="tags">
+      <a-form-item label="标签" name="tagList">
         <a-select
-          v-model:value="pictureEditForm.tags"
+          v-model:value="pictureEditForm.tagList"
           :options="tagList"
           mode="tags"
           placeholder="请输入图片标签"

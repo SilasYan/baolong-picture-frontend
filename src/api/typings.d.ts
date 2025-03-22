@@ -365,7 +365,7 @@ declare namespace API {
     picName?: string
     pictureId?: number
     spaceId?: number
-    tags?: string[]
+    tagList?: string[]
   }
 
   type PictureGrabRequest = {
