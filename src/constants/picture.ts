@@ -28,9 +28,9 @@ export const PIC_REVIEW_STATUS_MAP = {
 }
 
 export const PIC_STATUS_TAG_COLOR = {
-  0: 'red',
-  1: 'blue',
-  2: 'gray',
+  0: '#f50',
+  1: '#87d068',
+  2: '#616060',
 }
 
 export const PIC_FORMAT_STATUS_OPTIONS = Object.keys(PIC_FORMAT_STATUS_MAP).map((key) => {
