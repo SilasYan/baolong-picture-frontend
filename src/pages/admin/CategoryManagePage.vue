@@ -6,8 +6,8 @@
         <!-- 顶部标题 -->
         <a-typography>
           <a-typography-title :level="3">
-            <UnorderedListOutlined />
-            分类标签管理
+            <InsertRowAboveOutlined />
+            分类管理
           </a-typography-title>
         </a-typography>
         <!-- 操作 -->
@@ -74,7 +74,9 @@
           <template v-if="column.key === 'action'">
             <a-space wrap>
               <a-button type="link" @click="editCategory(record)">编辑</a-button>
-              <a-button type="link" danger @click="deleteCategory(record.categoryId)">删除</a-button>
+              <a-button type="link" danger @click="deleteCategory(record.categoryId)"
+                >删除</a-button
+              >
             </a-space>
           </template>
         </template>
@@ -89,6 +91,7 @@
       cancelText="取消"
       okText="创建"
       @ok="handleAddCategory"
+      :afterClose="handleAddClose"
     >
       <a-form layout="vertical" :model="addCategoryForm">
         <a-form-item label="分类名称" name="name">
@@ -116,7 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PlusCircleOutlined, UnorderedListOutlined } from '@ant-design/icons-vue'
+import { PlusCircleOutlined, InsertRowAboveOutlined } from '@ant-design/icons-vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import {
@@ -140,7 +143,7 @@ onMounted(() => {
 const categoryColumns = [
   {
     title: '分类 ID',
-    dataIndex: 'id',
+    dataIndex: 'categoryId',
     fixed: 'left',
     align: 'center',
     width: 80,
@@ -279,6 +282,12 @@ const handleAddCategory = async () => {
     addCategoryDialog.value = false
     await getCategoryListData()
   }
+}
+/**
+ * 处理新增分类关闭
+ */
+const handleAddClose = () => {
+  updateCategoryForm.name = ''
 }
 
 /**

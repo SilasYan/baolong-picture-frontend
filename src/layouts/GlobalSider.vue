@@ -32,8 +32,8 @@
 import { computed, h, reactive, ref, type VueElement, watch, watchEffect } from 'vue'
 import {
   BlockOutlined,
-  BugOutlined,
-  ContactsOutlined,
+  BugOutlined, ClockCircleOutlined,
+  ContactsOutlined, InsertRowAboveOutlined,
   MenuOutlined, PicCenterOutlined,
   PictureOutlined,
   SettingOutlined,
@@ -121,7 +121,9 @@ const siderOriginMenus: ItemType[] = reactive([
       getItem('用户管理', '/admin/userManage', () => h(ContactsOutlined)),
       getItem('图库管理', '/admin/pictureManage', () => h(PictureOutlined)),
       getItem('空间管理', '/admin/spaceManage', () => h(BlockOutlined)),
-      getItem('分类管理', '/admin/categoryManage', () => h(UnorderedListOutlined)),
+      getItem('分类管理', '/admin/categoryManage', () => h(InsertRowAboveOutlined)),
+      getItem('菜单管理', '/admin/menuManage', () => h(UnorderedListOutlined)),
+      getItem('定时任务', '/admin/scheduledTask', () => h(ClockCircleOutlined)),
     ],
     'group',
   ),

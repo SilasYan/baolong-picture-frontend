@@ -42,7 +42,7 @@
       <a-layout-footer class="footer" :style="{ left: contentMarginLeft + 'px' }">
         <a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2024136487号-1</a>
         <a>| 版权所有 © 2025</a>
-        <a href="https://blog.baolong.icu" target="_blank"> 暴龙 Jason Yan,</a>
+        <a href="https://www.baolong.icu" target="_blank"> Silas Yan,</a>
         <a>All rights reserved.</a>
       </a-layout-footer>
     </a-layout>

@@ -35,6 +35,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePageVOMenuVO_ = {
+    code?: number
+    data?: PageVOMenuVO_
+    message?: string
+  }
+
   type BaseResponsePageVOPictureHomeVO_ = {
     code?: number
     data?: PageVOPictureHomeVO_
@@ -44,6 +50,12 @@ declare namespace API {
   type BaseResponsePageVOPictureVO_ = {
     code?: number
     data?: PageVOPictureVO_
+    message?: string
+  }
+
+  type BaseResponsePageVOScheduledTaskVO_ = {
+    code?: number
+    data?: PageVOScheduledTaskVO_
     message?: string
   }
 
@@ -136,6 +148,7 @@ declare namespace API {
     name?: string
     parentId?: number
     useNum?: number
+    userId?: number
   }
 
   type DeleteRequest = {
@@ -210,11 +223,63 @@ declare namespace API {
     vipSign?: string
   }
 
+  type MenuAddRequest = {
+    menuName?: string
+    menuPath?: string
+    menuPosition?: number
+    parentId?: number
+  }
+
+  type MenuQueryRequest = {
+    createTime?: string
+    current?: number
+    editTime?: string
+    isDisabled?: number
+    menuId?: number
+    menuName?: string
+    menuPath?: string
+    menuPosition?: number
+    multipleSort?: boolean
+    pageSize?: number
+    parentId?: number
+    sort?: Sort
+    sorts?: Sort[]
+    updateTime?: string
+  }
+
+  type MenuUpdateRequest = {
+    menuId?: number
+    menuName?: string
+    menuPath?: string
+    menuPosition?: number
+    parentId?: number
+  }
+
+  type MenuVO = {
+    createTime?: string
+    editTime?: string
+    isDelete?: number
+    isDisabled?: number
+    menuId?: number
+    menuName?: string
+    menuPath?: string
+    menuPosition?: number
+    parentId?: number
+  }
+
   type PageVOCategoryVO_ = {
     current?: number
     pageSize?: number
     pages?: number
     records?: CategoryVO[]
+    total?: number
+  }
+
+  type PageVOMenuVO_ = {
+    current?: number
+    pageSize?: number
+    pages?: number
+    records?: MenuVO[]
     total?: number
   }
 
@@ -231,6 +296,14 @@ declare namespace API {
     pageSize?: number
     pages?: number
     records?: PictureVO[]
+    total?: number
+  }
+
+  type PageVOScheduledTaskVO_ = {
+    current?: number
+    pageSize?: number
+    pages?: number
+    records?: ScheduledTaskVO[]
     total?: number
   }
 
@@ -417,6 +490,52 @@ declare namespace API {
     userId?: number
     userInfo?: User
     viewQuantity?: number
+  }
+
+  type ScheduledTaskAddRequest = {
+    taskBean?: string
+    taskCron?: string
+    taskDesc?: string
+    taskName?: string
+  }
+
+  type ScheduledTaskQueryRequest = {
+    createTime?: string
+    current?: number
+    editTime?: string
+    multipleSort?: boolean
+    pageSize?: number
+    sort?: Sort
+    sorts?: Sort[]
+    taskBean?: string
+    taskCron?: string
+    taskDesc?: string
+    taskId?: number
+    taskKey?: string
+    taskName?: string
+    taskStatus?: number
+  }
+
+  type ScheduledTaskUpdateRequest = {
+    taskBean?: string
+    taskCron?: string
+    taskDesc?: string
+    taskId?: number
+    taskKey?: string
+    taskName?: string
+    taskStatus?: number
+  }
+
+  type ScheduledTaskVO = {
+    createTime?: string
+    editTime?: string
+    taskBean?: string
+    taskCron?: string
+    taskDesc?: string
+    taskId?: number
+    taskKey?: string
+    taskName?: string
+    taskStatus?: number
   }
 
   type Sort = {

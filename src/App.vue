@@ -1,8 +1,10 @@
 <template>
   <div id="app">
+    <!--<a-watermark content="Ant Design Vue">-->
     <a-config-provider :locale="zhCN">
       <BasicLayout />
     </a-config-provider>
+    <!--</a-watermark>-->
   </div>
 </template>
 

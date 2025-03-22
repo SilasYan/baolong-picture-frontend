@@ -19,6 +19,8 @@ import SpacePage from '@/pages/space/SpacePage.vue'
 import UserProfilePage from '@/pages/user/UserProfilePage.vue'
 import PersonSpacePage from '@/pages/space/PersonSpacePage.vue'
 import PictureListPage from '@/pages/picture/PictureListPage.vue'
+import ScheduledTaskManagePage from '@/pages/admin/ScheduledTaskManagePage.vue'
+import MenuManagePage from '@/pages/admin/MenuManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -98,14 +100,24 @@ const router = createRouter({
       component: PictureManagePage,
     },
     {
+      path: '/admin/spaceManage',
+      name: '空间管理',
+      component: SpaceManagePage,
+    },
+    {
       path: '/admin/categoryManage',
       name: '分类管理',
       component: CategoryManagePage,
     },
     {
-      path: '/admin/spaceManage',
-      name: '空间管理',
-      component: SpaceManagePage,
+      path: '/admin/menuManage',
+      name: '菜单管理',
+      component: MenuManagePage,
+    },
+    {
+      path: '/admin/scheduledTask',
+      name: '定时任务',
+      component: ScheduledTaskManagePage,
     },
     // {
     //   path: '/space/:id',
