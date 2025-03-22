@@ -53,7 +53,7 @@
       </template>
     </Waterfall>
     <!-- 分享弹框组件 -->
-    <ShareModal ref="shareModal" :link="shareLink" />
+    <ShareModal ref="shareModal" :link="shareLink" :name="picName" />
   </div>
 </template>
 
@@ -226,6 +226,10 @@ const shareModal = ref()
  */
 const shareLink = ref<string>()
 /**
+ * 图片名称
+ */
+const picName = ref<string>()
+/**
  * 处理分享
  * @param picture
  * @param e
@@ -239,6 +243,7 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
   const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
     shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
+    picName.value = picture.picName
     if (shareModal.value) {
       shareModal.value.openModal()
     }

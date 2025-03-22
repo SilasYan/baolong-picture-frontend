@@ -15,11 +15,11 @@
           <!-- 左侧图片部分 -->
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="18">
             <a-card :headStyle="{ 'text-align': 'center' }" :title="pictureDetailInfo.picName">
-              <template
-                #extra
-                v-if="pictureDetailInfo.reviewStatus === PIC_REVIEW_STATUS_ENUM.REVIEWING"
-              >
-                <span style="color: #ff0000">审核中</span>
+              <template #extra>
+                <!--<a-tag color="#ff0000">-->
+                <a-tag :color="PIC_STATUS_TAG_COLOR[pictureDetailInfo.reviewStatus]">
+                  {{ PIC_REVIEW_STATUS_MAP[pictureDetailInfo.reviewStatus] }}
+                </a-tag>
               </template>
               <!-- 图片 -->
               <div class="image-detail-content" @dragstart="handleDragStart">
@@ -236,7 +236,7 @@
     </div>
 
     <!-- 分享弹框组件 -->
-    <ShareModal ref="shareModal" :link="shareLink" />
+    <ShareModal ref="shareModal" :link="shareLink" :name="picName" />
   </div>
 </template>
 
@@ -276,7 +276,7 @@ import {
   PIC_INTERACTION_TYPE_ENUM,
   PIC_REVIEW_STATUS_ENUM,
   PIC_REVIEW_STATUS_MAP,
-  PIC_REVIEW_STATUS_OPTIONS,
+  PIC_REVIEW_STATUS_OPTIONS, PIC_STATUS_TAG_COLOR
 } from '@/constants/picture'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
@@ -482,6 +482,10 @@ const shareModal = ref()
  */
 const shareLink = ref<string>()
 /**
+ * 图片名称
+ */
+const picName = ref<string>()
+/**
  * 处理分享
  * @param picture
  */
@@ -494,6 +498,7 @@ const doSharePicture = async (picture: API.PictureDetailVO) => {
   const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
     shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
+    picName.value = picture.picName
     if (shareModal.value) {
       shareModal.value.openModal()
     }
