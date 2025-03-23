@@ -78,7 +78,7 @@ const handleSendCode = async () => {
     userEmail: registerFormData.userEmail,
   })
 
-  if (res.data.code === 0 && res.data.data) {
+  if (res.code === 0 && res.data) {
     message.success('验证码发送成功')
     registerFormData.codeKey = res.data.data
 
@@ -92,7 +92,7 @@ const handleSendCode = async () => {
       }
     }, 1000)
   } else {
-    message.error('验证码发送失败，' + res.data.message)
+    message.error(res.message)
   }
 }
 

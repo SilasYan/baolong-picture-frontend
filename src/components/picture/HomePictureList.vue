@@ -80,6 +80,7 @@ import 'vue-waterfall-plugin-next/dist/style.css'
 import { encrypt, formatNumber, handleDragStart } from '@/utils'
 import { pictureLikeOrCollectUsingPost, pictureShareUsingPost } from '@/api/pictureController'
 import { PIC_INTERACTION_TYPE_ENUM } from '@/constants/picture'
+import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
 /**
  * 定义 Props 接口
@@ -157,7 +158,6 @@ const doClickPicture = (picture) => {
   window.open(r.href, '_blank')
 }
 
-
 /**
  * 点赞状态
  */
@@ -166,6 +166,7 @@ const isLike = ref<boolean>(true)
  * 处理点赞
  */
 const doLike = async (picture: API.PictureHomeVO) => {
+  useLoginUserStore().checkLogin()
   if (!isLike.value) {
     message.warn('点太快啦！')
     return
@@ -196,6 +197,7 @@ const isCollect = ref<boolean>(true)
  * 处理收藏
  */
 const doCollect = async (picture: API.PictureHomeVO) => {
+  useLoginUserStore().checkLogin()
   if (!isCollect.value) {
     message.warn('点太快啦！')
     return
@@ -240,6 +242,7 @@ const picName = ref<string>()
  * @param e
  */
 const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
+  useLoginUserStore().checkLogin()
   if (!isShare.value) {
     message.warn('已分享！')
     return

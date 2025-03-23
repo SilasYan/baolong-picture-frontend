@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getLoginUserDetailUsingGet } from '@/api/userController'
 import LoginUserVO = API.LoginUserVO
+import router from '@/router'
 
 export const useLoginUserStore = defineStore(
   'USER_LOGIN_STATE',
@@ -43,7 +44,16 @@ export const useLoginUserStore = defineStore(
       }
     }
 
-    return { loginUser, setLoginUser, fetchLoginUser, clearLoginUser }
+    function checkLogin() {
+      if (!useLoginUserStore().loginUser.token) {
+        router.push({
+          path: '/user/login',
+        })
+        return
+      }
+    }
+
+    return { loginUser, setLoginUser, fetchLoginUser, clearLoginUser, checkLogin }
   },
   {
     persist: {

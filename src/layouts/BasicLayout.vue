@@ -64,7 +64,7 @@ const loginUserStore = useLoginUserStore()
 // 获取左侧菜单的宽度
 const siderRef = ref<HTMLElement | null>(null)
 // 默认左侧菜单宽度
-const contentMarginLeft = ref(200)
+const contentMarginLeft = ref(0)
 
 // 处理左侧菜单折叠/展开事件
 const handleCollapse = (collapsed: boolean) => {

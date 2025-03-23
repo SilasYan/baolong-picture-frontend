@@ -397,6 +397,7 @@ const isLike = ref<boolean>(true)
  * 处理点赞
  */
 const doLike = async (picture: API.PictureDetailVO) => {
+  useLoginUserStore().checkLogin()
   if (!isLike.value) {
     message.warn('点太快啦！')
     return
@@ -427,6 +428,7 @@ const isCollect = ref<boolean>(true)
  * 处理收藏
  */
 const doCollect = async (picture: API.PictureDetailVO) => {
+  useLoginUserStore().checkLogin()
   if (!isCollect.value) {
     message.warn('点太快啦！')
     return
@@ -458,6 +460,7 @@ const isDownload = ref<boolean>(true)
  * @param picture
  */
 const doDownload = async (picture: API.PictureDetailVO) => {
+  useLoginUserStore().checkLogin()
   if (!isDownload.value) {
     message.warn('重复下载！')
     return
@@ -496,6 +499,7 @@ const picName = ref<string>()
  * @param picture
  */
 const doSharePicture = async (picture: API.PictureDetailVO) => {
+  useLoginUserStore().checkLogin()
   if (!isShare.value) {
     message.warn('已分享！')
     return

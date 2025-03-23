@@ -228,6 +228,7 @@ import { getSpaceDetailByLoginUserUsingGet } from '@/api/spaceController'
 import { useRoute, useRouter } from 'vue-router'
 import { decrypt, encrypt } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
 /**
  * 路由组件中的路由对象

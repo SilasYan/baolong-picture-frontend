@@ -1,5 +1,17 @@
 /* 全局样式文件 */
 
+/* src/assets/css/global.css */
+.ant-btn-primary {
+  background-color: #4797f4 !important;
+  border-color: #4797f4 !important;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #4797f4 !important;
+  border-color: #4797f4 !important;
+}
+
 /* 为所有 inline 布局表单添加间隙 */
 .ant-form-inline {
   gap: 16px;
