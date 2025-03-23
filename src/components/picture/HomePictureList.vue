@@ -32,21 +32,24 @@
           <template #actions>
             <div v-if="showView">
               <EyeOutlined />
-              {{ item.viewQuantity }}
+              {{ formatNumber(item.viewQuantity) }}
             </div>
             <div v-if="showLike" @click="(e) => doLike(item)">
               <LikeFilled v-if="item.loginUserIsLike" />
               <LikeOutlined v-else />
-              {{ item.likeQuantity }}
+              {{ formatNumber(item.likeQuantity) }}
             </div>
             <div v-if="showCollect" @click="(e) => doCollect(item)">
               <StarFilled v-if="item.loginUserIsCollect" />
               <StarOutlined v-else />
-              {{ item.collectQuantity }}
+              {{ formatNumber(item.collectQuantity) }}
             </div>
             <div v-if="showShare" @click="(e) => doSharePicture(item)">
               <ShareAltOutlined />
-              {{ item.shareQuantity }}
+              {{ formatNumber(item.shareQuantity) }}
+            </div>
+            <div v-if="showSearch" @click="(e) => doSearchPicture(item)">
+              <SearchOutlined />
             </div>
           </template>
         </a-card>
@@ -67,13 +70,14 @@ import {
   StarOutlined,
   StarFilled,
   ShareAltOutlined,
+  SearchOutlined,
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import ShareModal from '@/components/ShareModal.vue'
 import { ref } from 'vue'
 import { LazyImg, Waterfall } from 'vue-waterfall-plugin-next'
 import 'vue-waterfall-plugin-next/dist/style.css'
-import { encrypt, handleDragStart } from '@/utils'
+import { encrypt, formatNumber, handleDragStart } from '@/utils'
 import { pictureLikeOrCollectUsingPost, pictureShareUsingPost } from '@/api/pictureController'
 import { PIC_INTERACTION_TYPE_ENUM } from '@/constants/picture'
 
@@ -87,6 +91,7 @@ interface Props {
   showLike?: boolean
   showCollect?: boolean
   showShare?: boolean
+  showSearch?: boolean
 }
 
 /**
@@ -111,7 +116,7 @@ const router = useRouter()
 const breakpoints = ref({
   3000: {
     //当屏幕宽度小于等于3000
-    rowPerView: 5, // 一行8图
+    rowPerView: 6, // 一行8图
   },
   1800: {
     rowPerView: 5,
@@ -253,6 +258,19 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
   } else {
     message.error(res.message)
   }
+}
+
+/**
+ * 以图搜图
+ * @param picture
+ */
+const doSearchPicture = async (picture: API.PictureDetailVO) => {
+  await router.push({
+    path: '/picture/search',
+    query: {
+      pictureId: picture.pictureId,
+    },
+  })
 }
 </script>
 

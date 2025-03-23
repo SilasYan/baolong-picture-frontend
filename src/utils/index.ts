@@ -164,30 +164,55 @@ export async function downloadImage(url?: string, fileName?: string) {
   // }
 
   return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous'; // 关键设置
+    const img = new Image()
+    img.crossOrigin = 'Anonymous' // 关键设置
 
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
 
-      const ctx = canvas.getContext('2d');
-      ctx?.drawImage(img, 0, 0);
+      const ctx = canvas.getContext('2d')
+      ctx?.drawImage(img, 0, 0)
 
       canvas.toBlob((blob) => {
         if (blob) {
-          saveAs(blob, fileName || 'download');
-          resolve();
+          saveAs(blob, fileName || 'download')
+          resolve()
         } else {
-          reject(new Error('Canvas转换失败'));
+          reject(new Error('Canvas转换失败'))
         }
-      }, 'image/jpeg');
-    };
+      }, 'image/jpeg')
+    }
 
-    img.onerror = (err) => reject(err);
-    img.src = url;
-  });
+    img.onerror = (err) => reject(err)
+    img.src = url
+  })
 }
 
 // endregion 下载图片
+
+// region 格式化数字为 k
+// console.log(formatNumber(999));   // "999"
+// console.log(formatNumber(1000));  // "1k"
+// console.log(formatNumber(1020));  // "1.02k"
+// console.log(formatNumber(1120));  // "1.12k"
+// console.log(formatNumber(1500));  // "1.5k"
+// console.log(formatNumber(1999));  // "2k"（四舍五入后为 2.00，去零后为 2）
+export function formatNumber(value: number): string {
+  if (value < 1000) {
+    return value.toString()
+  }
+
+  const kValue = value / 1000
+  // 保留两位小数并移除末尾的零
+  let formatted = kValue.toFixed(2).replace(/\.?0+$/, '')
+  // 处理如 "2." 变成 "2" 的情况
+  if (formatted.endsWith('.')) {
+    formatted = formatted.slice(0, -1)
+  }
+
+  return `${formatted}k`
+}
+
+// endregion 格式化数字为 k

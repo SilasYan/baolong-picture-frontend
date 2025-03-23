@@ -32,25 +32,29 @@
               >
                 <div>
                   <EyeOutlined />
-                  {{ viewCount }}
+                  {{ formatNumber(viewCount) }}
                 </div>
                 <div @click="(e) => doLike(pictureDetailInfo, e)">
                   <LikeFilled v-if="pictureDetailInfo.loginUserIsLike" />
                   <LikeOutlined v-else />
-                  {{ likeCount }}
+                  {{ formatNumber(likeCount) }}
                 </div>
                 <div @click="(e) => doCollect(pictureDetailInfo, e)">
                   <StarFilled v-if="pictureDetailInfo.loginUserIsCollect" />
                   <StarOutlined v-else />
-                  {{ collectCount }}
+                  {{ formatNumber(collectCount) }}
                 </div>
                 <div @click="(e) => doSharePicture(pictureDetailInfo, e)">
                   <ShareAltOutlined />
-                  {{ shareCount }}
+                  {{ formatNumber(shareCount) }}
                 </div>
                 <div @click="(e) => doDownload(pictureDetailInfo)">
                   <DownloadOutlined />
-                  {{ downloadCount }}
+                  {{ formatNumber(downloadCount) }}
+                </div>
+                <div @click="(e) => doSearchPicture(pictureDetailInfo)">
+                  <SearchOutlined />
+                  以图搜图
                 </div>
               </template>
             </a-card>
@@ -254,14 +258,15 @@ import Icon, {
   ShareAltOutlined,
   DownloadOutlined,
   RollbackOutlined,
+  SearchOutlined,
 } from '@ant-design/icons-vue'
 import {
   decrypt,
   downloadImage,
-  encrypt,
+  encrypt, formatNumber,
   formatPictureSize,
   handleDragStart,
-  toHexColor,
+  toHexColor
 } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
 import {
@@ -509,6 +514,19 @@ const doSharePicture = async (picture: API.PictureDetailVO) => {
   } else {
     message.error(res.message)
   }
+}
+
+/**
+ * 以图搜图
+ * @param picture
+ */
+const doSearchPicture = async (picture: API.PictureDetailVO) => {
+  await router.push({
+    path: '/picture/search',
+    query: {
+      pictureId: picture.pictureId,
+    },
+  })
 }
 
 /**

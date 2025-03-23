@@ -1,5 +1,5 @@
 <template>
-  <div id="grab-picture-page">
+  <div id="search-picture-page">
     <!-- 顶部标题 -->
     <a-flex justify="space-between">
       <a-typography>
@@ -267,19 +267,19 @@ const openImage = (picture: API.GrabPictureResult) => {
 </script>
 
 <style scoped>
-#grab-picture-page {
+#search-picture-page {
   /* height: 100vh; */
   display: flex;
   flex-direction: column;
 }
 
-#grab-picture-page .content {
+#search-picture-page .content {
   flex: 1;
   min-height: 0; /* 关键：允许内容区域收缩 */
   display: flex;
 }
 
-#grab-picture-page .list-card {
+#search-picture-page .list-card {
   flex: 1;
   /* 动态计算高度 */
   height: calc(100vh - 250px) !important;
@@ -307,7 +307,7 @@ const openImage = (picture: API.GrabPictureResult) => {
 }
 
 /* 保持顶部和表单区域固定 */
-#grab-picture-page .from-card {
+#search-picture-page .from-card {
   width: 20%;
   min-width: 300px;
   margin-right: 20px;

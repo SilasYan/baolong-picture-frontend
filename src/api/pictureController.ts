@@ -167,6 +167,21 @@ export async function reviewPictureUsingPost(
   })
 }
 
+/** searchPicture POST /api/picture/search */
+export async function searchPictureUsingPost(
+  body: API.PictureSearchRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListSearchPictureResult_>('/api/picture/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** pictureShare POST /api/picture/share */
 export async function pictureShareUsingPost(
   body: API.PictureInteractionRequest,

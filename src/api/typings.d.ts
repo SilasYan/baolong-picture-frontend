@@ -23,6 +23,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListSearchPictureResult_ = {
+    code?: number
+    data?: SearchPictureResult[]
+    message?: string
+  }
+
   type BaseResponseLoginUserVO_ = {
     code?: number
     data?: LoginUserVO
@@ -438,6 +444,13 @@ declare namespace API {
     reviewStatus?: number
   }
 
+  type PictureSearchRequest = {
+    pictureId?: number
+    randomSeed?: number
+    searchCount?: number
+    searchSource?: string
+  }
+
   type PictureUploadRequest = {
     categoryId?: number
     picDesc?: string
@@ -536,6 +549,12 @@ declare namespace API {
     taskKey?: string
     taskName?: string
     taskStatus?: number
+  }
+
+  type SearchPictureResult = {
+    imageKey?: string
+    imageName?: string
+    imageUrl?: string
   }
 
   type Sort = {

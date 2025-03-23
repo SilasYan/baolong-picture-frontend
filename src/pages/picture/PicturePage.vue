@@ -34,6 +34,7 @@
         :showLike="true"
         :showCollect="true"
         :showShare="true"
+        :showSearch="true"
       />
 
       <!-- 加载信息 -->

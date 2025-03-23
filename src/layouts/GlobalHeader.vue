@@ -67,7 +67,7 @@ import {
   SendOutlined,
   LogoutOutlined,
   PictureOutlined,
-  ThunderboltOutlined,
+  HistoryOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
@@ -101,10 +101,10 @@ const headerOriginMenus = [
     type: 'page',
   },
   {
-    key: '/ai-chat',
-    icon: () => h(ThunderboltOutlined),
-    label: 'AI 对话',
-    title: 'AI 对话',
+    key: '/timeline',
+    icon: () => h(HistoryOutlined),
+    label: '项目时序',
+    title: '项目时序',
     type: 'page',
   },
   {

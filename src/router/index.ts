@@ -13,7 +13,6 @@ import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
 import MySpacePage from '@/pages/space/SpacePage.vue'
 import SpacePage from '@/pages/space/SpacePage.vue'
 // import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
-// import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
 // import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 // import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
 import UserProfilePage from '@/pages/user/UserProfilePage.vue'
@@ -21,6 +20,8 @@ import PersonSpacePage from '@/pages/space/PersonSpacePage.vue'
 import PictureListPage from '@/pages/picture/PictureListPage.vue'
 import ScheduledTaskManagePage from '@/pages/admin/ScheduledTaskManagePage.vue'
 import MenuManagePage from '@/pages/admin/MenuManagePage.vue'
+import TimelinePage from '@/pages/TimelinePage.vue'
+import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
       name: '用户信息',
       component: UserProfilePage,
     },
+    {
+      path: '/timeline',
+      name: '项目时序',
+      component: TimelinePage,
+    },
     // 图片页面
     {
       path: '/picture/addEdit',
@@ -57,15 +63,20 @@ const router = createRouter({
       component: PictureListPage,
     },
     {
+      path: '/picture/detail/:pictureId',
+      name: '图片详情',
+      component: PictureDetailPage,
+      props: true,
+    },
+    {
       path: '/picture/grab',
       name: '爬取图片',
       component: GrabPicturePage,
     },
     {
-      path: '/picture/detail/:pictureId',
-      name: '图片详情',
-      component: PictureDetailPage,
-      props: true,
+      path: '/picture/search',
+      name: '以图搜图',
+      component: SearchPicturePage,
     },
     // 空间页面
     {
@@ -78,11 +89,6 @@ const router = createRouter({
       name: '个人空间',
       component: PersonSpacePage,
     },
-    // {
-    //   path: '/add_space',
-    //   name: '创建空间',
-    //   component: AddSpacePage,
-    // },
     {
       path: '/my_space',
       name: '我的空间',
