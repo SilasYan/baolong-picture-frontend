@@ -67,7 +67,7 @@
               <a-list item-layout="horizontal">
                 <a-list-item>
                   <a-list-item-meta
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    :description="`作者介绍：${pictureDetailInfo.userProfile ?? '暂无'}`"
                   >
                     <template #title>
                       <a href="#"> {{ pictureDetailInfo.userName ?? '未命名' }}</a>
@@ -156,7 +156,7 @@
               <a-list item-layout="horizontal">
                 <a-list-item>
                   <a-list-item-meta
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    :description="`作者介绍：${pictureDetailInfo.userProfile ?? '暂无'}`"
                   >
                     <template #title>
                       <a href="#"> {{ pictureDetailInfo.userName ?? '未命名' }}</a>
@@ -285,6 +285,7 @@ import {
   PIC_STATUS_TAG_COLOR,
 } from '@/constants/picture'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import UserProfilePage from '@/pages/user/UserProfilePage.vue'
 
 /**
  * 路由组件中的路由对象

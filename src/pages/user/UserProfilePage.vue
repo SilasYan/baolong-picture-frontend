@@ -3,7 +3,12 @@
     <!-- 个人信息 -->
     <div class="basicInfo">
       <a-card title="基础信息" :headStyle="{ 'text-align': 'center' }" :loading="userInfoLoading">
-        <template #extra><a @click="openEditUserInfoModal">修改</a></template>
+        <template #extra>
+          <a-space>
+            <a @click="openEditUserInfoModal">资料修改</a>
+            <a @click="openEditPasswordModal">密码修改</a>
+          </a-space>
+        </template>
         <div class="avatar">
           <a-upload
             :show-upload-list="false"
@@ -56,7 +61,8 @@
                 <p>会员类型: {{ userInfo.vipSign }}</p>
                 <p>到期时间: {{ dayjs(userInfo.vipExpireTime).format('YYYY-MM-DD HH:mm:ss') }}</p>
               </div>
-              <div v-else>暂未开通会员 <a @click="openExchangeVipModal">去开通?</a></div>
+              <!--<div v-else>暂未开通会员 <a @click="openExchangeVipModal">去开通?</a></div>-->
+              <div v-else>暂未开通会员</div>
             </a-descriptions-item>
           </a-descriptions>
         </div>
@@ -74,7 +80,7 @@
       @ok="editUserInfoSubmit"
       :maskClosable="false"
     >
-      <a-form layout="vertical" :model="userInfoForm" @finish="handleSubmit">
+      <a-form layout="vertical" :model="editUserInfoForm" @finish="handleSubmit">
         <a-form-item
           label="邮 箱"
           name="userEmail"
@@ -83,33 +89,107 @@
             { type: 'email', message: '请输入有效的邮箱地址' },
           ]"
           required
+          size="large"
         >
-          <a-input v-model:value="userInfoForm.userEmail" placeholder="请输入邮箱" disabled />
+          <a-input v-model:value="editUserInfoForm.userEmail" placeholder="请输入邮箱" disabled />
         </a-form-item>
         <a-form-item label="账 号（登录用户名）" name="userAccount" required>
-          <a-input v-model:value="userInfoForm.userAccount" placeholder="请输入账号" />
+          <a-input
+            v-model:value="editUserInfoForm.userAccount"
+            placeholder="请输入账号"
+            size="large"
+          />
         </a-form-item>
         <a-form-item label="昵 称" name="userName">
-          <a-input v-model:value="userInfoForm.userName" placeholder="请输入昵称" />
+          <a-input
+            v-model:value="editUserInfoForm.userName"
+            placeholder="请输入昵称"
+            size="large"
+          />
         </a-form-item>
         <a-form-item label="手机号" name="userPhone">
-          <a-input v-model:value="userInfoForm.userPhone" placeholder="请输入手机号" />
+          <a-input
+            v-model:value="editUserInfoForm.userPhone"
+            placeholder="请输入手机号"
+            size="large"
+          />
         </a-form-item>
         <a-form-item label="出生日期" name="birthday">
           <a-date-picker
             style="width: 100%"
-            v-model:value="userInfoForm.birthday"
+            v-model:value="editUserInfoForm.birthday"
             format="YYYY/MM/DD"
             placeholder="请选择出生日期"
+            size="large"
           />
         </a-form-item>
         <a-form-item label="个人介绍" name="userProfile">
           <a-textarea
-            v-model:value="userInfoForm.userProfile"
+            v-model:value="editUserInfoForm.userProfile"
             placeholder="请输入个人介绍"
             :rows="5"
             autoSize
             allowClear
+            size="large"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <!-- 密码修改弹出框 -->
+    <a-modal
+      v-model:open="editPasswordModal"
+      title="修改密码"
+      centered
+      cancelText="取消"
+      okText="提交"
+      @ok="editPasswordSubmit"
+      :maskClosable="false"
+    >
+      <a-form layout="vertical" :model="editPasswordForm" @finish="handleSubmit">
+        <a-form-item
+          label="原密码"
+          name="originPassword"
+          :rules="[
+            { required: true, message: '请输入原密码' },
+            { min: 8, message: '原密码不能小于 8 位' },
+          ]"
+          required
+        >
+          <a-input
+            v-model:value="editPasswordForm.originPassword"
+            placeholder="请输入原密码"
+            size="large"
+          />
+        </a-form-item>
+        <a-form-item
+          label="新密码"
+          name="newPassword"
+          :rules="[
+            { required: true, message: '请输入新密码' },
+            { min: 8, message: '新密码不能小于 8 位' },
+          ]"
+          required
+        >
+          <a-input
+            v-model:value="editPasswordForm.newPassword"
+            placeholder="请输入新密码"
+            size="large"
+          />
+        </a-form-item>
+        <a-form-item
+          label="确认新密码"
+          name="confirmPassword"
+          :rules="[
+            { required: true, message: '请再次输入新密码' },
+            { min: 8, message: '密码不能小于 8 位' },
+          ]"
+          required
+        >
+          <a-input
+            v-model:value="editPasswordForm.confirmPassword"
+            placeholder="请再次输入新密码"
+            size="large"
           />
         </a-form-item>
       </a-form>
@@ -227,6 +307,7 @@ import Icon, {
 import dayjs from 'dayjs'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import {
+  editUserPasswordUsingPost,
   editUserUsingPost,
   getUserDetailByIdUsingGet,
   uploadAvatarUsingPost,
@@ -265,30 +346,36 @@ const fetchUserInfo = async () => {
   }
 }
 
-// 编辑信息弹出框
+/**
+ * 编辑信息弹出框
+ */
 const editUserInfoModal = ref<boolean>(false)
-//打开编辑用户信息弹出框
+/**
+ * 打开编辑用户信息弹出框
+ */
 const openEditUserInfoModal = () => {
   editUserInfoModal.value = true
-  userInfoForm.userId = userInfo.value.userId
-  userInfoForm.userEmail = userInfo.value.userEmail
-  userInfoForm.userAccount = userInfo.value.userAccount
-  userInfoForm.userName = userInfo.value.userName
-  userInfoForm.userPhone = userInfo.value.userPhone
-  userInfoForm.birthday = userInfo.value.birthday ? dayjs(userInfo.value.birthday) : undefined
-  userInfoForm.userProfile = userInfo.value.userProfile
+  editUserInfoForm.userId = userInfo.value.userId
+  editUserInfoForm.userEmail = userInfo.value.userEmail
+  editUserInfoForm.userAccount = userInfo.value.userAccount
+  editUserInfoForm.userName = userInfo.value.userName
+  editUserInfoForm.userPhone = userInfo.value.userPhone
+  editUserInfoForm.birthday = userInfo.value.birthday ? dayjs(userInfo.value.birthday) : undefined
+  editUserInfoForm.userProfile = userInfo.value.userProfile
 }
-// 用户信息表单
-const userInfoForm = reactive<API.UserUpdateRequest>({})
+/**
+ * 用户信息表单
+ */
+const editUserInfoForm = reactive<API.UserEditRequest>({})
 /**
  * 提交编辑用户信息表单
  */
 const editUserInfoSubmit = async () => {
-  const userId = userInfoForm.userId
+  const userId = editUserInfoForm.userId
   if (!userId) {
     return
   }
-  const res = await editUserUsingPost(userInfoForm)
+  const res = await editUserUsingPost(editUserInfoForm)
   if (res.code === 0 && res.data) {
     message.success('修改成功')
     // 跳转到图片详情页
@@ -296,6 +383,38 @@ const editUserInfoSubmit = async () => {
     await fetchUserInfo()
   } else {
     message.error('修改失败, ' + res.message)
+  }
+}
+
+/**
+ * 密码修改弹出框
+ */
+const editPasswordModal = ref<boolean>(false)
+/**
+ * 打开密码修改弹出框
+ */
+const openEditPasswordModal = () => {
+  editPasswordModal.value = true
+}
+/**
+ * 密码表单
+ */
+const editPasswordForm = reactive<API.UserEditPasswordRequest>({})
+/**
+ * 提交密码表单
+ */
+const editPasswordSubmit = async () => {
+  if (editPasswordForm.newPassword !== editPasswordForm.confirmPassword) {
+    message.error('两次新密码不一致')
+    return
+  }
+  const res = await editUserPasswordUsingPost(editPasswordForm)
+  if (res.code === 0 && res.data) {
+    message.success('修改成功')
+    editPasswordModal.value = false
+    await fetchUserInfo()
+  } else {
+    message.error(res.message)
   }
 }
 

@@ -152,40 +152,52 @@
         <template #renderItem="{ item: picture }">
           <a-list-item style="padding: 0">
             <!-- 单张图片 -->
-            <a-card hoverable @click="doClickPicture(picture)">
-              <template #cover>
-                <img
-                  style="height: 250px; object-fit: cover"
-                  :alt="picture.picName"
-                  :src="picture.picUrl"
-                  loading="lazy"
-                />
-              </template>
-              <a-card-meta>
-                <template #title>
-                  {{ picture.picName }}
-                  <a-tag v-if="picture.categoryInfo" color="green">
-                    {{ picture.categoryInfo?.name }}
-                  </a-tag>
-                  <span v-else></span>
+            <a-badge-ribbon
+              :text="picture.categoryInfo?.name ?? '无'"
+              :color="`${picture.categoryInfo?.name ? '#87d068' : 'gray'}`"
+              style="
+                width: 80px;
+                height: 30px;
+                font-size: 16px;
+                text-align: center;
+                line-height: 30px;
+              "
+            >
+              <a-card hoverable @click="doClickPicture(picture)">
+                <template #cover>
+                  <img
+                    style="height: 250px; object-fit: cover"
+                    :alt="picture.picName"
+                    :src="picture.picUrl"
+                    loading="lazy"
+                  />
                 </template>
-              </a-card-meta>
-              <!-- 操作 -->
-              <template #actions>
-                <div @click="(e) => doEditPicture(picture.pictureId, e)">
-                  <EditOutlined />
-                  编辑
-                </div>
-                <div @click="(e) => doDeletePicture(picture.pictureId, e)">
-                  <DeleteOutlined />
-                  删除
-                </div>
-                <div @click="(e) => doSharePicture(picture, e)">
-                  <ShareAltOutlined />
-                  分享
-                </div>
-              </template>
-            </a-card>
+                <a-card-meta>
+                  <template #title>
+                    {{ picture.picName }}
+                    <a-tag v-if="picture.categoryInfo" color="green">
+                      {{ picture.categoryInfo?.name }}
+                    </a-tag>
+                    <span v-else></span>
+                  </template>
+                </a-card-meta>
+                <!-- 操作 -->
+                <template #actions>
+                  <div @click="(e) => doEditPicture(picture.pictureId, e)">
+                    <EditOutlined />
+                    编辑
+                  </div>
+                  <div @click="(e) => doDeletePicture(picture.pictureId, e)">
+                    <DeleteOutlined />
+                    删除
+                  </div>
+                  <div @click="(e) => doSharePicture(picture, e)">
+                    <ShareAltOutlined />
+                    分享
+                  </div>
+                </template>
+              </a-card>
+            </a-badge-ribbon>
           </a-list-item>
         </template>
       </a-list>
@@ -216,19 +228,23 @@ import {
   SyncOutlined,
 } from '@ant-design/icons-vue'
 import { h, onMounted, reactive, ref } from 'vue'
-import { PIC_FORMAT_STATUS_OPTIONS, PIC_SHEAR_STATUS_ENUM } from '@/constants/picture'
+import {
+  PIC_FORMAT_STATUS_OPTIONS,
+  PIC_REVIEW_STATUS_MAP,
+  PIC_STATUS_TAG_COLOR,
+} from '@/constants/picture'
 import dayjs from 'dayjs'
 import { message, Modal } from 'ant-design-vue'
 import { getCategoryListAsHomeUsingGet } from '@/api/categoryController'
 import {
   deletePictureUsingPost,
-  getPicturePageListAsPersonSpaceUsingPost, pictureShareUsingPost
+  getPicturePageListAsPersonSpaceUsingPost,
+  pictureShareUsingPost,
 } from '@/api/pictureController'
 import { getSpaceDetailByLoginUserUsingGet } from '@/api/spaceController'
 import { useRoute, useRouter } from 'vue-router'
 import { decrypt, encrypt } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
-import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
 /**
  * 路由组件中的路由对象
@@ -265,7 +281,7 @@ const doClickPicture = (picture) => {
 /**
  * 空间使用情况选中的 KEY
  */
-const useActiveKey = ref([''])
+const useActiveKey = ref(['1'])
 
 /**
  * 初始化图片搜索参数
@@ -308,11 +324,11 @@ const rangePresets = ref([
  */
 const onRangeChange = (dates: any[], dateStrings: string[]) => {
   if (dates.length < 2) {
-    pictureSearchParams.startCreateTime = undefined
-    pictureSearchParams.endCreateTime = undefined
+    pictureSearchParams.startEditTime = undefined
+    pictureSearchParams.endEditTime = undefined
   } else {
-    pictureSearchParams.startCreateTime = dayjs(dayjs(dates[0]).format('YYYY-MM-DD') + ' 00:00:00')
-    pictureSearchParams.endCreateTime = dayjs(dayjs(dates[0]).format('YYYY-MM-DD') + ' 23:59:59')
+    pictureSearchParams.startEditTime = dayjs(dates[0]).format('YYYY-MM-DD') + ' 00:00:00'
+    pictureSearchParams.endEditTime = dayjs(dates[1]).format('YYYY-MM-DD') + ' 23:59:59'
   }
 }
 

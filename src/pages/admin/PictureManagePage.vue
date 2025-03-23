@@ -102,7 +102,7 @@
       >
         <template #bodyCell="{ column, record }">
           <!-- 图片 ID -->
-          <template v-if="column.dataIndex === 'id'">
+          <template v-if="column.dataIndex === 'pictureId'">
             <a-tooltip placement="right">
               <template #title>
                 <span>{{ record.pictureId }}</span>
@@ -203,6 +203,14 @@
                 通过
               </a-button>
               <a-button
+                v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS"
+                type="link"
+                danger
+                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
+              >
+                拒绝
+              </a-button>
+              <a-button
                 v-if="record.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
                 type="link"
                 danger
@@ -212,8 +220,7 @@
               </a-button>
               <a-button
                 type="link"
-                :href="`/picture/addEdit?id=${record.pictureId}`"
-                target="_blank"
+                :href="`/picture/addEdit?pId=${record.pictureId}`"
                 >编辑
               </a-button>
               <a-button type="link" danger @click="handleDelete(record.pictureId)">删除</a-button>
@@ -276,13 +283,6 @@ const pictureColumns = [
     title: '图片地址',
     dataIndex: 'picUrl',
     align: 'center',
-  },
-  {
-    title: '描述',
-    dataIndex: 'picDesc',
-    align: 'center',
-    ellipsis: true,
-    customCell: () => ({ style: { minWidth: '250px', maxWidth: '250px' } }),
   },
   {
     title: '分类',
@@ -351,6 +351,13 @@ const pictureColumns = [
   {
     title: '审核信息',
     dataIndex: 'reviewInfo',
+  },
+  {
+    title: '描述',
+    dataIndex: 'picDesc',
+    align: 'center',
+    ellipsis: true,
+    customCell: () => ({ style: { minWidth: '250px', maxWidth: '250px' } }),
   },
   {
     title: '上传时间',
@@ -572,7 +579,7 @@ const handleReview = async (pictureId: string, reviewStatus: number) => {
       }
     },
     onCancel: () => {
-      message.info(`取消${checked ? '启用' : '禁用'}该用户！`)
+      message.info(`取消${flag ? '启用' : '禁用'}该用户！`)
     },
   })
 }

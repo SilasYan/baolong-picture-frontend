@@ -80,7 +80,7 @@ const handleSendCode = async () => {
 
   if (res.code === 0 && res.data) {
     message.success('验证码发送成功')
-    registerFormData.codeKey = res.data.data
+    registerFormData.codeKey = res.data
 
     // 开始倒计时
     countdown.value = 60
@@ -111,14 +111,14 @@ const registerFormData = reactive<API.UserRegisterRequest>({
 const handleRegister = async () => {
   const res = await userRegisterUsingPost(registerFormData)
   // 注册成功，跳转到登录页面
-  if (res.data.code === 0 && res.data.data) {
+  if (res.code === 0 && res.data) {
     message.success('注册成功')
     await router.push({
       path: '/user/login',
       replace: true,
     })
   } else {
-    message.error('注册失败，' + res.data.message)
+    message.error('注册失败，' + res.message)
   }
 }
 

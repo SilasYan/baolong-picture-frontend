@@ -15,9 +15,10 @@ export const PIC_SHEAR_STATUS_ENUM = {
 }
 
 export const PIC_FORMAT_STATUS_MAP = {
-  jpg: 'JPG',
+  jpeg: 'JPG/JPEG',
   png: 'PNG',
   gif: 'GIF',
+  webp: 'WEBP',
   other: '其他',
 }
 

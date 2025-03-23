@@ -17,7 +17,7 @@
       <a-tab-pane
         v-for="category in homeCategoryList"
         :key="category.categoryId"
-        :tab="`${category.name}（${category.useNum}）`"
+        :tab="`${category.name}`"
       />
     </a-tabs>
 

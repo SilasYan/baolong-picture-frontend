@@ -86,94 +86,94 @@
       </template>
     </a-card>
 
-    <div style="margin-bottom: 16px" />
-
     <!-- 图片信息相关 -->
-    <a-form layout="vertical" :model="pictureEditForm" @finish="handlePictureEditSubmit">
-      <!-- 表单部分 -->
-      <a-form-item
-        label="图片名称"
-        name="picName"
-        :rules="[{ required: true, message: '请输入图片名称' }]"
-        required
-      >
-        <a-input
-          size="large"
-          v-model:value="pictureEditForm.picName"
-          placeholder="请输入图片名称"
-          allowClear
-        />
-      </a-form-item>
-      <a-form-item label="图片介绍" name="picDesc">
-        <a-textarea
-          v-model:value="pictureEditForm.picDesc"
-          placeholder="请输入图片介绍"
-          :auto-size="{ minRows: 2, maxRows: 5 }"
-          allowClear
-        />
-      </a-form-item>
-      <a-form-item label="分类" name="categoryId">
-        <a-select
-          v-model:value="pictureEditForm.categoryId"
-          :options="categoryList"
-          placeholder="请选择图片分类"
-          allowClear
-          size="large"
-        />
-      </a-form-item>
-      <a-form-item label="标签" name="tagList">
-        <a-select
-          v-model:value="pictureEditForm.tagList"
-          :options="tagList"
-          mode="tags"
-          placeholder="请输入图片标签"
-          allowClear
-          size="large"
-        />
-      </a-form-item>
-
-      <!-- 不可修改部分 -->
-      <a-descriptions v-if="pictureInfo" bordered title="图片信息（不可以修改）">
-        <a-descriptions-item v-if="pictureInfo.originColor" label="主色调">
-          <a-space>
-            <div
-              :style="{
-                backgroundColor: toHexColor(pictureInfo.originColor),
-                width: '36px',
-                height: '20px',
-              }"
-            />
-            【{{ toHexColor(pictureInfo.originColor) }}】
-          </a-space>
-        </a-descriptions-item>
-        <a-descriptions-item label="原图大小">
-          {{ formatPictureSize(pictureInfo.originSize) }}
-        </a-descriptions-item>
-        <a-descriptions-item label="原图格式">
-          <a-tag v-if="pictureInfo.originFormat" color="cyan">
-            {{ pictureInfo.originFormat }}
-          </a-tag>
-          <span v-else>-</span>
-        </a-descriptions-item>
-        <a-descriptions-item
-          v-if="pictureInfo.originWidth && pictureInfo.originHeight"
-          label="原图宽高"
+    <div v-if="pictureInfo" class="custom-div">
+      <a-form layout="vertical" :model="pictureEditForm" @finish="handlePictureEditSubmit">
+        <!-- 表单部分 -->
+        <a-form-item
+          label="图片名称"
+          name="picName"
+          :rules="[{ required: true, message: '请输入图片名称' }]"
+          required
         >
-          {{ pictureInfo.originWidth }} × {{ pictureInfo.originHeight }}
-        </a-descriptions-item>
-        <a-descriptions-item v-if="pictureInfo.originScale" label="原图比例">
-          {{ pictureInfo.originScale }}
-        </a-descriptions-item>
-      </a-descriptions>
+          <a-input
+            size="large"
+            v-model:value="pictureEditForm.picName"
+            placeholder="请输入图片名称"
+            allowClear
+          />
+        </a-form-item>
+        <a-form-item label="图片介绍" name="picDesc">
+          <a-textarea
+            v-model:value="pictureEditForm.picDesc"
+            placeholder="请输入图片介绍"
+            :auto-size="{ minRows: 2, maxRows: 5 }"
+            allowClear
+          />
+        </a-form-item>
+        <a-form-item label="分类" name="categoryId">
+          <a-select
+            v-model:value="pictureEditForm.categoryId"
+            :options="categoryList"
+            placeholder="请选择图片分类"
+            allowClear
+            size="large"
+          />
+        </a-form-item>
+        <a-form-item label="标签" name="tagList">
+          <a-select
+            v-model:value="pictureEditForm.tagList"
+            :options="tagList"
+            mode="tags"
+            placeholder="请输入图片标签"
+            allowClear
+            size="large"
+          />
+        </a-form-item>
 
-      <div style="margin-bottom: 16px" />
+        <!-- 不可修改部分 -->
+        <a-descriptions v-if="pictureInfo" bordered title="图片信息（不可以修改）">
+          <a-descriptions-item v-if="pictureInfo.originColor" label="主色调">
+            <a-space>
+              <div
+                :style="{
+                  backgroundColor: toHexColor(pictureInfo.originColor),
+                  width: '36px',
+                  height: '20px',
+                }"
+              />
+              【{{ toHexColor(pictureInfo.originColor) }}】
+            </a-space>
+          </a-descriptions-item>
+          <a-descriptions-item label="原图大小">
+            {{ formatPictureSize(pictureInfo.originSize) }}
+          </a-descriptions-item>
+          <a-descriptions-item label="原图格式">
+            <a-tag v-if="pictureInfo.originFormat" color="cyan">
+              {{ pictureInfo.originFormat }}
+            </a-tag>
+            <span v-else>-</span>
+          </a-descriptions-item>
+          <a-descriptions-item
+            v-if="pictureInfo.originWidth && pictureInfo.originHeight"
+            label="原图宽高"
+          >
+            {{ pictureInfo.originWidth }} × {{ pictureInfo.originHeight }}
+          </a-descriptions-item>
+          <a-descriptions-item v-if="pictureInfo.originScale" label="原图比例">
+            {{ pictureInfo.originScale }}
+          </a-descriptions-item>
+        </a-descriptions>
 
-      <a-form-item>
-        <a-button type="primary" html-type="submit" size="large" style="width: 100%">
-          {{ pictureId ? '修改' : '保存' }}
-        </a-button>
-      </a-form-item>
-    </a-form>
+        <div style="margin-bottom: 16px" />
+
+        <a-form-item>
+          <a-button type="primary" html-type="submit" size="large" style="width: 100%">
+            {{ pictureId ? '修改' : '保存' }}
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </div>
 
     <!-- 图片裁剪组件 -->
     <ImageCropper

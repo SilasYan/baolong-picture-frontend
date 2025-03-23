@@ -9,7 +9,13 @@
       <!-- 中间区域 -->
       <a-layout>
         <!-- 左侧菜单 -->
-        <GlobalSider ref="siderRef" class="sider" @collapse="handleCollapse" />
+        <GlobalSider
+          ref="siderRef"
+          class="sider"
+          @collapse="handleCollapse"
+          :key="loginUserStore.loginUser.token"
+        />
+        <!-- :key="loginUserStore.loginUser.token" 作用：强制 token 变化时重新渲染 -->
 
         <!-- 右边内容 -->
         <a-layout-content class="content" :style="{ marginLeft: contentMarginLeft + 'px' }">
@@ -71,7 +77,7 @@ const handleCollapse = (collapsed: boolean) => {
   if (collapsed) {
     contentMarginLeft.value = 80 // 折叠时的宽度（根据实际情况调整）
   } else {
-    contentMarginLeft.value = 200 // 展开时的宽度
+    contentMarginLeft.value = 150 // 展开时的宽度
   }
 }
 

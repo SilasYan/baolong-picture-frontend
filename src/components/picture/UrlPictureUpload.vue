@@ -15,7 +15,7 @@
         上传图片
       </a-button>
     </a-input-group>
-    <img v-if="picture?.url" :src="picture?.url" alt="avatar" />
+    <img v-if="picture?.picUrl" :src="picture?.picUrl" :alt="picture.picName" />
   </div>
 </template>
 
@@ -57,7 +57,7 @@ const handleUploadPicture = async () => {
       // 将上传成功的图片信息传递给父组件
       props.uploadSuccess?.(res.data)
     } else {
-      message.error('图片上传失败! ' + res.message)
+      message.error(res.message)
     }
   } finally {
     uploadLoading.value = false

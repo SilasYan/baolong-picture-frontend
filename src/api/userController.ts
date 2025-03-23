@@ -108,6 +108,21 @@ export async function getUserPageListAsManageUsingPost(
   })
 }
 
+/** editUserPassword POST /api/user/password */
+export async function editUserPasswordUsingPost(
+  body: API.UserEditPasswordRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/user/password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** userRegister POST /api/user/register */
 export async function userRegisterUsingPost(
   body: API.UserRegisterRequest,

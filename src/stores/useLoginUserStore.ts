@@ -39,9 +39,7 @@ export const useLoginUserStore = defineStore(
      * 清空登录用户信息
      */
     function clearLoginUser() {
-      loginUser.value = {
-        token: null,
-      }
+      loginUser.value = {}
     }
 
     function checkLogin() {

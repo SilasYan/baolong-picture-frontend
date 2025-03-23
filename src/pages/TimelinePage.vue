@@ -227,6 +227,18 @@
       </a-timeline-item>
       <a-timeline-item>
         <template #dot>
+          <CheckCircleOutlined class="complete" />
+        </template>
+        <a-typography-title :level="5">2025-03-23</a-typography-title>
+        <a-typography-paragraph>
+          <ul>
+            <li>前端、后端：以图搜图重构</li>
+            <li>后端：线程池配置</li>
+          </ul>
+        </a-typography-paragraph>
+      </a-timeline-item>
+      <a-timeline-item>
+        <template #dot>
           <QuestionCircleOutlined class="confirmed" />
         </template>
         <a-typography-title :level="5">需要重构的功能</a-typography-title>

@@ -26,10 +26,10 @@
       <a-form-item name="captchaCode" :rules="[{ required: true, message: '请输入验证码' }]">
         <a-input
           v-model:value="loginFormData.captchaCode"
-          placeholder="请输入账号"
+          placeholder="请输入验证码"
           style="height: 40px"
         >
-          <template #prefix> 验证码</template>
+          <!--<template #prefix> 验证码</template>-->
           <template #suffix>
             <a-image :width="100" :src="captchaImage" :preview="false" @click="captcha" />
           </template>

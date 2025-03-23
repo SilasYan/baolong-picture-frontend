@@ -135,10 +135,6 @@
                 <a-card-meta>
                   <template #title>
                     {{ picture.picName }}
-                    <a-tag v-if="picture.categoryInfo" color="green">
-                      {{ picture.categoryInfo?.name }}
-                    </a-tag>
-                    <span v-else></span>
                   </template>
                 </a-card-meta>
                 <!-- 操作 -->
@@ -283,8 +279,8 @@ const onRangeChange = (dates: any[], dateStrings: string[]) => {
     pictureSearchParams.startCreateTime = undefined
     pictureSearchParams.endCreateTime = undefined
   } else {
-    pictureSearchParams.startCreateTime = dayjs(dayjs(dates[0]).format('YYYY-MM-DD') + ' 00:00:00')
-    pictureSearchParams.endCreateTime = dayjs(dayjs(dates[0]).format('YYYY-MM-DD') + ' 23:59:59')
+    pictureSearchParams.startEditTime = dayjs(dates[0]).format('YYYY-MM-DD') + ' 00:00:00'
+    pictureSearchParams.endEditTime = dayjs(dates[1]).format('YYYY-MM-DD')+ ' 23:59:59'
   }
 }
 
@@ -404,9 +400,6 @@ const doEditPicture = (pictureId: number, e: Event) => {
     path: '/picture/addEdit',
     query: {
       pId: pictureId,
-      sid: spaceDetail.value.spaceId,
-      t: spaceDetail.value.spaceType,
-      n: spaceDetail.value.spaceName,
       ed: encodeURIComponent(encrypt(route.path + '=', 'source')),
     },
   })
@@ -439,7 +432,6 @@ const doDeletePicture = async (pictureId: number, e: Event) => {
         message.error('删除失败！')
       } finally {
         await getPictureListData()
-        await getSpaceDetailData()
       }
     },
     onCancel: () => {

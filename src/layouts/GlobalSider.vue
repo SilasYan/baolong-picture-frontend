@@ -2,12 +2,11 @@
   <div id="globalSider">
     <a-layout-sider
       v-if="loginUserStore.loginUser.token"
-      width="200"
+      width="150"
       breakpoint="xxl"
       v-model:collapsed="collapsed"
       collapsible
       class="sider"
-      :style="{ width: collapsed ? '80px' : '200px' }"
       @collapse="handleCollapse"
     >
       <a-menu

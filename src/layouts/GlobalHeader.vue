@@ -3,7 +3,7 @@
     <a-row :wrap="false" :style="{ backgroundColor: 'transparent' }">
       <!-- 左侧 LOGO -->
       <a-col flex="200px">
-        <RouterLink to="/public">
+        <RouterLink to="/">
           <div class="title-bar">
             <img class="logo" src="../assets/logo.png" alt="logo" />
           </div>
@@ -21,7 +21,7 @@
       </a-col>
 
       <!-- 右侧头像 -->
-      <a-col flex="120px">
+      <a-col flex="150px">
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.userId">
             <a-dropdown>
@@ -197,5 +197,9 @@ const doLogout = async () => {
 .logo {
   height: 60px;
   max-width: 100%; /* 确保图片不超过容器宽度 */
+}
+
+.user-login-status {
+  margin-right: 20px;
 }
 </style>

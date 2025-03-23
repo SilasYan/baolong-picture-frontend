@@ -169,7 +169,6 @@ declare namespace API {
   type getPicturePageListAsHomeUsingGETParams = {
     categoryId?: number
     current?: number
-    endCreateTime?: string
     endEditTime?: string
     multipleSort?: boolean
     originColor?: string
@@ -190,7 +189,6 @@ declare namespace API {
     'sorts[0].asc'?: boolean
     'sorts[0].field'?: string
     spaceId?: number
-    startCreateTime?: string
     startEditTime?: string
     tags?: string
     userId?: number
@@ -362,6 +360,7 @@ declare namespace API {
     userAvatar?: string
     userId?: number
     userName?: string
+    userProfile?: string
     viewQuantity?: number
   }
 
@@ -412,7 +411,6 @@ declare namespace API {
   type PictureQueryRequest = {
     categoryId?: number
     current?: number
-    endCreateTime?: string
     endEditTime?: string
     multipleSort?: boolean
     originColor?: string
@@ -431,7 +429,6 @@ declare namespace API {
     sort?: Sort
     sorts?: Sort[]
     spaceId?: number
-    startCreateTime?: string
     startEditTime?: string
     tags?: string
     userId?: number
@@ -661,6 +658,7 @@ declare namespace API {
   type User = {
     admin?: boolean
     birthday?: string
+    confirmPassword?: string
     createTime?: string
     current?: number
     editTime?: string
@@ -669,6 +667,8 @@ declare namespace API {
     isDisabled?: number
     leftMenus?: string[]
     multipleSort?: boolean
+    newPassword?: string
+    originPassword?: string
     otherMenus?: string[]
     pageSize?: number
     shareCode?: string
@@ -709,6 +709,12 @@ declare namespace API {
     vipExpireTime?: string
     vipNumber?: number
     vipSign?: string
+  }
+
+  type UserEditPasswordRequest = {
+    confirmPassword?: string
+    newPassword?: string
+    originPassword?: string
   }
 
   type UserEditRequest = {

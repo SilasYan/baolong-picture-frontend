@@ -12,12 +12,11 @@ import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
 // import AddSpacePage from '@/pages/space/AddSpacePage.vue'
 import MySpacePage from '@/pages/space/SpacePage.vue'
 import SpacePage from '@/pages/space/SpacePage.vue'
-// import SpaceDetailPage from '@/pages/space/SpaceDetailPage.vue'
 // import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 // import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
 import UserProfilePage from '@/pages/user/UserProfilePage.vue'
 import PersonSpacePage from '@/pages/space/PersonSpacePage.vue'
-import PictureListPage from '@/pages/picture/PictureListPage.vue'
+import PictureReleaseListPage from '@/pages/picture/PictureReleaseListPage.vue'
 import ScheduledTaskManagePage from '@/pages/admin/ScheduledTaskManagePage.vue'
 import MenuManagePage from '@/pages/admin/MenuManagePage.vue'
 import TimelinePage from '@/pages/TimelinePage.vue'
@@ -60,7 +59,7 @@ const router = createRouter({
     {
       path: '/picture/list',
       name: '发布列表',
-      component: PictureListPage,
+      component: PictureReleaseListPage,
     },
     {
       path: '/picture/detail/:pictureId',

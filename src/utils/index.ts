@@ -26,11 +26,11 @@ export const imageValidator = (
   file: File,
   options: ValidatorOptions = {
     maxSizeMB: 2,
-    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png'],
+    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
   },
 ) => {
   // 解构配置参数
-  const { maxSizeMB = 2, allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'] } = options
+  const { maxSizeMB = 2, allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'] } = options
 
   // 校验图片格式
   const isValidType = allowedTypes.includes(file.type)
