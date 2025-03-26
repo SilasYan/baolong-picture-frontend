@@ -17,13 +17,20 @@
             <a-card :headStyle="{ 'text-align': 'center' }" :title="pictureDetailInfo.picName">
               <template #extra>
                 <!--<a-tag color="#ff0000">-->
-                <a-tag :color="PIC_STATUS_TAG_COLOR[pictureDetailInfo.reviewStatus]">
-                  {{ PIC_REVIEW_STATUS_MAP[pictureDetailInfo.reviewStatus] }}
-                </a-tag>
+                <a-flex>
+                  <div
+                    v-if="pictureDetailInfo.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
+                    @click="(e) => doDownload(pictureDetailInfo)"
+                  >
+                    <a-button type="dashed">
+                      <DownloadOutlined />下载图片（{{ formatNumber(downloadCount) }}）
+                    </a-button>
+                  </div>
+                </a-flex>
               </template>
               <!-- 图片 -->
               <div class="image-detail-content" @dragstart="handleDragStart">
-                <a-image :src="pictureDetailInfo.picUrl" />
+                <a-image :src="pictureDetailInfo.picUrl" height="100%" />
               </div>
               <!-- 操作按钮 -->
               <template
@@ -47,14 +54,6 @@
                 <div @click="(e) => doSharePicture(pictureDetailInfo, e)">
                   <ShareAltOutlined />
                   {{ formatNumber(shareCount) }}
-                </div>
-                <div @click="(e) => doDownload(pictureDetailInfo)">
-                  <DownloadOutlined />
-                  {{ formatNumber(downloadCount) }}
-                </div>
-                <div @click="(e) => doSearchPicture(pictureDetailInfo)">
-                  <SearchOutlined />
-                  以图搜图
                 </div>
               </template>
             </a-card>
@@ -81,7 +80,16 @@
             </a-card>
             <div style="margin-bottom: 16px" />
             <!-- 图片信息部分 -->
-            <a-card title="图片信息">
+            <a-card :title="`图片信息`">
+              <template #extra v-if="pictureDetailInfo.reviewStatus !== null">
+                <a-tag :color="PIC_STATUS_TAG_COLOR[pictureDetailInfo.reviewStatus]">
+                  {{ PIC_REVIEW_STATUS_MAP[pictureDetailInfo.reviewStatus] }}
+                </a-tag>
+                <a-tag v-if="pictureDetailInfo.expandStatus == 2" color="#4797f4">
+                  AI 生成
+                </a-tag>
+              </template>
+
               <a-descriptions :column="1">
                 <a-descriptions-item label="名称">
                   {{ pictureDetailInfo.picName ?? '-' }}
@@ -131,7 +139,7 @@
               <!-- 操作按钮 -->
               <template
                 #actions
-                v-if="loginUserStore.loginUser.userId === pictureDetailInfo.userId"
+                v-if="loginUserStore.loginUser?.userId === pictureDetailInfo.userId"
               >
                 <div @click="doEditPicture(pictureDetailInfo.pictureId)">
                   <EditOutlined />
@@ -140,6 +148,10 @@
                 <div @click="doDeletePicture(pictureDetailInfo.pictureId)">
                   <DeleteOutlined />
                   删除
+                </div>
+                <div @click="(e) => doSearchPicture(pictureDetailInfo)">
+                  <SearchOutlined />
+                  以图搜图
                 </div>
               </template>
             </a-card>
@@ -220,7 +232,7 @@
               <!-- 操作按钮 -->
               <template
                 #actions
-                v-if="loginUserStore.loginUser.userId === pictureDetailInfo.userId"
+                v-if="loginUserStore.loginUser?.userId === pictureDetailInfo.userId"
               >
                 <div @click="doEditPicture(pictureDetailInfo.pictureId)">
                   <EditOutlined />
@@ -229,6 +241,10 @@
                 <div @click="doDeletePicture(pictureDetailInfo.pictureId)">
                   <DeleteOutlined />
                   删除
+                </div>
+                <div @click="(e) => doSearchPicture(pictureDetailInfo)">
+                  <SearchOutlined />
+                  以图搜图
                 </div>
               </template>
             </a-card>
@@ -263,18 +279,20 @@ import Icon, {
 import {
   decrypt,
   downloadImage,
-  encrypt, formatNumber,
+  encrypt,
+  formatNumber,
   formatPictureSize,
   handleDragStart,
-  toHexColor
+  toHexColor,
 } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
 import {
-  deletePictureUsingPost,
+  deletePictureUsingPost, expandPictureQueryUsingGet,
+  expandPictureUsingPost,
   getPictureDetailByIdUsingGet,
   pictureDownloadUsingPost,
   pictureLikeOrCollectUsingPost,
-  pictureShareUsingPost,
+  pictureShareUsingPost
 } from '@/api/pictureController'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -339,6 +357,20 @@ onMounted(() => {
     sourceName.value = data[1]
   }
   pictureDetailLoading.value = false
+
+  // const res = expandPictureUsingPost({
+  //   pictureId: props.pictureId,
+  // })
+  // console.log('扩图请求：', res)
+  // taskId:"a5689bdd-2c03-4bdb-aab7-acb176073762"
+  // taskId:"f355a51f-d641-4fdd-bf0c-f98dd18bf234"
+  // taskId:"9b03dcbe-690f-44da-b3fb-e993921a4228"
+  // taskId:"3eb0509d-bdb7-497e-85b4-96a574bbd01a"
+  // taskId:"26decc82-833a-4c13-919b-55824e0f5250"
+  const res = expandPictureQueryUsingGet({
+    taskId: "8b707000-e285-41eb-bc48-cf07514b074d"
+  })
+  // console.log('任务信息：', res)
 })
 
 /**
@@ -508,7 +540,7 @@ const doSharePicture = async (picture: API.PictureDetailVO) => {
   const pictureId = picture.pictureId
   const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/detail/${pictureId}`
     picName.value = picture.picName
     if (shareModal.value) {
       shareModal.value.openModal()
@@ -608,10 +640,17 @@ const doDeletePicture = async (pictureId: number) => {
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   width: 100%; /* 确保容器宽度占满父容器 */
+  /* 动态计算高度 */
+  height: calc(100vh - 500px) !important;
 }
 
-.image-detail-content .ant-image {
-  max-width: 100%; /* 防止图片超出容器 */
-  max-height: 100%; /* 防止图片超出容器 */
+.image-detail-content :deep(.ant-image) {
+  /* max-width: 100%; !* 防止图片超出容器 *! */
+  height: 100%; /* 防止图片超出容器 */
+}
+
+.image-detail-content :deep(.ant-image .ant-image-img) {
+  /* max-width: 100%; !* 防止图片超出容器 *! */
+  height: 100%; /* 防止图片超出容器 */
 }
 </style>

@@ -62,6 +62,36 @@ export async function editPictureUsingPost(
   })
 }
 
+/** expandPicture POST /api/picture/expand */
+export async function expandPictureUsingPost(
+  body: API.PictureExpandRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseCreateBaiLianTaskResponse_>('/api/picture/expand', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** expandPictureQuery GET /api/picture/expand/query */
+export async function expandPictureQueryUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.expandPictureQueryUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBaiLianTaskResponse_>('/api/picture/expand/query', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
 /** grabPicture POST /api/picture/grab */
 export async function grabPictureUsingPost(
   body: API.PictureGrabRequest,

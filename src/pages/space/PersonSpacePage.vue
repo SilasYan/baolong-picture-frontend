@@ -546,7 +546,7 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
   const pictureId = picture.pictureId
   const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.pictureId}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/detail/${picture.pictureId}`
     picName.value = picture.picName
     if (shareModal.value) {
       shareModal.value.openModal()

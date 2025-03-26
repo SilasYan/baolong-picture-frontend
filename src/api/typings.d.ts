@@ -1,4 +1,16 @@
 declare namespace API {
+  type BaiLianTaskResponse = {
+    output?: Output
+    requestId?: string
+    usage?: Output
+  }
+
+  type BaseResponseBaiLianTaskResponse_ = {
+    code?: number
+    data?: BaiLianTaskResponse
+    message?: string
+  }
+
   type BaseResponseBoolean_ = {
     code?: number
     data?: boolean
@@ -8,6 +20,12 @@ declare namespace API {
   type BaseResponseCaptchaVO_ = {
     code?: number
     data?: CaptchaVO
+    message?: string
+  }
+
+  type BaseResponseCreateBaiLianTaskResponse_ = {
+    code?: number
+    data?: CreateBaiLianTaskResponse
     message?: string
   }
 
@@ -157,8 +175,20 @@ declare namespace API {
     userId?: number
   }
 
+  type CreateBaiLianTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output1
+    requestId?: string
+  }
+
   type DeleteRequest = {
     id?: number
+  }
+
+  type expandPictureQueryUsingGETParams = {
+    /** taskId */
+    taskId?: string
   }
 
   type getPictureDetailByIdUsingGETParams = {
@@ -271,6 +301,23 @@ declare namespace API {
     parentId?: number
   }
 
+  type Output = {
+    code?: string
+    endTime?: string
+    message?: string
+    outputImageUrl?: string
+    scheduledTime?: string
+    submitTime?: string
+    taskId?: string
+    taskMetrics?: TaskMetrics
+    taskStatus?: string
+  }
+
+  type Output1 = {
+    taskId?: string
+    taskStatus?: string
+  }
+
   type PageVOCategoryVO_ = {
     current?: number
     pageSize?: number
@@ -335,6 +382,7 @@ declare namespace API {
     compressSize?: number
     createTime?: string
     downloadQuantity?: number
+    expandStatus?: number
     isShare?: number
     likeQuantity?: number
     loginUserIsCollect?: boolean
@@ -366,11 +414,17 @@ declare namespace API {
 
   type PictureEditRequest = {
     categoryId?: number
+    isShare?: number
     picDesc?: string
     picName?: string
     pictureId?: number
     spaceId?: number
     tagList?: string[]
+  }
+
+  type PictureExpandRequest = {
+    expandType?: number
+    picUrl?: string
   }
 
   type PictureGrabRequest = {
@@ -450,6 +504,7 @@ declare namespace API {
 
   type PictureUploadRequest = {
     categoryId?: number
+    expandStatus?: number
     picDesc?: string
     picName?: string
     pictureId?: number
@@ -645,8 +700,15 @@ declare namespace API {
     userInfo?: User
   }
 
+  type TaskMetrics = {
+    failed?: number
+    succeeded?: number
+    total?: number
+  }
+
   type uploadPictureByFileUsingPOSTParams = {
     categoryId?: number
+    expandStatus?: number
     picDesc?: string
     picName?: string
     pictureId?: number

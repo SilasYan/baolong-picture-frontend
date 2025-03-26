@@ -14,7 +14,7 @@ interface BaseResponse<T = any> {
 // 创建 Axios 实例
 const myAxios = axios.create({
   baseURL: '/api',
-  timeout: 10000,
+  timeout: 60000,
   // withCredentials: true, // 携带跨域 Cookie
 })
 
@@ -56,7 +56,7 @@ myAxios.interceptors.request.use(
 myAxios.interceptors.response.use(
   async (response: AxiosResponse<BaseResponse>) => {
     const { data } = response
-    console.log('响应数据: ', data)
+    // console.log('响应数据: ', data)
 
     // 如果有 token 则带上 token
     const userStore = useLoginUserStore()

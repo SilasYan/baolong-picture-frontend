@@ -183,6 +183,7 @@
               审核时间：{{ dayjs(record.reviewTime).format('YYYY-MM-DD HH:mm:ss') }}
             </div>
             <div v-if="record.reviewerUser">审核人：{{ record.reviewerUser }}</div>
+            <div v-if="record.spaceId">图片上传位置：{{ record.spaceId == 0 ? '公共图库' : record.spaceId }}</div>
           </template>
           <!-- 上传时间 -->
           <template v-if="column.dataIndex === 'createTime'">

@@ -21,6 +21,7 @@ import ScheduledTaskManagePage from '@/pages/admin/ScheduledTaskManagePage.vue'
 import MenuManagePage from '@/pages/admin/MenuManagePage.vue'
 import TimelinePage from '@/pages/TimelinePage.vue'
 import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
+import ExpandPicturePage from '@/pages/picture/ExpandPicturePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +77,11 @@ const router = createRouter({
       path: '/picture/search',
       name: '以图搜图',
       component: SearchPicturePage,
+    },
+    {
+      path: '/picture/eExpand',
+      name: 'AI 扩图',
+      component: ExpandPicturePage,
     },
     // 空间页面
     {

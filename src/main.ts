@@ -10,6 +10,15 @@ import App from './App.vue'
 import router from './router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
+import Icon from '@ant-design/icons-vue';
+// 设置默认 viewBox
+Icon.props = {
+  ...Icon.props,
+  viewBox: {
+    type: String,
+    default: '0 0 1024 1024'
+  }
+};
 
 // 自定义配置
 import '@/access.ts'

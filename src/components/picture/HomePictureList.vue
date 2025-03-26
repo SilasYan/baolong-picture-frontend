@@ -117,25 +117,25 @@ const router = useRouter()
 const breakpoints = ref({
   3000: {
     //当屏幕宽度小于等于3000
-    rowPerView: 6, // 一行8图
+    rowPerView: 7, // 一行8图
   },
   1800: {
-    rowPerView: 5,
+    rowPerView: 6,
   },
   1500: {
-    rowPerView: 4,
+    rowPerView: 5,
   },
   1200: {
-    rowPerView: 3,
+    rowPerView: 4,
   },
   1000: {
-    rowPerView: 2,
+    rowPerView: 3,
   },
   800: {
     rowPerView: 2,
   },
   700: {
-    rowPerView: 1,
+    rowPerView: 2,
   },
   500: {
     rowPerView: 1,
@@ -250,7 +250,7 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
   const pictureId = picture.pictureId
   const res = await pictureShareUsingPost({ pictureId })
   if (res.code === 0 && res.data) {
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${pictureId}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/detail/${pictureId}`
     picName.value = picture.picName
     if (shareModal.value) {
       shareModal.value.openModal()

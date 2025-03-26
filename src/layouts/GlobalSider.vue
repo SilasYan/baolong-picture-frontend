@@ -19,8 +19,8 @@
       <!-- 自定义收缩/展开图标 -->
       <template #trigger>
         <div class="custom-trigger">
-          <span v-if="collapsed"> 👉 </span>
-          <span v-else> 👈 </span>
+          <MenuUnfoldOutlined  v-if="collapsed"/>
+          <MenuFoldOutlined v-else/>
         </div>
       </template>
     </a-layout-sider>
@@ -38,7 +38,8 @@ import {
   SettingOutlined,
   TeamOutlined,
   UnorderedListOutlined,
-  UserOutlined
+  MenuUnfoldOutlined,
+  MenuFoldOutlined, FullscreenOutlined
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
@@ -108,6 +109,7 @@ const siderOriginMenus: ItemType[] = reactive([
   getItem('发布列表', '/picture/list', () => h(PicCenterOutlined)),
   getItem('个人空间', '/space', () => h(BlockOutlined)),
   getItem('爬取图片', '/picture/grab', () => h(BugOutlined)),
+  getItem('AI 扩图', '/picture/eExpand', () => h(FullscreenOutlined)),
   getItem('团队空间', '/groupSpace', () => h(TeamOutlined)),
 
   { type: 'divider' },
@@ -197,5 +199,7 @@ router.afterEach((to, from, failure) => {
   border-top: 0.5px solid #eee;
   /* 渐变 */
   background: linear-gradient(to right, #ece9e6, #ffffff);
+  color: #4797f4;
+  font-size: 20px;
 }
 </style>

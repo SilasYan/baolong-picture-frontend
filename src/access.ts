@@ -28,7 +28,7 @@ router.beforeEach(async (to, from, next) => {
     }
   })
 
-  console.log(isAllowed)
+  // console.log(isAllowed)
   // 未登录且路径不在白名单
   if (!isAllowed) {
     // 没有登录，则跳转登录

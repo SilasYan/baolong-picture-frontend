@@ -83,9 +83,9 @@ onMounted(() => {
 /**
  * 卸载页面
  */
-onUnmounted(() => {
-  window.removeEventListener('scroll', debounce(handleScroll, 200))
-})
+// onUnmounted(() => {
+//   window.removeEventListener('scroll', debounce(handleScroll, 200))
+// })
 
 /**
  * 当前选中的分类
@@ -216,8 +216,8 @@ const debounce = (fn, delay) => {
 
 <style scoped>
 #picture-page .search-bar {
-  max-width: 480px;
-  margin: 0 auto 16px;
+  max-width: 600px;
+  margin: 20px auto 20px;
 }
 
 .loadingInfo {

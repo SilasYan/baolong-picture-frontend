@@ -44,16 +44,19 @@
               {{ userInfo.userEmail }}
             </a-descriptions-item>
             <a-descriptions-item label="手机号" :span="1">
-              {{ userInfo.userPhone }}
+              <span v-if="userInfo.userPhone">{{ userInfo.userPhone }}</span>
+              <span v-else style="color: gray">未填写</span>
             </a-descriptions-item>
             <a-descriptions-item label="出生日期" :span="2">
-              {{ dayjs(userInfo.birthday).format('YYYY-MM-DD') }}
+              <span v-if="userInfo.birthday">{{ dayjs(userInfo.birthday).format('YYYY-MM-DD')}}</span>
+              <span v-else style="color: gray">未填写</span>
             </a-descriptions-item>
             <a-descriptions-item label="注册时间" :span="3">
               {{ dayjs(userInfo.createTime).format('YYYY-MM-DD HH:mm:ss') }}
             </a-descriptions-item>
             <a-descriptions-item label="个人介绍" :span="3">
-              {{ userInfo.userProfile }}
+              <span v-if="userInfo.userProfile">{{ userInfo.userProfile }}</span>
+              <span v-else style="color: gray">未填写</span>
             </a-descriptions-item>
             <a-descriptions-item label="会员信息">
               <div v-if="userInfo.vipNumber">

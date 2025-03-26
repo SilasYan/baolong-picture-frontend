@@ -28,6 +28,7 @@ interface Props {
   picture?: API.PictureDetailVO
   spaceId?: number
   uploadSuccess?: (newPicture: API.PictureDetailVO) => void
+  expandPicture?: boolean
 }
 
 // 把接收到的父组件参数做一个赋值
@@ -49,6 +50,10 @@ const handleUploadPicture = async ({ file }: any) => {
   try {
     const params = props.picture ? { pictureId: props.picture.pictureId } : {}
     params.spaceId = props.spaceId
+    // 说明是AI 扩图进来了，应该存储为临时文件，等扩图之后保存了再修改状态
+    if (props.expandPicture) {
+      params.expandStatus = 1
+    }
     const res = await uploadPictureByFileUsingPost(params, {}, file)
     if (res.code === 0 && res.data) {
       message.success('图片上传成功!')
@@ -58,6 +63,7 @@ const handleUploadPicture = async ({ file }: any) => {
       message.error('图片上传失败! ' + res.message)
     }
   } catch (error) {
+    console.error(error)
     message.error('图片上传失败!')
   } finally {
     uploadLoading.value = false
@@ -69,7 +75,7 @@ const handleUploadPicture = async ({ file }: any) => {
 .picture-upload :deep(.ant-upload) {
   width: 100% !important;
   height: 100% !important;
-  min-height: 152px;
+  min-height: 250px;
   min-width: 152px;
 }
 
