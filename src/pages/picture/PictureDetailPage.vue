@@ -16,7 +16,6 @@
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="18">
             <a-card :headStyle="{ 'text-align': 'center' }" :title="pictureDetailInfo.picName">
               <template #extra>
-                <!--<a-tag color="#ff0000">-->
                 <a-flex>
                   <div
                     v-if="pictureDetailInfo.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
@@ -30,7 +29,7 @@
               </template>
               <!-- 图片 -->
               <div class="image-detail-content" @dragstart="handleDragStart">
-                <a-image :src="pictureDetailInfo.picUrl" height="100%" />
+                <a-image :src="pictureDetailInfo.picUrl" />
               </div>
               <!-- 操作按钮 -->
               <template
@@ -357,20 +356,6 @@ onMounted(() => {
     sourceName.value = data[1]
   }
   pictureDetailLoading.value = false
-
-  // const res = expandPictureUsingPost({
-  //   pictureId: props.pictureId,
-  // })
-  // console.log('扩图请求：', res)
-  // taskId:"a5689bdd-2c03-4bdb-aab7-acb176073762"
-  // taskId:"f355a51f-d641-4fdd-bf0c-f98dd18bf234"
-  // taskId:"9b03dcbe-690f-44da-b3fb-e993921a4228"
-  // taskId:"3eb0509d-bdb7-497e-85b4-96a574bbd01a"
-  // taskId:"26decc82-833a-4c13-919b-55824e0f5250"
-  const res = expandPictureQueryUsingGet({
-    taskId: "8b707000-e285-41eb-bc48-cf07514b074d"
-  })
-  // console.log('任务信息：', res)
 })
 
 /**
@@ -635,22 +620,33 @@ const doDeletePicture = async (pictureId: number) => {
   margin: 0 auto 40px;
 }
 
+/* 图片容器：使用min-height而非height */
 #picture-detail-page .image-detail .image-detail-content {
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  width: 100%; /* 确保容器宽度占满父容器 */
-  /* 动态计算高度 */
-  height: calc(100vh - 500px) !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100px; /* 最小高度 */
+  max-height: 80vh; /* 最大高度为视口的80% */
+  overflow: hidden; /* 确保不会溢出 */
 }
 
+/* 图片样式：完全自适应 */
 .image-detail-content :deep(.ant-image) {
-  /* max-width: 100%; !* 防止图片超出容器 *! */
-  height: 100%; /* 防止图片超出容器 */
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #f0f2f5; /* 加载时的背景色 */
 }
 
 .image-detail-content :deep(.ant-image .ant-image-img) {
-  /* max-width: 100%; !* 防止图片超出容器 *! */
-  height: 100%; /* 防止图片超出容器 */
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 70vh; /* 与容器一致 */
+  object-fit: scale-down; /* 关键修改：使用scale-down */
+  margin: 0 auto;
+  transition: transform 0.3s ease;
 }
 </style>
