@@ -106,11 +106,11 @@ function getItem(
  * 左侧原始菜单项
  */
 const siderOriginMenus: ItemType[] = reactive([
-  getItem('发布列表', '/picture/list', () => h(PicCenterOutlined)),
-  getItem('个人空间', '/space', () => h(BlockOutlined)),
-  getItem('爬取图片', '/picture/grab', () => h(BugOutlined)),
-  getItem('AI 扩图', '/picture/eExpand', () => h(FullscreenOutlined)),
-  getItem('团队空间', '/groupSpace', () => h(TeamOutlined)),
+  // getItem('发布列表', '/picture/list', () => h(PicCenterOutlined)),
+  // getItem('个人空间', '/space', () => h(BlockOutlined)),
+  // getItem('爬取图片', '/picture/grab', () => h(BugOutlined)),
+  // getItem('AI 扩图', '/picture/eExpand', () => h(FullscreenOutlined)),
+  // getItem('团队空间', '/groupSpace', () => h(TeamOutlined)),
 
   { type: 'divider' },
 

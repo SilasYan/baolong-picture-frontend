@@ -79,7 +79,7 @@ const router = createRouter({
       component: SearchPicturePage,
     },
     {
-      path: '/picture/eExpand',
+      path: '/picture/expand',
       name: 'AI 扩图',
       component: ExpandPicturePage,
     },

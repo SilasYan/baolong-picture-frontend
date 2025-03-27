@@ -10,6 +10,7 @@
       <a-layout>
         <!-- 左侧菜单 -->
         <GlobalSider
+          v-if="loginUserStore.loginUser.userRole === 'ADMIN'"
           ref="siderRef"
           class="sider"
           @collapse="handleCollapse"

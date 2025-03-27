@@ -68,7 +68,7 @@ import {
   LogoutOutlined,
   PictureOutlined,
   HistoryOutlined,
-  UserOutlined,
+  UserOutlined, PicCenterOutlined, BlockOutlined, BugOutlined, FullscreenOutlined, TeamOutlined
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -100,6 +100,42 @@ const headerOriginMenus = [
     title: '公共图库',
     type: 'page',
   },
+  {
+    key: '/picture/list',
+    icon: () => h(PicCenterOutlined),
+    label: '发布列表',
+    title: '发布列表',
+    type: 'page',
+  },
+  {
+    key: '/space',
+    icon: () => h(BlockOutlined),
+    label: '个人空间',
+    title: '个人空间',
+    type: 'page',
+  },
+  {
+    key: '/picture/grab',
+    icon: () => h(BugOutlined),
+    label: '爬取图片',
+    title: '爬取图片',
+    type: 'page',
+  },
+  {
+    key: '/picture/expand',
+    icon: () => h(FullscreenOutlined),
+    label: 'AI 扩图',
+    title: 'AI 扩图',
+    type: 'page',
+  },
+  {
+    key: '/groupSpace',
+    icon: () => h(TeamOutlined),
+    label: '团队空间',
+    title: '团队空间',
+    type: 'page',
+  },
+
   {
     key: '/timeline',
     icon: () => h(HistoryOutlined),

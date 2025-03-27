@@ -15,7 +15,7 @@ interface BaseResponse<T = any> {
 const myAxios = axios.create({
   baseURL: '/api',
   timeout: 60000,
-  // withCredentials: true, // 携带跨域 Cookie
+  withCredentials: true, // 携带跨域 Cookie
 })
 
 // 请求重试
