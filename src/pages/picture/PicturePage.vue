@@ -76,16 +76,21 @@ const showBottomLine = ref(false)
  */
 onMounted(() => {
   getHomeCategoryList()
-  getHomePictureList()
-  window.addEventListener('scroll', debounce(handleScroll, 200))
+  // 延迟执行初始图片加载，确保DOM已准备好
+  setTimeout(() => {
+    getHomePictureList()
+  }, 100)
+  window.addEventListener('scroll', handleScrollDebounced)
 })
 
 /**
  * 卸载页面
  */
-// onUnmounted(() => {
-//   window.removeEventListener('scroll', debounce(handleScroll, 200))
-// })
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScrollDebounced)
+})
+
+const loadingLock = ref(false)
 
 /**
  * 当前选中的分类
@@ -115,8 +120,8 @@ const homePictureList = ref<API.PictureHomeVO[]>([])
  * 获取首页图片列表
  */
 const getHomePictureList = async () => {
-  if (loadingFinish.value) return // 如果已经加载完毕，直接返回
-  // homeLoading.value = true
+  if (loadingFinish.value || loadingLock.value) return // 如果已经加载完毕，直接返回
+  loadingLock.value = true
   // 发请求
   const res = await getPicturePageListAsHomeUsingGet(searchParams)
   if (res.code === 0 && res.data) {
@@ -140,6 +145,7 @@ const getHomePictureList = async () => {
     message.error('图片加载失败! ' + res.message)
   }
   homeLoading.value = false
+  loadingLock.value = false
 }
 
 /**
@@ -147,7 +153,7 @@ const getHomePictureList = async () => {
  */
 const searchParams = reactive<API.PictureQueryRequest>({
   current: 1,
-  pageSize: 10,
+  pageSize: 20,
 })
 /**
  * 搜索
@@ -171,22 +177,24 @@ const doHomeSearch = () => {
  * 检查页面高度是否小于屏幕高度
  */
 const checkPageHeight = () => {
-  const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
-  const clientHeight =
-    window.innerHeight ||
-    Math.min(document.documentElement.clientHeight, document.body.clientHeight)
+  // 延迟检查，确保DOM更新完成
+  setTimeout(() => {
+    const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
+    const clientHeight =
+      window.innerHeight ||
+      Math.min(document.documentElement.clientHeight, document.body.clientHeight)
 
-  // 如果页面高度小于屏幕高度，继续加载下一页
-  if (scrollHeight <= clientHeight && !loadingFinish.value) {
-    searchParams.current++
-    getHomePictureList()
-  }
+    if (scrollHeight <= clientHeight && !loadingFinish.value) {
+      searchParams.current++
+      getHomePictureList()
+    }
+  }, 300)
 }
 /**
  * 滚动加载
  */
 const handleScroll = () => {
-  if (loadingFinish.value || homeLoading.value) return // 如果已经加载完毕或正在加载，直接返回
+  if (loadingFinish.value || homeLoading.value) return
   const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
   const scrollTop =
     window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -194,10 +202,10 @@ const handleScroll = () => {
     window.innerHeight ||
     Math.min(document.documentElement.clientHeight, document.body.clientHeight)
 
-  // 滚动到底部时加载更多
-  if (clientHeight + scrollTop + 100 >= scrollHeight) {
+  // 增加更严格的判断条件
+  if (scrollHeight - (clientHeight + scrollTop) < 500) {
     searchParams.current++
-    getHomePictureList() // 发送下一页的请求
+    getHomePictureList()
   }
 }
 /**
@@ -212,6 +220,8 @@ const debounce = (fn, delay) => {
     }, delay)
   }
 }
+// 在setup外部定义防抖函数
+const handleScrollDebounced = debounce(handleScroll, 200)
 </script>
 
 <style scoped>
