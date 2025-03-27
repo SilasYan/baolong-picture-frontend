@@ -3,7 +3,7 @@
     <div class="image-detail">
       <a-spin :spinning="pictureDetailLoading">
         <!-- 面包屑区域 -->
-        <a-typography-title v-if="sourcePath && sourceName" :level="5">
+        <a-typography-title v-if="!isMobile && sourcePath && sourceName" :level="5">
           <a :href="sourcePath" style="color: #666666">
             <RollbackOutlined />&nbsp; 回到【<span>{{ sourceName }}</span
             >】
@@ -22,7 +22,8 @@
                     @click="(e) => doDownload(pictureDetailInfo)"
                   >
                     <a-button type="dashed">
-                      <DownloadOutlined />下载图片（{{ formatNumber(downloadCount) }}）
+                      <DownloadOutlined />
+                      下载图片（{{ formatNumber(downloadCount) }}）
                     </a-button>
                   </div>
                 </a-flex>
@@ -34,7 +35,7 @@
               <!-- 操作按钮 -->
               <template
                 #actions
-                v-if="pictureDetailInfo.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
+                v-if="!isMobile && pictureDetailInfo.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
               >
                 <div>
                   <EyeOutlined />
@@ -84,9 +85,7 @@
                 <a-tag :color="PIC_STATUS_TAG_COLOR[pictureDetailInfo.reviewStatus]">
                   {{ PIC_REVIEW_STATUS_MAP[pictureDetailInfo.reviewStatus] }}
                 </a-tag>
-                <a-tag v-if="pictureDetailInfo.expandStatus == 2" color="#4797f4">
-                  AI 生成
-                </a-tag>
+                <a-tag v-if="pictureDetailInfo.expandStatus == 2" color="#4797f4"> AI 生成 </a-tag>
               </template>
 
               <a-descriptions :column="1">
@@ -160,7 +159,7 @@
         <div style="margin-bottom: 16px" />
 
         <!-- 视口窗口小时显示 -->
-        <a-row :gutter="[16, 16]">
+        <a-row v-if="!isMobile" :gutter="[16, 16]">
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="0">
             <!-- 作者信息部分 -->
             <a-card title="作者信息">
@@ -286,23 +285,26 @@ import {
 } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
 import {
-  deletePictureUsingPost, expandPictureQueryUsingGet,
-  expandPictureUsingPost,
+  deletePictureUsingPost,
   getPictureDetailByIdUsingGet,
   pictureDownloadUsingPost,
   pictureLikeOrCollectUsingPost,
-  pictureShareUsingPost
+  pictureShareUsingPost,
 } from '@/api/pictureController'
 import { useRoute, useRouter } from 'vue-router'
 import {
   PIC_INTERACTION_TYPE_ENUM,
   PIC_REVIEW_STATUS_ENUM,
   PIC_REVIEW_STATUS_MAP,
-  PIC_REVIEW_STATUS_OPTIONS,
   PIC_STATUS_TAG_COLOR,
 } from '@/constants/picture'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
-import UserProfilePage from '@/pages/user/UserProfilePage.vue'
+
+// 新增移动端检测
+import { useWindowSize } from '@vueuse/core'
+
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 768)
 
 /**
  * 路由组件中的路由对象
@@ -636,7 +638,6 @@ const doDeletePicture = async (pictureId: number) => {
   display: block;
   width: 100%;
   height: 100%;
-  background: #f0f2f5; /* 加载时的背景色 */
 }
 
 .image-detail-content :deep(.ant-image .ant-image-img) {
@@ -648,5 +649,30 @@ const doDeletePicture = async (pictureId: number) => {
   object-fit: scale-down; /* 关键修改：使用scale-down */
   margin: 0 auto;
   transition: transform 0.3s ease;
+}
+
+/* 移动端特定样式 */
+@media (max-width: 768px) {
+  #picture-detail-page .image-detail {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 8px;
+  }
+
+  .image-detail-content {
+    max-height: 80vh !important;
+  }
+
+  /* 隐藏卡片边框和阴影 */
+  :deep(.ant-card) {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 图片全屏显示 */
+  .image-detail-content :deep(.ant-image-img) {
+    max-height: 80vh !important;
+    width: 100% !important;
+  }
 }
 </style>
