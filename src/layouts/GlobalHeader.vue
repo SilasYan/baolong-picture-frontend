@@ -24,7 +24,17 @@
       <a-col flex="150px">
         <div class="user-login-status">
           <div v-if="loginUserStore.loginUser.userId">
-            <a-dropdown>
+            <a-dropdown
+              @visible-change="
+                (visible) => {
+                  if (visible) {
+                    emit('dropdown-open')
+                  } else {
+                    emit('dropdown-close')
+                  }
+                }
+              "
+            >
               <ASpace>
                 <a-avatar :src="loginUserStore.loginUser.userAvatar" />
                 {{ loginUserStore.loginUser.userName }}
@@ -229,6 +239,8 @@ const doLogout = async () => {
     message.error('退出登录失败')
   }
 }
+
+const emit = defineEmits(['dropdown-open', 'dropdown-close'])
 </script>
 
 <style scoped>
