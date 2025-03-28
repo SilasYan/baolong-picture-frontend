@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as mainController from './mainController'
 import * as categoryController from './categoryController'
+import * as feedbackController from './feedbackController'
 import * as menuController from './menuController'
 import * as pictureController from './pictureController'
 import * as spaceController from './spaceController'
@@ -13,6 +14,7 @@ import * as vipController from './vipController'
 export default {
   mainController,
   categoryController,
+  feedbackController,
   menuController,
   pictureController,
   spaceController,

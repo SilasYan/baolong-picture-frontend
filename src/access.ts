@@ -3,7 +3,15 @@ import { message } from 'ant-design-vue'
 import router from '@/router'
 
 // 无需登录即可访问的地址
-const whiteList = ['/', '/user/login', '/user/register', '/picture/detail/*']
+const whiteList = [
+  '/',
+  '/user/login',
+  '/user/register',
+  '/picture/detail/*',
+  '/timeline',
+  '/feedback',
+  '/about',
+]
 
 /**
  * 全局权限校验
@@ -19,10 +27,10 @@ router.beforeEach(async (to, from, next) => {
   const loginUser = useLoginUserStore().loginUser
 
   // 检查路径是否匹配白名单（支持通配符）
-  const isAllowed = whiteList.some(pattern => {
+  const isAllowed = whiteList.some((pattern) => {
     if (pattern.endsWith('/*')) {
       const base = pattern.slice(0, -1) // 移除末尾的 '*'，例如 '/picture/'
-      return to.path.startsWith(base)    // 匹配所有以 '/picture/detail' 开头的路径
+      return to.path.startsWith(base) // 匹配所有以 '/picture/detail' 开头的路径
     } else {
       return to.path === pattern // 精确匹配其他路径
     }
@@ -41,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
     const menus = [...loginUser.topMenus, ...loginUser.leftMenus, ...loginUser.otherMenus] ?? []
     if (!isAllowed && !menus.includes(to.path)) {
       message.error('没有权限')
-      next("/")
+      next('/')
       return
     }
   }

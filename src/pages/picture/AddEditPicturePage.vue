@@ -79,7 +79,7 @@
         </div>
 
         <!-- 图片信息相关 -->
-        <div v-if="pictureInfo" class="custom-div form-info">
+        <div v-if="pictureInfo.picUrl" class="custom-div form-info">
           <a-card>
             <a-typography-title :level="4"> 图片信息</a-typography-title>
             <a-form layout="vertical" :model="pictureEditForm" @finish="handlePictureEditSubmit">
@@ -164,7 +164,7 @@
         </div>
 
         <!-- 不可修改部分 -->
-        <div v-if="pictureInfo" class="origin-info">
+        <div v-if="pictureInfo.picUrl" class="origin-info">
           <a-card>
             <a-descriptions v-if="pictureInfo" bordered title="原图信息（不可以修改）">
               <a-descriptions-item v-if="pictureInfo.originColor" label="主色调" :span="3">

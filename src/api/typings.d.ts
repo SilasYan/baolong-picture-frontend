@@ -59,6 +59,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePageVOFeedbackVO_ = {
+    code?: number
+    data?: PageVOFeedbackVO_
+    message?: string
+  }
+
   type BaseResponsePageVOMenuVO_ = {
     code?: number
     data?: PageVOMenuVO_
@@ -189,6 +195,35 @@ declare namespace API {
   type expandPictureQueryUsingGETParams = {
     /** taskId */
     taskId?: string
+  }
+
+  type FeedbackAddRequest = {
+    contactInfo?: string
+    contactType?: number
+    content?: string
+    feedbackType?: number
+  }
+
+  type FeedbackQueryRequest = {
+    contactInfo?: string
+    contactType?: number
+    createTime?: string
+    editTime?: string
+    feedbackId?: number
+    feedbackType?: number
+    processStatus?: number
+  }
+
+  type FeedbackVO = {
+    contactInfo?: string
+    contactType?: number
+    content?: string
+    createTime?: string
+    editTime?: string
+    feedbackId?: number
+    feedbackType?: number
+    processContent?: string
+    processStatus?: number
   }
 
   type getPictureDetailByIdUsingGETParams = {
@@ -323,6 +358,14 @@ declare namespace API {
     pageSize?: number
     pages?: number
     records?: CategoryVO[]
+    total?: number
+  }
+
+  type PageVOFeedbackVO_ = {
+    current?: number
+    pageSize?: number
+    pages?: number
+    records?: FeedbackVO[]
     total?: number
   }
 

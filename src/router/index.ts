@@ -22,6 +22,7 @@ import MenuManagePage from '@/pages/admin/MenuManagePage.vue'
 import TimelinePage from '@/pages/TimelinePage.vue'
 import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
 import ExpandPicturePage from '@/pages/picture/ExpandPicturePage.vue'
+import FeedbackPage from '@/pages/FeedbackPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,11 @@ const router = createRouter({
       path: '/timeline',
       name: '项目时序',
       component: TimelinePage,
+    },
+    {
+      path: '/feedback',
+      name: '建议反馈',
+      component: FeedbackPage,
     },
     // 图片页面
     {

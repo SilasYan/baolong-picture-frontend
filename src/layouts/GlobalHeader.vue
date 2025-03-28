@@ -68,7 +68,13 @@ import {
   LogoutOutlined,
   PictureOutlined,
   HistoryOutlined,
-  UserOutlined, PicCenterOutlined, BlockOutlined, BugOutlined, FullscreenOutlined, TeamOutlined
+  UserOutlined,
+  PicCenterOutlined,
+  BlockOutlined,
+  BugOutlined,
+  FullscreenOutlined,
+  TeamOutlined,
+  BulbOutlined,
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -135,12 +141,18 @@ const headerOriginMenus = [
     title: '团队空间',
     type: 'page',
   },
-
   {
     key: '/timeline',
     icon: () => h(HistoryOutlined),
     label: '项目时序',
     title: '项目时序',
+    type: 'page',
+  },
+  {
+    key: '/feedback',
+    icon: () => h(BulbOutlined),
+    label: '建议反馈',
+    title: '建议反馈',
     type: 'page',
   },
   {
@@ -165,7 +177,13 @@ const showItems = computed<MenuProps['items']>(() => filterMenus(headerOriginMen
  */
 const filterMenus = (originMenus = [] as MenuProps['items']) => {
   return originMenus?.filter((menu) => {
-    if (topMenus.value.includes(menu.key) || menu.key === '/') {
+    if (
+      topMenus.value.includes(menu.key) ||
+      menu.key === '/' ||
+      menu.key === '/timeline' ||
+      menu.key === '/feedback' ||
+      menu.key === '/about'
+    ) {
       return true
     }
     return false
