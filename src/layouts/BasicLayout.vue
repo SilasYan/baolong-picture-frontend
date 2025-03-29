@@ -9,6 +9,9 @@
         </div>
       </div>
 
+      <!-- 上方触发区域 -->
+      <div class="top-trigger-area" @mouseenter="showHeader" @mouseleave="startHideTimer"></div>
+
       <!-- 顶部 -->
       <a-layout-header
         class="header"
@@ -237,6 +240,17 @@ watch(
   cursor: pointer;
 }
 
+/* 上方触发区域样式 */
+.top-trigger-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px; /* 很窄的高度，足够触发鼠标事件 */
+  z-index: 1002;
+  cursor: pointer;
+}
+
 .dropdown-indicator {
   background-color: #1890ff; /* 使用主题色 */
   color: white;
@@ -260,11 +274,6 @@ watch(
 
 .icon-flipped {
   transform: rotate(180deg);
-}
-
-.indicator-text {
-  font-size: 14px;
-  font-weight: 500;
 }
 
 /* 顶部菜单样式调整 */

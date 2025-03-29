@@ -14,38 +14,38 @@
           </template>
         </a-card-meta>
         <a-divider />
-        <!-- 内容 -->
-        <a-flex gap="middle" justify="flex-start">
-          <div class="origin-region">
-            <PictureUpload
-              :picture="pictureInfo"
-              :expandPicture="true"
-              :uploadSuccess="handleUploadSuccess"
-            />
-          </div>
-          <div v-if="pictureInfo.picUrl" class="change-region">
-            <a-flex vertical justify="space-between" align="stretch">
-              <a-button
-                type="dashed"
-                size="large"
-                :disabled="expandClick"
-                @click="() => doExpandPicture(pictureInfo, 0)"
-              >
-                等比
-              </a-button>
-              <a-button
-                type="dashed"
-                size="large"
-                :disabled="expandClick"
-                @click="() => doExpandPicture(pictureInfo, 1)"
-              >
-                旋转
-              </a-button>
-            </a-flex>
-          </div>
-          <div class="expand-region">
-            <a-empty v-if="!expandPicUrl" :description="null" />
-            <a-spin v-else :spinning="expandLoading" tip="扩图任务执行中...">
+        <a-spin :spinning="expandLoading" tip="扩图任务执行中，请耐心等待不要刷新页面...">
+          <!-- 内容 -->
+          <a-flex gap="middle" justify="flex-start">
+            <div class="origin-region">
+              <PictureUpload
+                :picture="pictureInfo"
+                :expandPicture="true"
+                :uploadSuccess="handleUploadSuccess"
+              />
+            </div>
+            <div v-if="pictureInfo.picUrl" class="change-region">
+              <a-flex vertical justify="space-between" align="stretch">
+                <a-button
+                  type="dashed"
+                  size="large"
+                  :disabled="expandClick"
+                  @click="() => doExpandPicture(pictureInfo, 1)"
+                >
+                  等比
+                </a-button>
+                <a-button
+                  type="dashed"
+                  size="large"
+                  :disabled="expandClick"
+                  @click="() => doExpandPicture(pictureInfo, 0)"
+                >
+                  旋转
+                </a-button>
+              </a-flex>
+            </div>
+            <div class="expand-region">
+              <a-empty v-if="!expandPicUrl" :description="null" />
               <a-card
                 title="请尽快保存当前扩图图片，以免失效"
                 :headStyle="{ 'text-align': 'center' }"
@@ -60,9 +60,9 @@
                   <div @click="doUploadExpandPicture">上传当前扩图图片</div>
                 </template>
               </a-card>
-            </a-spin>
-          </div>
-        </a-flex>
+            </div>
+          </a-flex>
+        </a-spin>
       </a-card>
     </a-spin>
   </div>
@@ -172,7 +172,7 @@ const startPolling = () => {
           expandClick.value = false
           expandLoading.value = false
           clearPolling()
-        } else if (taskResult.taskStatus === 'FAILED')  {
+        } else if (taskResult.taskStatus === 'FAILED') {
           message.error(res.message)
           clearPolling()
         }
