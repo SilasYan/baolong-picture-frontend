@@ -9,7 +9,7 @@
           placeholder="从海量图库中搜索图片..."
           enter-button="搜索"
           size="large"
-          @search="doHomeSearch('search')"
+          @search="doHomeSearch"
           class="logo-search"
         />
       </div>
@@ -175,17 +175,7 @@ const searchParams = reactive<API.PictureQueryRequest>({
 /**
  * 搜索
  */
-const doHomeSearch = (type: string) => {
-  // if (selectedCategory.value === 'ALL' && !searchParams.searchText) {
-  //   message.warning('请输入搜索内容！')
-  //   return
-  // }
-  if (type === 'search') {
-    if (!searchParams.searchText) {
-      message.warning('请输入搜索内容！')
-      return
-    }
-  }
+const doHomeSearch = () => {
   homeLoading.value = true
   searchParams.current = 1
   // 处理分类
