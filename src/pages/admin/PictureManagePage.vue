@@ -586,7 +586,7 @@ const handleReview = async () => {
         const res = await reviewPictureUsingPost({
           pictureId: reviewFormData.pictureId,
           reviewStatus: reviewFormData.reviewStatus,
-          reviewMessage: reviewFormData.reviewMessage ? '审核通过' : reviewFormData.reviewMessage,
+          reviewMessage: reviewFormData.reviewMessage ? reviewFormData.reviewMessage : '手动审核通过',
         })
         if (res.code === 0) {
           message.success(`图片${flag ? '审核' : '下架'}成功！`)
