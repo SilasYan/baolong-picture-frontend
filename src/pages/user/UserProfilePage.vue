@@ -1,312 +1,312 @@
 <template>
-  <div id="userProfilePage">
-    <!-- 个人信息 -->
-    <div class="basicInfo">
-      <a-card title="基础信息" :headStyle="{ 'text-align': 'center' }" :loading="userInfoLoading">
-        <template #extra>
-          <a-space>
-            <a @click="openEditUserInfoModal">资料修改</a>
-            <a @click="openEditPasswordModal">密码修改</a>
-          </a-space>
-        </template>
-        <div class="avatar">
-          <a-upload
-            :show-upload-list="false"
-            :before-upload="beforeUploadAvatar"
-            :custom-request="handleUploadAvatar"
-          >
-            <a-avatar
-              v-if="userAvatar"
-              :size="{ xs: 64, sm: 64, md: 64, lg: 64, xl: 80, xxl: 100 }"
-              :src="userAvatar"
-            >
-              <template #icon>
-                <AntDesignOutlined />
-              </template>
-            </a-avatar>
-            <div v-else>
-              <LoadingOutlined v-if="loading" />
-              <PlusOutlined v-else />
-              <div class="ant-upload-text">上传头像</div>
+  <div id="userProfilePage" class="profile-container">
+    <!-- 个人信息卡片 -->
+    <div class="profile-card">
+      <a-card :loading="userInfoLoading" :bordered="false">
+        <!-- 卡片头部 -->
+        <template #title>
+          <div class="card-header">
+            <h2 class="header-title">个人资料</h2>
+            <div class="action-buttons">
+              <a-button type="primary" ghost @click="openEditUserInfoModal" size="small">
+                <template #icon><EditOutlined /></template>
+                编辑资料
+              </a-button>
+              <a-button type="text" @click="openEditPasswordModal" size="small">
+                <template #icon><LockOutlined /></template>
+                修改密码
+              </a-button>
             </div>
-          </a-upload>
-        </div>
-        <div style="margin-bottom: 16px" />
-        <div class="info">
-          <a-descriptions title="" bordered :labelStyle="{ 'text-align': 'center' }">
-            <a-descriptions-item label="昵 称" :span="2">
-              {{ userInfo.userName }}
-            </a-descriptions-item>
-            <a-descriptions-item label="用户名" :span="1">
-              {{ userInfo.userAccount }}
-            </a-descriptions-item>
-            <a-descriptions-item label="邮 箱" :span="2">
-              {{ userInfo.userEmail }}
-            </a-descriptions-item>
-            <a-descriptions-item label="手机号" :span="1">
-              <span v-if="userInfo.userPhone">{{ userInfo.userPhone }}</span>
-              <span v-else style="color: gray">未填写</span>
-            </a-descriptions-item>
-            <a-descriptions-item label="出生日期" :span="2">
-              <span v-if="userInfo.birthday">{{ dayjs(userInfo.birthday).format('YYYY-MM-DD')}}</span>
-              <span v-else style="color: gray">未填写</span>
-            </a-descriptions-item>
-            <a-descriptions-item label="注册时间" :span="3">
-              {{ dayjs(userInfo.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-            </a-descriptions-item>
-            <a-descriptions-item label="个人介绍" :span="3">
-              <span v-if="userInfo.userProfile">{{ userInfo.userProfile }}</span>
-              <span v-else style="color: gray">未填写</span>
-            </a-descriptions-item>
-            <a-descriptions-item label="会员信息">
-              <div v-if="userInfo.vipNumber">
-                <p>会员编号: {{ userInfo.vipNumber }}</p>
-                <p>会员类型: {{ userInfo.vipSign }}</p>
-                <p>到期时间: {{ dayjs(userInfo.vipExpireTime).format('YYYY-MM-DD HH:mm:ss') }}</p>
+          </div>
+        </template>
+
+        <!-- 主体内容 -->
+        <div class="profile-content">
+          <!-- 头像区域 -->
+          <div class="avatar-section">
+            <a-upload
+              :show-upload-list="false"
+              :before-upload="beforeUploadAvatar"
+              :custom-request="handleUploadAvatar"
+              class="avatar-uploader"
+            >
+              <div class="avatar-wrapper">
+                <a-badge :count="userInfo.vipNumber ? 'VIP' : null" :color="userInfo.vipNumber ? '#722ed1' : ''">
+                  <a-avatar :size="120" :src="userAvatar" class="profile-avatar">
+                    <template v-if="!userAvatar" #icon>
+                      <UserOutlined />
+                    </template>
+                  </a-avatar>
+                </a-badge>
+                <div class="upload-text">
+                  <span>点击上传头像</span>
+                </div>
               </div>
-              <!--<div v-else>暂未开通会员 <a @click="openExchangeVipModal">去开通?</a></div>-->
-              <div v-else>暂未开通会员</div>
-            </a-descriptions-item>
-          </a-descriptions>
+            </a-upload>
+          </div>
+
+          <!-- 基本信息区域 -->
+          <div class="info-section">
+            <div class="user-name">
+              <h2>{{ userInfo.userName || '未设置昵称' }}</h2>
+              <span class="username">@{{ userInfo.userAccount }}</span>
+            </div>
+
+            <a-divider class="divider" />
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label"><MailOutlined /> 邮箱</span>
+                <span class="info-value">{{ userInfo.userEmail || '未设置' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label"><PhoneOutlined /> 手机</span>
+                <span class="info-value">{{ userInfo.userPhone || '未设置' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label"><CalendarOutlined /> 生日</span>
+                <span class="info-value">
+                  {{ userInfo.birthday ? dayjs(userInfo.birthday).format('YYYY-MM-DD') : '未设置' }}
+                </span>
+              </div>
+              <div class="info-item">
+                <span class="info-label"><ClockCircleOutlined /> 注册时间</span>
+                <span class="info-value">
+                  {{ dayjs(userInfo.createTime).format('YYYY-MM-DD HH:mm') }}
+                </span>
+              </div>
+            </div>
+
+            <!-- 个人简介 -->
+            <div class="bio-section" v-if="userInfo.userProfile">
+              <a-divider class="divider" />
+              <div class="bio-content">
+                <span class="info-label"><ProfileOutlined /> 个人简介</span>
+                <p>{{ userInfo.userProfile }}</p>
+              </div>
+            </div>
+
+            <!-- 会员信息 -->
+            <div class="vip-section" v-if="userInfo.vipNumber">
+              <a-divider class="divider" />
+              <div class="vip-card">
+                <div class="vip-badge">
+                  <crown-two-tone two-tone-color="#fadb14" />
+                  <span>VIP会员</span>
+                </div>
+                <div class="vip-details">
+                  <p><span>会员编号:</span> {{ userInfo.vipNumber }}</p>
+                  <p><span>会员类型:</span> {{ userInfo.vipSign }}</p>
+                  <p><span>到期时间:</span> {{ dayjs(userInfo.vipExpireTime).format('YYYY-MM-DD') }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="vip-section" v-else>
+              <a-divider class="divider" />
+              <div class="upgrade-card">
+                <p>升级为会员享受更多特权</p>
+                <a-button type="primary" @click="openExchangeVipModal" size="small">
+                  <template #icon><CrownOutlined /></template>
+                  立即升级
+                </a-button>
+              </div>
+            </div>
+          </div>
         </div>
       </a-card>
     </div>
-    <div style="margin-bottom: 16px" />
 
-    <!-- 编辑用户信息弹出框 -->
+    <!-- 编辑用户信息模态框 -->
     <a-modal
       v-model:open="editUserInfoModal"
-      title="修改基础信息"
+      title="编辑个人信息"
       centered
-      cancelText="取消"
-      okText="提交"
-      @ok="editUserInfoSubmit"
+      width="600px"
       :maskClosable="false"
+      :destroyOnClose="true"
     >
-      <a-form layout="vertical" :model="editUserInfoForm" @finish="handleSubmit">
-        <a-form-item
-          label="邮 箱"
-          name="userEmail"
-          :rules="[
-            { required: true, message: '请输入邮箱地址' },
-            { type: 'email', message: '请输入有效的邮箱地址' },
-          ]"
-          required
-          size="large"
-        >
-          <a-input v-model:value="editUserInfoForm.userEmail" placeholder="请输入邮箱" disabled />
-        </a-form-item>
-        <a-form-item label="账 号（登录用户名）" name="userAccount" required>
+      <a-form
+        layout="vertical"
+        :model="editUserInfoForm"
+        @finish="editUserInfoSubmit"
+        class="edit-form"
+      >
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="用户名" name="userAccount">
+              <a-input
+                v-model:value="editUserInfoForm.userAccount"
+                placeholder="请输入用户名"
+                size="large"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="昵称" name="userName">
+              <a-input
+                v-model:value="editUserInfoForm.userName"
+                placeholder="请输入昵称"
+                size="large"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-form-item label="邮箱" name="userEmail">
           <a-input
-            v-model:value="editUserInfoForm.userAccount"
-            placeholder="请输入账号"
+            v-model:value="editUserInfoForm.userEmail"
+            placeholder="请输入邮箱"
             size="large"
+            disabled
           />
         </a-form-item>
-        <a-form-item label="昵 称" name="userName">
-          <a-input
-            v-model:value="editUserInfoForm.userName"
-            placeholder="请输入昵称"
-            size="large"
-          />
-        </a-form-item>
-        <a-form-item label="手机号" name="userPhone">
-          <a-input
-            v-model:value="editUserInfoForm.userPhone"
-            placeholder="请输入手机号"
-            size="large"
-          />
-        </a-form-item>
-        <a-form-item label="出生日期" name="birthday">
-          <a-date-picker
-            style="width: 100%"
-            v-model:value="editUserInfoForm.birthday"
-            format="YYYY/MM/DD"
-            placeholder="请选择出生日期"
-            size="large"
-          />
-        </a-form-item>
-        <a-form-item label="个人介绍" name="userProfile">
+
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="手机号" name="userPhone">
+              <a-input
+                v-model:value="editUserInfoForm.userPhone"
+                placeholder="请输入手机号"
+                size="large"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="出生日期" name="birthday">
+              <a-date-picker
+                v-model:value="editUserInfoForm.birthday"
+                style="width: 100%"
+                size="large"
+                placeholder="选择出生日期"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-form-item label="个人简介" name="userProfile">
           <a-textarea
             v-model:value="editUserInfoForm.userProfile"
-            placeholder="请输入个人介绍"
-            :rows="5"
-            autoSize
-            allowClear
-            size="large"
+            placeholder="介绍一下自己..."
+            :rows="4"
+            :maxlength="200"
+            show-count
           />
         </a-form-item>
       </a-form>
+
+      <template #footer>
+        <div class="modal-footer">
+          <a-button @click="editUserInfoModal = false">取消</a-button>
+          <a-button type="primary" @click="editUserInfoSubmit">保存更改</a-button>
+        </div>
+      </template>
     </a-modal>
 
-    <!-- 密码修改弹出框 -->
+    <!-- 修改密码模态框 -->
     <a-modal
       v-model:open="editPasswordModal"
       title="修改密码"
       centered
-      cancelText="取消"
-      okText="提交"
-      @ok="editPasswordSubmit"
+      width="500px"
       :maskClosable="false"
     >
-      <a-form layout="vertical" :model="editPasswordForm" @finish="handleSubmit">
-        <a-form-item
-          label="原密码"
-          name="originPassword"
-          :rules="[
-            { required: true, message: '请输入原密码' },
-            { min: 8, message: '原密码不能小于 8 位' },
-          ]"
-          required
-        >
-          <a-input
+      <a-form
+        layout="vertical"
+        :model="editPasswordForm"
+        @finish="editPasswordSubmit"
+        class="password-form"
+      >
+        <a-form-item label="当前密码" name="originPassword">
+          <a-input-password
             v-model:value="editPasswordForm.originPassword"
-            placeholder="请输入原密码"
+            placeholder="请输入当前密码"
             size="large"
           />
         </a-form-item>
-        <a-form-item
-          label="新密码"
-          name="newPassword"
-          :rules="[
-            { required: true, message: '请输入新密码' },
-            { min: 8, message: '新密码不能小于 8 位' },
-          ]"
-          required
-        >
-          <a-input
+
+        <a-form-item label="新密码" name="newPassword">
+          <a-input-password
             v-model:value="editPasswordForm.newPassword"
-            placeholder="请输入新密码"
+            placeholder="请输入新密码 (至少8位)"
             size="large"
           />
         </a-form-item>
-        <a-form-item
-          label="确认新密码"
-          name="confirmPassword"
-          :rules="[
-            { required: true, message: '请再次输入新密码' },
-            { min: 8, message: '密码不能小于 8 位' },
-          ]"
-          required
-        >
-          <a-input
+
+        <a-form-item label="确认新密码" name="confirmPassword">
+          <a-input-password
             v-model:value="editPasswordForm.confirmPassword"
             placeholder="请再次输入新密码"
             size="large"
           />
         </a-form-item>
       </a-form>
+
+      <template #footer>
+        <div class="modal-footer">
+          <a-button @click="editPasswordModal = false">取消</a-button>
+          <a-button type="primary" @click="editPasswordSubmit">确认修改</a-button>
+        </div>
+      </template>
     </a-modal>
 
-    <!-- 兑换会员弹出框 -->
+    <!-- 兑换会员模态框 -->
     <a-modal
       v-model:open="openVipModal"
+      title="升级会员"
       centered
+      width="450px"
+      :footer="null"
       :maskClosable="false"
-      :width="600"
-      cancelText="取消"
-      okText="提交"
-      @ok="exchangeVipSubmit"
     >
-      <!-- 自定义标题带图标 -->
-      <template #title>
-        <div class="custom-title">
-          <icon>
-            <template #component>
-              <svg
-                viewBox="0 0 1024 1024"
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-              >
-                <path
-                  d="M663.864 147.333H362.136c-34.421 0-67.432 13.998-91.773 38.916l-207.86 212.78c-19.338 19.798-19.338 51.893 0 71.691l404.102 413.673c25.623 26.229 67.165 26.229 92.788 0L963.495 470.72c19.338-19.798 19.338-51.893 0-71.691l-207.862-212.78c-24.337-24.918-57.348-38.916-91.769-38.916z"
-                  fill="#FFA820"
-                ></path>
-                <path
-                  d="M62.504 399.028c-19.338 19.798-19.338 51.893 0 71.691l8.667 8.873c2.085-38.628 9.355-75.876 21.127-111.063l-29.794 30.499zM963.496 399.028L861.313 294.427c34.885 61.489 54.811 132.578 54.811 208.323 0 5.627-0.113 11.228-0.33 16.802l47.704-48.833c19.337-19.798 19.337-51.893-0.002-71.691z"
-                  fill="#FEAC33"
-                ></path>
-                <path
-                  d="M160.006 299.218l-67.708 69.311c-11.772 35.187-19.041 72.435-21.127 111.063l41.377 42.357a368.9 368.9 0 0 1-2.075-39.073c0-66.966 18.046-129.715 49.533-183.658zM861.313 294.427L755.635 186.248c-24.339-24.917-57.35-38.916-91.771-38.916h-45.019C749 203.074 840.189 332.323 840.189 482.875c0 51.345-10.611 100.209-29.752 144.528l105.356-107.851c0.218-5.574 0.33-11.175 0.33-16.802 0-75.746-19.925-146.835-54.81-208.323zM427.792 844.659l38.814 39.733c25.623 26.229 67.165 26.229 92.788 0l68.278-69.895c-46.362 21.333-97.961 33.236-152.341 33.236a368.23 368.23 0 0 1-47.539-3.074z"
-                  fill="#FEB133"
-                ></path>
-                <path
-                  d="M618.845 147.333H362.136c-34.421 0-67.432 13.998-91.773 38.916l-110.358 112.97c-31.487 53.943-49.533 116.692-49.533 183.657 0 13.2 0.708 26.235 2.075 39.073l64.293 65.816c-16.982-38.122-26.436-80.336-26.436-124.763 0-169.51 137.415-306.925 306.925-306.925s306.925 137.415 306.925 306.925S626.839 769.926 457.33 769.926c-46.985 0-91.495-10.573-131.306-29.445L427.792 844.66a368.23 368.23 0 0 0 47.539 3.074c54.38 0 105.979-11.903 152.341-33.236l182.765-187.094c19.14-44.319 29.752-93.184 29.752-144.528 0-150.553-91.189-279.802-221.344-335.543z"
-                  fill="#FEB633"
-                ></path>
-                <path
-                  d="M764.254 463.001c0-169.51-137.415-306.925-306.925-306.925S150.405 293.491 150.405 463.001c0 44.427 9.453 86.642 26.436 124.763L326.024 740.48c39.81 18.872 84.321 29.445 131.306 29.445 169.509 0.001 306.924-137.414 306.924-306.924z m-573.917-19.875c0-137.514 111.477-248.991 248.991-248.991S688.32 305.612 688.32 443.126 576.842 692.118 439.328 692.118 190.337 580.641 190.337 443.126z"
-                  fill="#FFBC34"
-                ></path>
-                <path
-                  d="M688.32 443.126c0-137.514-111.477-248.991-248.991-248.991S190.337 305.612 190.337 443.126s111.477 248.991 248.991 248.991S688.32 580.641 688.32 443.126zM421.327 614.31c-105.518 0-191.058-85.54-191.058-191.058s85.54-191.058 191.058-191.058 191.058 85.54 191.058 191.058S526.846 614.31 421.327 614.31z"
-                  fill="#FFC134"
-                ></path>
-                <path
-                  d="M421.327 232.194c-105.518 0-191.058 85.54-191.058 191.058s85.54 191.058 191.058 191.058 191.058-85.54 191.058-191.058-85.539-191.058-191.058-191.058z m-18.001 304.308c-73.523 0-133.125-59.602-133.125-133.125s59.602-133.125 133.125-133.125 133.125 59.602 133.125 133.125-59.602 133.125-133.125 133.125z"
-                  fill="#FFC634"
-                ></path>
-                <path
-                  d="M403.326 403.378m-133.125 0a133.125 133.125 0 1 0 266.25 0 133.125 133.125 0 1 0-266.25 0Z"
-                  fill="#FFCB34"
-                ></path>
-                <path
-                  d="M663.864 165.333c14.702 0 29.048 2.922 42.639 8.686 13.62 5.775 25.818 14.122 36.256 24.808L950.62 411.606c12.532 12.83 12.532 33.706 0.001 46.535L546.518 871.814c-8.977 9.189-20.881 14.25-33.518 14.25-12.638 0-24.542-5.061-33.518-14.25L75.38 458.141c-12.532-12.83-12.532-33.706-0.001-46.535l207.86-212.78c10.439-10.686 22.637-19.033 36.257-24.808 13.591-5.763 27.937-8.686 42.639-8.686h301.729m0-17.999H362.136c-34.421 0-67.432 13.998-91.772 38.915l-207.86 212.78c-19.338 19.798-19.338 51.893 0 71.691l404.102 413.673c12.811 13.115 29.603 19.672 46.394 19.672s33.583-6.557 46.394-19.672l404.102-413.673c19.338-19.798 19.338-51.893 0-71.691l-207.862-212.78c-24.338-24.917-57.349-38.915-91.77-38.915z"
-                  fill="#FFA820"
-                ></path>
-                <path
-                  d="M585.506 299.37H440.494c-16.543 0-32.407 6.686-44.106 18.584L296.49 419.583c-9.294 9.454-9.294 24.783 0 34.237l194.213 197.576a31.154 31.154 0 0 0 44.593 0L729.509 453.82c9.294-9.454 9.294-24.783 0-34.237l-99.896-101.629c-11.698-11.898-27.564-18.584-44.107-18.584z"
-                  fill="#FFE3B4"
-                ></path>
-                <path
-                  d="M222.012 346.805a17.94 17.94 0 0 1-12.677-5.222c-7.057-7.001-7.102-18.398-0.101-25.456l87.419-88.112c7.002-7.057 18.398-7.102 25.456-0.1 7.057 7.001 7.102 18.398 0.101 25.456l-87.419 88.112a17.945 17.945 0 0 1-12.779 5.322zM172.371 396.84a17.94 17.94 0 0 1-12.677-5.222c-7.058-7.001-7.103-18.398-0.101-25.456l7.428-7.487c7.002-7.058 18.399-7.103 25.456-0.101 7.058 7.001 7.103 18.398 0.101 25.456l-7.428 7.487a17.946 17.946 0 0 1-12.779 5.323z"
-                  fill="#FFFFFF"
-                ></path>
-              </svg>
-            </template>
-          </icon>
-          <span style="margin-left: 8px">兑换会员</span>
+      <div class="vip-modal-content">
+        <div class="vip-header">
+          <crown-two-tone two-tone-color="#fadb14" class="vip-icon" />
+          <h3>会员特权</h3>
         </div>
-      </template>
 
-      <!-- 内容区域 -->
-      <div class="modal-content">
-        <!-- 表单容器 -->
+        <div class="vip-benefits">
+          <div class="benefit-item">
+            <check-circle-outlined class="benefit-icon" />
+            <span>专属标识与徽章</span>
+          </div>
+          <div class="benefit-item">
+            <check-circle-outlined class="benefit-icon" />
+            <span>高级功能使用权</span>
+          </div>
+          <div class="benefit-item">
+            <check-circle-outlined class="benefit-icon" />
+            <span>优先客服支持</span>
+          </div>
+        </div>
+
         <a-form layout="vertical" class="vip-form">
           <a-form-item>
-            <div class="input-container">
-              <a-input
-                v-model:value="userVipForm.vipCode"
-                placeholder="请输入会员兑换码"
-                allowClear
-                size="large"
-              />
-            </div>
+            <a-input
+              v-model:value="userVipForm.vipCode"
+              placeholder="请输入会员兑换码"
+              size="large"
+              allowClear
+            >
+              <template #prefix>
+                <gift-outlined />
+              </template>
+            </a-input>
           </a-form-item>
         </a-form>
-      </div>
 
-      <!-- 自定义底部按钮 -->
-      <template #footer>
-        <div class="custom-footer">
-          <a-button @click="openVipModal = false">取消</a-button>
-          <a-button type="primary" @click="exchangeVipSubmit">确定</a-button>
+        <div class="vip-actions">
+          <a-button type="primary" block @click="exchangeVipSubmit" size="large">
+            立即兑换
+          </a-button>
         </div>
-      </template>
+      </div>
     </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
-import { message, type UploadProps } from 'ant-design-vue'
-import Icon, {
-  LoadingOutlined,
-  PlusOutlined,
-  AntDesignOutlined,
-  StarTwoTone,
-} from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import {
@@ -316,6 +316,20 @@ import {
   uploadAvatarUsingPost,
 } from '@/api/userController'
 import { imageValidator } from '@/utils'
+import {
+  UserOutlined,
+  EditOutlined,
+  LockOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
+  ProfileOutlined,
+  CrownOutlined,
+  CrownTwoTone,
+  CheckCircleOutlined,
+  GiftOutlined
+} from '@ant-design/icons-vue'
 
 /**
  * 初始化页面
@@ -339,12 +353,15 @@ const userAvatar = ref<string>('')
  */
 const fetchUserInfo = async () => {
   userInfoLoading.value = true
-  const res = await getUserDetailByIdUsingGet({
-    userId: loginUserStore.loginUser.userId,
-  })
-  if (res.code === 0 && res.data) {
-    userInfo.value = res.data
-    userAvatar.value = res.data.userAvatar
+  try {
+    const res = await getUserDetailByIdUsingGet({
+      userId: loginUserStore.loginUser.userId,
+    })
+    if (res.code === 0 && res.data) {
+      userInfo.value = res.data
+      userAvatar.value = res.data.userAvatar
+    }
+  } finally {
     userInfoLoading.value = false
   }
 }
@@ -381,7 +398,6 @@ const editUserInfoSubmit = async () => {
   const res = await editUserUsingPost(editUserInfoForm)
   if (res.code === 0 && res.data) {
     message.success('修改成功')
-    // 跳转到图片详情页
     editUserInfoModal.value = false
     await fetchUserInfo()
   } else {
@@ -398,6 +414,9 @@ const editPasswordModal = ref<boolean>(false)
  */
 const openEditPasswordModal = () => {
   editPasswordModal.value = true
+  editPasswordForm.originPassword = ''
+  editPasswordForm.newPassword = ''
+  editPasswordForm.confirmPassword = ''
 }
 /**
  * 密码表单
@@ -408,14 +427,17 @@ const editPasswordForm = reactive<API.UserEditPasswordRequest>({})
  */
 const editPasswordSubmit = async () => {
   if (editPasswordForm.newPassword !== editPasswordForm.confirmPassword) {
-    message.error('两次新密码不一致')
+    message.error('两次输入的新密码不一致')
+    return
+  }
+  if (editPasswordForm.newPassword.length < 8) {
+    message.error('新密码长度不能少于8位')
     return
   }
   const res = await editUserPasswordUsingPost(editPasswordForm)
   if (res.code === 0 && res.data) {
-    message.success('修改成功')
+    message.success('密码修改成功')
     editPasswordModal.value = false
-    await fetchUserInfo()
   } else {
     message.error(res.message)
   }
@@ -451,6 +473,7 @@ const openVipModal = ref<boolean>(false)
 // 打开兑换VIP弹出框
 const openExchangeVipModal = () => {
   openVipModal.value = true
+  userVipForm.vipCode = ''
 }
 // 兑换VIP表单
 const userVipForm = reactive<API.UserVipExchangeRequest>({})
@@ -474,59 +497,332 @@ const exchangeVipSubmit = async () => {
 }
 </script>
 
-<style scoped>
-#userProfilePage {
-  max-width: 720px;
+<style scoped lang="less">
+@primary-color: #1890ff;
+@vip-color: #722ed1;
+@border-color: #f0f0f0;
+@text-color: rgba(0, 0, 0, 0.85);
+@text-color-secondary: rgba(0, 0, 0, 0.45);
+
+.profile-container {
+  max-width: 800px;
   margin: 0 auto;
-}
+  padding: 24px;
 
-#userProfilePage .basicInfo .avatar {
-  text-align: center;
-}
+  .profile-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 
-/* 模态框标题样式 */
-.custom-title {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-}
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      //padding-bottom: 16px;
+      //border-bottom: 1px solid @border-color;
+      flex-wrap: wrap; /* 允许在小屏幕上换行 */
 
-/* 内容容器 */
-.modal-content {
-  /* padding: 24px 0; */
-  min-height: 100px; /* 保证垂直居中效果 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      .header-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        flex: 1; /* 占据剩余空间 */
+        min-width: 100px; /* 防止标题过小 */
+      }
 
-/* 模态框底部按钮居中 */
-.custom-footer {
-  display: flex;
-  justify-content: center;
-  gap: 16px; /* 按钮间距 */
-}
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px; /* 小屏幕下增加上边距 */
 
-/* 表单样式 */
-.vip-form {
-  width: 100%;
-}
+        /* 小屏幕下的按钮调整 */
+        @media (max-width: 480px) {
+          width: 100%;
+          justify-content: flex-end;
+        }
+      }
+    }
 
-/* 输入框容器 */
-.input-container {
-  width: 80%;
-  margin: 0 auto;
-}
+    .profile-content {
+      padding: 24px;
 
-/* 响应式处理 */
-@media (max-width: 768px) {
-  .input-container {
-    width: 100%;
+      .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .profile-avatar {
+          border: 3px solid #fff;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+
+        .avatar-upload-hint {
+          margin-top: 8px;
+          color: @text-color-secondary;
+          font-size: 12px;
+          cursor: pointer;
+        }
+      }
+
+      .info-section {
+        .user-name {
+          text-align: center;
+          margin-bottom: 16px;
+
+          h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 500;
+          }
+
+          .username {
+            color: @text-color-secondary;
+            font-size: 14px;
+          }
+        }
+
+        .divider {
+          margin: 16px 0;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 16px;
+
+          .info-item {
+            display: flex;
+            flex-direction: column;
+
+            .info-label {
+              color: @text-color-secondary;
+              font-size: 12px;
+              margin-bottom: 4px;
+
+              .anticon {
+                margin-right: 6px;
+              }
+            }
+
+            .info-value {
+              font-size: 14px;
+              word-break: break-word;
+            }
+          }
+        }
+
+        .bio-section {
+          margin-top: 16px;
+
+          .bio-content {
+            p {
+              margin: 8px 0 0;
+              color: @text-color;
+              line-height: 1.6;
+            }
+          }
+        }
+
+        .vip-section {
+          .vip-card {
+            background: linear-gradient(135deg, #f9f0ff 0%, #e6f7ff 100%);
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 3px solid @vip-color;
+
+            .vip-badge {
+              display: flex;
+              align-items: center;
+              margin-bottom: 8px;
+
+              .anticon {
+                font-size: 18px;
+                margin-right: 8px;
+              }
+
+              span {
+                font-weight: 500;
+                color: @vip-color;
+              }
+            }
+
+            .vip-details {
+              p {
+                margin: 4px 0;
+                font-size: 13px;
+
+                span {
+                  color: @text-color-secondary;
+                  margin-right: 8px;
+                }
+              }
+            }
+          }
+
+          .upgrade-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            background-color: #fafafa;
+            border-radius: 8px;
+
+            p {
+              margin-bottom: 12px;
+              color: @text-color-secondary;
+            }
+          }
+        }
+      }
+    }
   }
 
-  .custom-footer {
-    flex-direction: column; /* 小屏幕下按钮垂直排列 */
-    gap: 12px;
+
+
+  .avatar-uploader {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .avatar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      .profile-avatar {
+        border: 3px solid #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      .upload-text {
+        color: @text-color-secondary;
+        font-size: 14px;
+        cursor: pointer;
+        text-align: center;
+        transition: color 0.3s;
+
+        &:hover {
+          color: @primary-color;
+        }
+      }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .vip-modal-content {
+      .vip-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+
+        .vip-icon {
+          font-size: 24px;
+          margin-right: 8px;
+        }
+
+        h3 {
+          margin: 0;
+          font-size: 18px;
+        }
+      }
+
+      .vip-benefits {
+        margin-bottom: 24px;
+
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          padding: 8px 0;
+
+          .benefit-icon {
+            color: #52c41a;
+            margin-right: 8px;
+          }
+        }
+      }
+
+      .vip-actions {
+        margin-top: 24px;
+      }
+    }
+  }
+
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .vip-modal-content {
+    .vip-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+
+      .vip-icon {
+        font-size: 24px;
+        margin-right: 8px;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+    }
+
+    .vip-benefits {
+      margin-bottom: 24px;
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+
+        .benefit-icon {
+          color: #52c41a;
+          margin-right: 8px;
+        }
+      }
+    }
+
+    .vip-actions {
+      margin-top: 24px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 12px;
+
+    .profile-card {
+      .profile-content {
+        padding: 16px;
+
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
   }
 }
 </style>
