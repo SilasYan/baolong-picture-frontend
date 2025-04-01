@@ -183,7 +183,9 @@
               审核时间：{{ dayjs(record.reviewTime).format('YYYY-MM-DD HH:mm:ss') }}
             </div>
             <div v-if="record.reviewerUser">审核人：{{ record.reviewerUser }}</div>
-            <div v-if="record.spaceId">图片上传位置：{{ record.spaceId == 0 ? '公共图库' : record.spaceId }}</div>
+            <div v-if="record.spaceId">
+              图片上传位置：{{ record.spaceId == 0 ? '公共图库' : record.spaceId }}
+            </div>
           </template>
           <!-- 上传时间 -->
           <template v-if="column.dataIndex === 'createTime'">
@@ -199,15 +201,15 @@
               <a-button
                 v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS"
                 type="link"
-                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.PASS)"
+                @click="openReviewDialog(record.pictureId, PIC_REVIEW_STATUS_ENUM.PASS)"
               >
                 通过
               </a-button>
               <a-button
-                v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS"
+                v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS && record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT"
                 type="link"
                 danger
-                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
+                @click="openReviewDialog(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
               >
                 拒绝
               </a-button>
@@ -215,13 +217,11 @@
                 v-if="record.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS"
                 type="link"
                 danger
-                @click="handleReview(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
+                @click="openReviewDialog(record.pictureId, PIC_REVIEW_STATUS_ENUM.REJECT)"
               >
                 下架
               </a-button>
-              <a-button
-                type="link"
-                :href="`/picture/addEdit?pId=${record.pictureId}`"
+              <a-button type="link" :href="`/picture/addEdit?pId=${record.pictureId}`"
                 >编辑
               </a-button>
               <a-button type="link" danger @click="handleDelete(record.pictureId)">删除</a-button>
@@ -231,6 +231,14 @@
       </a-table>
     </div>
   </div>
+
+  <a-modal v-model:open="rejectDialog" title="审核拒绝" @ok="handleReview">
+    <a-form layout="vertical" :model="reviewFormData">
+      <a-form-item label="拒绝理由" name="reviewMessage">
+        <a-input v-model:value="reviewFormData.reviewMessage" placeholder="请输入拒绝理由" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
@@ -545,16 +553,28 @@ const getCategoryListData = async () => {
   }
 }
 
+const rejectDialog = ref<boolean>(false)
+const reviewFormData = reactive<API.PictureReviewRequest>({
+  pictureId: null,
+  reviewStatus: null,
+  reviewMessage: '',
+})
+
+const openReviewDialog = (pictureId: string, reviewStatus: number) => {
+  reviewFormData.pictureId = pictureId
+  reviewFormData.reviewStatus = reviewStatus
+  rejectDialog.value = true
+}
+
 /**
  * 处理审核
- * @param pictureId
- * @param reviewStatus
  */
-const handleReview = async (pictureId: string, reviewStatus: number) => {
-  if (!pictureId) {
+const handleReview = async () => {
+  const flag = reviewFormData.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS
+  if (!flag && !reviewFormData.reviewMessage) {
+    message.error('请输入审核不通过原因！')
     return
   }
-  const flag = reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS
   // 确认弹窗
   Modal.confirm({
     title: `${flag ? '审核' : '下架'}图片`,
@@ -564,12 +584,13 @@ const handleReview = async (pictureId: string, reviewStatus: number) => {
     onOk: async () => {
       try {
         const res = await reviewPictureUsingPost({
-          pictureId: pictureId,
-          reviewStatus: reviewStatus,
-          reviewMessage: flag ? '审核通过' : '审核不通过',
+          pictureId: reviewFormData.pictureId,
+          reviewStatus: reviewFormData.reviewStatus,
+          reviewMessage: reviewFormData.reviewMessage ? '审核通过' : reviewFormData.reviewMessage,
         })
         if (res.code === 0) {
           message.success(`图片${flag ? '审核' : '下架'}成功！`)
+          rejectDialog.value = false
         } else {
           message.error(`图片${flag ? '审核' : '下架'}失败！`)
         }
