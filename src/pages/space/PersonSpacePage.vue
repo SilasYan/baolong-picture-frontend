@@ -2,18 +2,21 @@
   <div id="space-manager-page">
     <!-- 标题区域 -->
     <div class="custom-div title-region">
-      <a-flex justify="space-between">
+      <a-flex justify="space-between" align="center">
         <!-- 顶部标题 -->
-        <a-typography>
-          <a-typography-title :level="3">
-            <BlockOutlined />
-            个人空间
-          </a-typography-title>
-        </a-typography>
+        <a-typography-title :level="3" class="title-text">
+          <BlockOutlined class="title-icon" />
+          个人空间
+        </a-typography-title>
         <!-- 操作 -->
         <a-space>
-          <a-button size="large" ghost type="primary" @click="openAddEditPicture">
-            <CloudUploadOutlined />
+          <a-button
+            type="primary"
+            size="large"
+            @click="openAddEditPicture"
+            class="upload-btn"
+          >
+            <template #icon><CloudUploadOutlined /></template>
             上传图片到空间
           </a-button>
         </a-space>
@@ -21,39 +24,42 @@
     </div>
 
     <!-- 空间使用区域 -->
-    <div class="custom-div">
-      <a-collapse v-model:activeKey="useActiveKey" collapsible="header">
-        <a-collapse-panel key="1">
+    <div class="usage-section">
+      <a-collapse v-model:activeKey="useActiveKey" collapsible="header" :bordered="false">
+        <a-collapse-panel key="1" class="usage-panel">
           <template #header>
-            <div class="custom-header">
-              <a-typography-title :level="5">📦 空间使用情况</a-typography-title>
-              <icon type="caret-down" />
+            <div class="panel-header">
+              <a-typography-title :level="5" class="usage-title">
+                <FolderOpenOutlined class="usage-icon" />
+                空间使用情况
+              </a-typography-title>
+              <CaretDownOutlined class="collapse-icon" />
             </div>
           </template>
-          <a-typography-title :level="5">
-            <div style="padding: 0 20px">
-              使用大小：{{ spaceDetail.usedSizeUnit }} / {{ spaceDetail.maxSizeUnit }}
+          <div class="usage-content">
+            <div class="usage-item">
+              <span class="usage-label">存储空间:</span>
+              <span class="usage-value">{{ spaceDetail.usedSizeUnit }} / {{ spaceDetail.maxSizeUnit }}</span>
               <a-progress
                 :percent="((spaceDetail.usedSize / spaceDetail.maxSize) * 100).toFixed(1)"
-                :stroke-color="{
-                  '0%': '#06D6A0',
-                  '50%': '#108ee9',
-                  '100%': '#D90429',
-                }"
+                :stroke-color="getProgressColor(spaceDetail.usedSize / spaceDetail.maxSize)"
                 status="active"
-              />
-              使用数量：{{ spaceDetail.usedCount }} / {{ spaceDetail.maxCount }} 张
-              <a-progress
-                :percent="((spaceDetail.usedCount / spaceDetail.maxCount) * 100).toFixed(1)"
-                :stroke-color="{
-                  '0%': '#06D6A0',
-                  '50%': '#108ee9',
-                  '100%': '#D90429',
-                }"
-                status="active"
+                :show-info="false"
+                class="usage-progress"
               />
             </div>
-          </a-typography-title>
+            <div class="usage-item">
+              <span class="usage-label">图片数量:</span>
+              <span class="usage-value">{{ spaceDetail.usedCount }} / {{ spaceDetail.maxCount }} 张</span>
+              <a-progress
+                :percent="((spaceDetail.usedCount / spaceDetail.maxCount) * 100).toFixed(1)"
+                :stroke-color="getProgressColor(spaceDetail.usedCount / spaceDetail.maxCount)"
+                status="active"
+                :show-info="false"
+                class="usage-progress"
+              />
+            </div>
+          </div>
         </a-collapse-panel>
       </a-collapse>
     </div>
@@ -225,7 +231,7 @@ import {
   CloudUploadOutlined,
   SearchOutlined,
   ShareAltOutlined,
-  SyncOutlined,
+  SyncOutlined, CaretDownOutlined, FolderOpenOutlined
 } from '@ant-design/icons-vue'
 import { h, onMounted, reactive, ref } from 'vue'
 import {
@@ -263,6 +269,13 @@ onMounted(() => {
   getPictureListData()
   getCategoryListData()
 })
+
+// 辅助函数：获取进度条颜色
+const getProgressColor = (ratio: number) => {
+  if (ratio < 0.5) return '#06D6A0'
+  if (ratio < 0.8) return '#FFD166'
+  return '#D90429'
+}
 
 /**
  * 点击图片
@@ -567,5 +580,74 @@ const doSharePicture = async (picture: API.PictureDetailVO, e: Event) => {
   line-height: 40px; /* 垂直居中 */
   display: flex;
   align-items: center; /* 垂直对齐 */
+}
+
+.usage-section {
+  margin-bottom: 24px;
+
+  .usage-panel {
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+
+    :deep(.ant-collapse-header) {
+      padding: 12px 16px !important;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .usage-title {
+        margin: 0;
+        display: flex;
+        align-items: center;
+
+        .usage-icon {
+          margin-right: 8px;
+          color: #ff9a2e;
+        }
+      }
+
+      .collapse-icon {
+        transition: transform 0.3s;
+      }
+    }
+
+    :deep(.ant-collapse-content-box) {
+      padding: 16px !important;
+    }
+  }
+
+  .usage-content {
+    .usage-item {
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .usage-label {
+        font-weight: 500;
+        margin-right: 8px;
+        color: #555;
+      }
+
+      .usage-value {
+        color: #333;
+        font-weight: 500;
+      }
+
+      .usage-progress {
+        margin-top: 8px;
+
+        :deep(.ant-progress-bg) {
+          height: 10px !important;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -1,26 +1,21 @@
 <template>
   <div id="search-picture-page">
     <!-- 顶部标题 -->
-    <a-flex justify="space-between">
-      <a-typography>
-        <a-typography-title :level="3">
-          <BugOutlined />
-          爬取图片
-        </a-typography-title>
-      </a-typography>
+    <a-flex justify="space-between" align="center" class="page-header">
+      <a-typography-title :level="3" class="header-title">
+        <BugOutlined />
+        爬取图片
+      </a-typography-title>
     </a-flex>
 
-    <div style="margin-bottom: 20px" />
-
-    <div class="content">
+    <div class="content-container">
       <!-- 表单部分 -->
-      <div class="from-card">
-        <a-card>
+      <div class="form-section">
+        <a-card class="form-card" :bordered="false">
           <a-form layout="vertical" :model="grabFormParam" @finish="handleGrabPictureSubmit">
             <a-form-item
               label="爬取来源"
               name="grabSource"
-              class="custom-form-item bold-label"
               :rules="[{ required: true, message: '请选择爬取来源' }]"
             >
               <a-select
@@ -36,7 +31,6 @@
             <a-form-item
               label="图片关键词"
               name="keyword"
-              class="custom-form-item bold-label"
               :rules="[{ required: true, message: '请输入图片关键词' }]"
             >
               <a-input
@@ -49,7 +43,6 @@
             <a-form-item
               label="图片名称前缀（可选）"
               name="namePrefix"
-              class="custom-form-item bold-label"
             >
               <a-input
                 size="large"
@@ -61,7 +54,6 @@
             <a-form-item
               label="随机种子（输入 0-100 的数）"
               name="randomSeed"
-              class="custom-form-item bold-label"
             >
               <a-input-number
                 size="large"
@@ -76,7 +68,6 @@
             <a-form-item
               label="抓取数量（默认 15 张）"
               name="grabCount"
-              class="custom-form-item bold-label"
             >
               <a-input-number
                 size="large"
@@ -93,8 +84,9 @@
                 size="large"
                 type="primary"
                 html-type="submit"
-                style="width: 100%"
+                block
                 :loading="grabLoading"
+                class="submit-btn"
               >
                 开始爬取
               </a-button>
@@ -104,56 +96,49 @@
       </div>
 
       <!-- 爬取图片列表部分 -->
-      <div class="list-card" style="background-color: #ececec; padding: 20px; min-height: 350px">
-        <a-spin
-          v-if="requestSendStatus"
-          tip="爬取中，请稍后..."
-          :spinning="spinning"
-          :style="{
-            width: '100%',
-            height: '350px',
-          }"
-        >
-          <a-flex justify="flex-start" wrap="wrap" gap="small">
-            <a-card
-              v-for="(item, index) in grabPictureList"
-              :key="index"
-              :title="item.imageName"
-              :bordered="false"
-              :headStyle="{ 'text-align': 'center' }"
-              :style="{ width: '320px', height: '350px', margin: '0 20px 20px 0' }"
-            >
-              <template #actions>
-                <div @click="(e) => uploadImage(item)">
-                  <CloudUploadOutlined />
-                  上传到公共图库
-                </div>
-                <div @click="(e) => openImage(item)">
-                  <ExportOutlined />
-                  图片源
-                </div>
-              </template>
-              <template #cover>
-                <a-image
-                  :src="item.handleImageUrl"
-                  fallback="data:image/png;base64,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"
-                  :style="{
-                    width: '100%',
-                    height: '250px',
-                    objectFit: 'cover',
-                  }"
-                />
-              </template>
-            </a-card>
-          </a-flex>
-        </a-spin>
-        <a-empty v-else style="margin-top: 200px">
-          <template #description>
-            <span>
-              {{ emptyDesc }}
-            </span>
-          </template>
-        </a-empty>
+      <div class="results-section">
+        <a-card class="results-card" :bordered="false">
+          <a-spin
+            v-if="requestSendStatus"
+            tip="爬取中，请稍后..."
+            :spinning="spinning"
+            class="results-spinner"
+          >
+            <a-flex justify="flex-start" wrap="wrap" gap="middle" class="image-grid">
+              <a-card
+                v-for="(item, index) in grabPictureList"
+                :key="index"
+                :title="item.imageName"
+                :bordered="false"
+                class="image-card"
+              >
+                <template #actions>
+                  <div @click="(e) => uploadImage(item)" class="card-action">
+                    <CloudUploadOutlined />
+                    <span>上传到公共图库</span>
+                  </div>
+                  <div @click="(e) => openImage(item)" class="card-action">
+                    <ExportOutlined />
+                    <span>图片源</span>
+                  </div>
+                </template>
+                <template #cover>
+                  <a-image
+                    :src="item.handleImageUrl"
+                    class="image-preview"
+                  />
+                </template>
+              </a-card>
+            </a-flex>
+          </a-spin>
+          <a-empty v-else class="empty-state">
+            <template #description>
+              <span class="empty-text">
+                {{ emptyDesc }}
+              </span>
+            </template>
+          </a-empty>
+        </a-card>
       </div>
     </div>
   </div>
@@ -165,11 +150,8 @@ import { BugOutlined, ExportOutlined, CloudUploadOutlined } from '@ant-design/ic
 import { message } from 'ant-design-vue'
 import {
   grabPictureUsingPost,
-  pictureDownloadUsingPost,
   uploadPictureByGrabUsingPost,
-  uploadPictureByUrlUsingPost,
 } from '@/api/pictureController'
-import { downloadImage } from '@/utils'
 
 /**
  * 爬取表单参数
@@ -268,49 +250,134 @@ const openImage = (picture: API.GrabPictureResult) => {
 
 <style scoped>
 #search-picture-page {
-  /* height: 100vh; */
+  height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-#search-picture-page .content {
-  flex: 1;
-  min-height: 0; /* 关键：允许内容区域收缩 */
-  display: flex;
-}
-
-#search-picture-page .list-card {
-  flex: 1;
-  /* 动态计算高度 */
-  height: calc(100vh - 250px) !important;
-  overflow-y: auto; /* 添加垂直滚动 */
-  background-color: #ececec;
+  background-color: #f5f5f5;
   padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.header-title {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  height: calc(100% - 60px);
+}
+
+.form-section {
+  width: 320px;
+  min-width: 320px;
+}
+
+.form-card {
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+}
+
+.form-card :deep(.ant-form-item-label > label) {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.submit-btn {
+  height: 40px;
+  font-weight: 500;
+}
+
+.results-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.results-card {
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.results-spinner {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-grid {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.image-card {
+  width: 320px;
+  height: 350px;
+  text-align: center;
+  margin:0 20px 20px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.image-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.image-preview {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 4px 4px 0 0;
+}
+
+/* 图片样式：完全自适应 */
+.image-preview :deep(.ant-image) {
+  width: 100%;
+  height: 350px;
+}
+
+.image-preview :deep(.ant-image .ant-image-img) {
+  width: auto;
+  height: 350px;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.card-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.card-action:hover {
+  color: #1890ff;
+}
+
+.empty-state {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 300px);
 }
 
-/* 调整 Spin 容器高度 */
-.list-card >>> .ant-spin-nested-loading {
-  height: 100%;
-}
-
-.list-card >>> .ant-spin-container {
-  height: 100%;
-}
-
-/* 调整 Flex 容器高度 */
-.list-card >>> .ant-flex {
-  height: 100%;
-  align-content: flex-start;
-  overflow-y: auto;
-}
-
-/* 保持顶部和表单区域固定 */
-#search-picture-page .from-card {
-  width: 20%;
-  min-width: 300px;
-  margin-right: 20px;
-  height: fit-content; /* 根据内容自适应高度 */
+.empty-text {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 16px;
 }
 </style>

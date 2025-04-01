@@ -1,22 +1,23 @@
 <template>
   <div id="expand-picture-page">
-    <a-spin :spinning="uploadLoading" tip="图片上传中中...">
-      <a-card style="height: 100%">
+    <a-spin :spinning="uploadLoading" tip="图片上传中...">
+      <a-card class="expand-card">
         <!-- 标题 -->
         <a-card-meta>
           <template #title>
-            <a-typography>
-              <a-typography-title :level="3">
-                <FullscreenOutlined />
-                AI扩图
-              </a-typography-title>
-            </a-typography>
+            <a-typography-title :level="3" class="page-title">
+              <FullscreenOutlined />
+              AI扩图
+            </a-typography-title>
           </template>
         </a-card-meta>
+
         <a-divider />
+
         <a-spin :spinning="expandLoading" tip="扩图任务执行中，请耐心等待不要刷新页面...">
-          <!-- 内容 -->
-          <a-flex gap="middle" justify="flex-start">
+          <!-- 内容区域 -->
+          <a-flex gap="middle" align="stretch" class="content-wrapper">
+            <!-- 原始图片区域 -->
             <div class="origin-region">
               <PictureUpload
                 :picture="pictureInfo"
@@ -24,40 +25,47 @@
                 :uploadSuccess="handleUploadSuccess"
               />
             </div>
-            <div v-if="pictureInfo.picUrl" class="change-region">
+
+            <!-- 操作按钮区域 -->
+            <div v-if="pictureInfo.picUrl" class="action-region">
               <a-flex vertical justify="space-between" align="stretch">
                 <a-button
                   type="dashed"
                   size="large"
-                  :disabled="expandClick"
+                  :disabled="expandDisabled"
                   @click="() => doExpandPicture(pictureInfo, 1)"
                 >
-                  等比
+                  等比扩图
                 </a-button>
                 <a-button
                   type="dashed"
                   size="large"
-                  :disabled="expandClick"
+                  :disabled="expandDisabled"
                   @click="() => doExpandPicture(pictureInfo, 0)"
                 >
-                  旋转
+                  旋转扩图
                 </a-button>
               </a-flex>
             </div>
-            <div class="expand-region">
+
+            <!-- 扩图结果区域 -->
+            <div class="result-region">
               <a-empty v-if="!expandPicUrl" :description="null" />
               <a-card
+                v-else
                 title="请尽快保存当前扩图图片，以免失效"
-                :headStyle="{ 'text-align': 'center' }"
-                style="width: 100%"
+                class="result-card"
               >
-                <!-- 图片 -->
-                <div class="image-detail-content">
-                  <a-image v-if="expandPicUrl" :src="expandPicUrl" />
+                <!-- 扩图结果图片 -->
+                <div class="image-container">
+                  <a-image :src="expandPicUrl" :preview="false" />
                 </div>
+
                 <!-- 操作按钮 -->
                 <template #actions>
-                  <div @click="doUploadExpandPicture">上传当前扩图图片</div>
+                  <a-button type="link" @click="doUploadExpandPicture">
+                    保存扩图结果
+                  </a-button>
                 </template>
               </a-card>
             </div>
@@ -69,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { FullscreenOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import PictureUpload from '@/components/picture/FilePictureUpload.vue'
@@ -79,122 +87,105 @@ import {
   uploadPictureByUrlUsingPost,
 } from '@/api/pictureController'
 
-/**
- * 图片信息
- */
+// 图片信息
 const pictureInfo = ref<API.PictureDetailVO>({})
-/**
- * 处理子组件上传图片成功回调
- * @param newPicture
- */
+
+// 处理子组件上传图片成功回调
 const handleUploadSuccess = (newPicture: API.PictureDetailVO) => {
   pictureInfo.value = newPicture
+  // 上传新图片时清空之前的扩图结果
+  expandPicUrl.value = ''
+  taskId.value = ''
 }
 
-/**
- * 扩图按钮点击状态
- */
-const expandClick = ref<boolean>(false)
-/**
- * 扩图加载中
- */
+// 扩图相关状态
+const expandDisabled = ref<boolean>(false)
 const expandLoading = ref<boolean>(false)
-/**
- * 扩图任务ID
- */
+const expandPicUrl = ref<string>('')
 const taskId = ref<string>('')
-/**
- * 执行扩图
- * @param picture
- * @param type
- */
+const uploadLoading = ref<boolean>(false)
+
+// 轮询定时器
+let pollingTimer: NodeJS.Timeout | null = null
+
+// 执行扩图
 const doExpandPicture = async (picture: API.PictureDetailVO, type: number) => {
   if (!picture.picUrl) {
     message.error('请先上传一张图片')
     return
   }
-  expandClick.value = true
-  expandLoading.value = true
-  const res = await expandPictureUsingPost({
-    picUrl: picture.picUrl,
-    expandType: type,
-  })
-  if (res.code === 0 && res.data) {
-    expandClick.value = true
-    taskId.value = res.data.output.taskId
-    message.success('扩图任务执行成功，请等待...')
-    startPolling()
-  } else {
-    expandClick.value = false
-    expandLoading.value = false
-  }
-}
-/**
- * 扩图图片地址
- */
-const expandPicUrl = ref<string>('')
 
-/**
- * 轮询定时器
- */
-let pollingTimer: NodeJS.Timeout = null
-/**
- * 清除轮询定时器
- */
-const clearPolling = () => {
-  if (pollingTimer) {
-    clearInterval(pollingTimer)
-    pollingTimer = null
-    taskId.value = null
+  // 重置状态
+  expandDisabled.value = true
+  expandLoading.value = true
+  expandPicUrl.value = ''
+
+  try {
+    const res = await expandPictureUsingPost({
+      picUrl: picture.picUrl,
+      expandType: type,
+    })
+
+    if (res.code === 0 && res.data) {
+      taskId.value = res.data.output.taskId
+      message.success('扩图任务已提交，请等待处理...')
+      startPolling()
+    } else {
+      throw new Error(res.message || '扩图任务提交失败')
+    }
+  } catch (error) {
+    message.error(error.message || '扩图任务提交失败')
+    resetExpandState()
   }
 }
-/**
- * 开始轮询获取扩图结果
- */
+
+// 开始轮询获取扩图结果
 const startPolling = () => {
   if (!taskId.value) {
     message.warning('当前任务已失效')
-    expandClick.value = false
-    expandLoading.value = false
+    resetExpandState()
     return
   }
 
-  pollingTimer = setInterval(async () => {
-    try {
-      const res = await expandPictureQueryUsingGet({
-        taskId: taskId.value,
-      })
-      if (res.code === 0 && res.data) {
-        const taskResult = res.data.output
-        if (taskResult.taskStatus === 'SUCCEEDED') {
-          message.success('扩图成功')
-          expandPicUrl.value = taskResult.outputImageUrl
-          expandClick.value = false
-          expandLoading.value = false
-          clearPolling()
-        } else if (taskResult.taskStatus === 'FAILED') {
-          message.error(res.message)
-          clearPolling()
-        }
-      }
-    } catch (error) {
-      message.error('扩图服务异常，请稍后重试！')
-      clearPolling()
-    }
-  }, 5000) // 每隔 5 秒轮询一次
+  // 先立即查询一次
+  checkExpandResult()
+
+  // 然后设置定时器
+  pollingTimer = setInterval(checkExpandResult, 5000)
 }
 
-/**
- * 清理定时器，避免内存泄漏
- */
-onUnmounted(() => {
-  clearPolling()
-})
+// 检查扩图结果
+const checkExpandResult = async () => {
+  if (!taskId.value) return
 
-/**
- * 上传扩图图片
- */
-const uploadLoading = ref<boolean>(false)
+  try {
+    const res = await expandPictureQueryUsingGet({
+      taskId: taskId.value,
+    })
+
+    if (res.code === 0 && res.data) {
+      const taskResult = res.data.output
+
+      if (taskResult.taskStatus === 'SUCCEEDED') {
+        message.success('扩图成功')
+        expandPicUrl.value = taskResult.outputImageUrl
+        resetExpandState()
+        clearPolling()
+      } else if (taskResult.taskStatus === 'FAILED') {
+        throw new Error(res.message || '扩图任务执行失败')
+      }
+      // 其他状态继续轮询
+    } else {
+      throw new Error(res.message || '查询扩图结果失败')
+    }
+  } catch (error) {
+    message.error(error.message || '扩图服务异常，请稍后重试！')
+    resetExpandState()
+    clearPolling()
+  }
+}
+
+// 上传扩图图片
 const doUploadExpandPicture = async () => {
   if (!pictureInfo.value.pictureId) {
     message.error('图片不存在，请先上传图片')
@@ -204,77 +195,122 @@ const doUploadExpandPicture = async () => {
     message.error('扩图图片不存在，请重新扩图')
     return
   }
+
   uploadLoading.value = true
   try {
     const params = {
       pictureId: pictureInfo.value.pictureId,
       pictureUrl: expandPicUrl.value,
-      // 这里就是扩图成功后的
       expandStatus: 2,
       expandTaskId: taskId.value,
       expandOriginUrl: expandPicUrl.value,
     }
+
     const res = await uploadPictureByUrlUsingPost(params)
     if (res.code === 0 && res.data) {
       message.success('图片上传成功!')
     } else {
-      message.error('图片上传失败! ' + res.message)
+      throw new Error(res.message || '图片上传失败')
     }
   } catch (error) {
+    message.error(error.message || '图片上传失败!')
     console.error('上传失败:', error)
-    message.error('图片上传失败!')
   } finally {
     uploadLoading.value = false
   }
 }
+
+// 重置扩图状态
+const resetExpandState = () => {
+  expandDisabled.value = false
+  expandLoading.value = false
+}
+
+// 清除轮询定时器
+const clearPolling = () => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
+  }
+}
+
+// 组件卸载时清理
+onUnmounted(() => {
+  clearPolling()
+})
 </script>
 
-<style scoped>
+<style scoped lang="less">
 #expand-picture-page {
-  max-width: 80%;
+  max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  height: 720px;
-}
+  padding: 16px;
+  height: calc(100vh - 64px);
 
-#expand-picture-page .origin-region {
-  width: 40%;
-  height: 100%;
-}
+  .expand-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
-#expand-picture-page .change-region {
-  width: 10%;
-  height: calc(100% - 24px);
-}
+    .page-title {
+      text-align: center;
+      margin-bottom: 0;
+    }
+  }
 
-#expand-picture-page .expand-region {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* 防止内容溢出 */
-}
+  .content-wrapper {
+    flex: 1;
+    min-height: 0; // 防止flex容器溢出
 
-.image-detail-content {
-  display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  width: 100%; /* 确保容器宽度占满父容器 */
-  /* 动态计算高度 */
-  height: calc(100vh - 720px) !important;
-}
+    .origin-region {
+      flex: 0 0 40%;
+      min-width: 0;
+    }
 
-.image-detail-content :deep(.ant-image) {
-  height: 100%; /* 防止图片超出容器 */
-}
+    .action-region {
+      flex: 0 0 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
 
-.image-detail-content :deep(.ant-image .ant-image-img) {
-  height: 100%; /* 防止图片超出容器 */
-}
+      .ant-btn {
+        margin: 8px 0;
+        white-space: nowrap;
+      }
+    }
 
-.ant-btn-dashed {
-  flex: 1; /* 按钮均分宽度 */
-  margin: 8px 0; /* 添加垂直间距 */
+    .result-region {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+
+      .result-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        :deep(.ant-card-body) {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+        }
+
+        .image-container {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 0;
+
+          .ant-image {
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

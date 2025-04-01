@@ -12,7 +12,7 @@
         </a-typography>
         <!-- 操作 -->
         <a-space>
-          <a-button size="large" ghost type="primary" @click="openAddEditPicture">
+          <a-button type="primary" size="large" @click="openAddEditPicture">
             <SendOutlined />
             发布图片
           </a-button>
@@ -121,7 +121,13 @@
             <a-badge-ribbon
               :text="PIC_REVIEW_STATUS_MAP[picture.reviewStatus]"
               :color="PIC_STATUS_TAG_COLOR[picture.reviewStatus]"
-              style="width: 80px; height: 30px; font-size: 16px; text-align: center; line-height: 30px"
+              style="
+                width: 80px;
+                height: 30px;
+                font-size: 16px;
+                text-align: center;
+                line-height: 30px;
+              "
             >
               <a-card hoverable @click="doClickPicture(picture)">
                 <template #cover>
@@ -280,7 +286,7 @@ const onRangeChange = (dates: any[], dateStrings: string[]) => {
     pictureSearchParams.endCreateTime = undefined
   } else {
     pictureSearchParams.startEditTime = dayjs(dates[0]).format('YYYY-MM-DD') + ' 00:00:00'
-    pictureSearchParams.endEditTime = dayjs(dates[1]).format('YYYY-MM-DD')+ ' 23:59:59'
+    pictureSearchParams.endEditTime = dayjs(dates[1]).format('YYYY-MM-DD') + ' 23:59:59'
   }
 }
 
