@@ -1,21 +1,16 @@
 <template>
-  <div id="person-space-page">
+  <div id="team-space-page">
     <!-- 标题区域 -->
     <div class="custom-div title-region">
       <a-flex justify="space-between" align="center">
         <!-- 顶部标题 -->
         <a-typography-title :level="3" class="title-text">
-          <BlockOutlined class="title-icon" />
-          个人空间
+          <TeamOutlined class="title-icon" />
+          团队空间：{{ spaceDetail.spaceName }}
         </a-typography-title>
         <!-- 操作 -->
-        <a-space size="large">
-          <a-button
-            type="primary"
-            size="large"
-            @click="openAddEditPicture"
-            class="upload-btn"
-          >
+        <a-space v-if="spaceDetail.spaceRole !== SPACE_ROLE_ENUM.VIEWER" size="large">
+          <a-button type="primary" size="large" @click="openAddEditPicture" class="upload-btn">
             <CloudUploadOutlined />
             上传图片
           </a-button>
@@ -29,7 +24,7 @@
     </div>
 
     <!-- 空间使用区域 -->
-    <div class="usage-section">
+    <div v-if="spaceDetail.spaceRole !== SPACE_ROLE_ENUM.VIEWER" class="usage-section">
       <a-collapse v-model:activeKey="useActiveKey" collapsible="header" :bordered="false">
         <a-collapse-panel key="1" class="usage-panel">
           <template #header>
@@ -44,7 +39,9 @@
           <div class="usage-content">
             <div class="usage-item">
               <span class="usage-label">存储空间:</span>
-              <span class="usage-value">{{ spaceDetail.usedSizeUnit }} / {{ spaceDetail.maxSizeUnit }}</span>
+              <span class="usage-value"
+                >{{ spaceDetail.usedSizeUnit }} / {{ spaceDetail.maxSizeUnit }}</span
+              >
               <a-progress
                 :percent="((spaceDetail.usedSize / spaceDetail.maxSize) * 100).toFixed(1)"
                 :stroke-color="getProgressColor(spaceDetail.usedSize / spaceDetail.maxSize)"
@@ -55,7 +52,9 @@
             </div>
             <div class="usage-item">
               <span class="usage-label">图片数量:</span>
-              <span class="usage-value">{{ spaceDetail.usedCount }} / {{ spaceDetail.maxCount }} 张</span>
+              <span class="usage-value"
+                >{{ spaceDetail.usedCount }} / {{ spaceDetail.maxCount }} 张</span
+              >
               <a-progress
                 :percent="((spaceDetail.usedCount / spaceDetail.maxCount) * 100).toFixed(1)"
                 :stroke-color="getProgressColor(spaceDetail.usedCount / spaceDetail.maxCount)"
@@ -230,32 +229,31 @@
 
 <script lang="ts" setup>
 import {
-  BlockOutlined,
+  TeamOutlined,
   DeleteOutlined,
   EditOutlined,
   CloudUploadOutlined,
   SearchOutlined,
   ShareAltOutlined,
-  SyncOutlined, CaretDownOutlined, FolderOpenOutlined, SendOutlined
+  SyncOutlined,
+  CaretDownOutlined,
+  FolderOpenOutlined,
 } from '@ant-design/icons-vue'
-import { h, onMounted, reactive, ref } from 'vue'
-import {
-  PIC_FORMAT_STATUS_OPTIONS,
-  PIC_REVIEW_STATUS_MAP,
-  PIC_STATUS_TAG_COLOR,
-} from '@/constants/picture'
+import { h, onMounted, reactive, ref, watch } from 'vue'
+import { PIC_FORMAT_STATUS_OPTIONS } from '@/constants/picture'
 import dayjs from 'dayjs'
 import { message, Modal } from 'ant-design-vue'
 import { getCategoryListAsHomeUsingGet } from '@/api/categoryController'
 import {
   deletePictureUsingPost,
-  getPicturePageListAsPersonSpaceUsingPost,
+  getPicturePageListAsTeamSpaceUsingPost,
   pictureShareUsingPost,
 } from '@/api/pictureController'
-import { getSpaceDetailByLoginUserUsingGet } from '@/api/spaceController'
+import { getSpaceDetailBySpaceIdUsingGet } from '@/api/spaceController'
 import { useRoute, useRouter } from 'vue-router'
 import { decrypt, encrypt } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
+import { SPACE_ROLE_ENUM } from '@/constants/space'
 
 /**
  * 路由组件中的路由对象
@@ -265,6 +263,21 @@ const router = useRouter()
  * 路由组件中的路径对象
  */
 const route = useRoute()
+
+/**
+ * 使用 defineProps 声明 props 并指定类型
+ */
+const props = defineProps<{ spaceId: string | number }>()
+
+// 监听 props 变化
+watch(
+  () => props.spaceId,
+  () => {
+    getSpaceDetailData()
+    getPictureListData()
+    getCategoryListData()
+  },
+)
 
 /**
  * 初始化页面
@@ -409,7 +422,9 @@ const spaceDetail = ref<API.SpaceDetailVO>({
  * 获取空间详情数据
  */
 const getSpaceDetailData = async () => {
-  const res = await getSpaceDetailByLoginUserUsingGet()
+  const res = await getSpaceDetailBySpaceIdUsingGet({
+    spaceId: props.spaceId,
+  })
   if (res.code === 0 && res.data) {
     spaceDetail.value = res.data
   } else {
@@ -430,7 +445,8 @@ const pictureListLoading = ref<boolean>(true)
  */
 const getPictureListData = async () => {
   pictureListLoading.value = true
-  const res = await getPicturePageListAsPersonSpaceUsingPost({
+  const res = await getPicturePageListAsTeamSpaceUsingPost({
+    spaceId: props.spaceId,
     ...pictureSearchParams,
   })
   if (res.code === 0 && res.data) {

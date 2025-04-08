@@ -32,6 +32,21 @@ export async function deleteSpaceUsingPost(
   })
 }
 
+/** getSpaceDetailBySpaceId GET /api/space/detail */
+export async function getSpaceDetailBySpaceIdUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getSpaceDetailBySpaceIdUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseSpaceDetailVO_>('/api/space/detail', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
 /** editSpace POST /api/space/edit */
 export async function editSpaceUsingPost(
   body: API.SpaceEditRequest,

@@ -11,6 +11,7 @@ const whiteList = [
   '/timeline',
   '/feedback',
   '/about',
+  '/space/team/*',
 ]
 
 /**
@@ -45,8 +46,13 @@ router.beforeEach(async (to, from, next) => {
       next(`/user/login?redirect=${to.fullPath}`)
       return
     }
+
+    // 获取 Menus 里面的 menuPath 字段
+    const topMenus = loginUser.topMenus.map((menu) => menu.menuPath)
+    const leftMenus = loginUser.leftMenus.map((menu) => menu.menuPath)
+    const otherMenus = loginUser.otherMenus.map((menu) => menu.menuPath)
     // 判断当前访问的路径是否在登录用户的菜单中
-    const menus = [...loginUser.topMenus, ...loginUser.leftMenus, ...loginUser.otherMenus] ?? []
+    const menus = [...topMenus, ...leftMenus, ...otherMenus] ?? []
     if (!isAllowed && !menus.includes(to.path)) {
       message.error('没有权限')
       next('/')

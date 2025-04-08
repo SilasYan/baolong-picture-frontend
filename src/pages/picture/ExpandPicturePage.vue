@@ -80,7 +80,7 @@
 import { ref, onUnmounted } from 'vue'
 import { FullscreenOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import PictureUpload from '@/components/picture/FilePictureUpload.vue'
+import PictureUpload from '@/components/picture/upload/FilePictureUpload.vue'
 import {
   expandPictureQueryUsingGet,
   expandPictureUsingPost,

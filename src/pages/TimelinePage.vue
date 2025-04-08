@@ -222,8 +222,20 @@ const timelineData: TimelineItem[] = [
     status: 'completed',
   },
   {
+    date: '2025-04-08',
+    title: '批量上传图片上线',
+    content: ['批量上传仅于个人空间、团队空间可使用','普通用户一次上传仅限8张','VIP用户无限制'],
+    status: 'completed',
+  },
+  {
+    date: '2025-04-08',
+    title: '团队空间重新开放',
+    content: ['每个用户都属于共享空间编辑者权限','只有开通了个人空间的用户才会自动加入官方共享空间'],
+    status: 'completed',
+  },
+  {
     title: '预计添加的新功能',
-    content: ['团队空间', '空间分析', '协同开发', '文生图', '图片修复', '消息通知'],
+    content: ['空间分析', '协同开发', '文生图', '图片修复', '消息通知'],
     status: 'pending',
   },
 ]

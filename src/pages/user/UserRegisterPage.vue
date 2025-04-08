@@ -140,7 +140,7 @@ const handleRegister = async () => {
     const res = await userRegisterUsingPost(registerFormData)
     if (res.code === 0 && res.data) {
       message.success('注册成功')
-      await router.push({ path: '/user/login', replace: true })
+      router.push({ path: '/user/login', replace: true })
     } else {
       message.error('注册失败: ' + res.message)
     }

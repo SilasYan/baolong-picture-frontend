@@ -9,8 +9,6 @@ import PictureDetailPage from '@/pages/picture/PictureDetailPage.vue'
 import CategoryManagePage from '@/pages/admin/CategoryManagePage.vue'
 import GrabPicturePage from '@/pages/picture/GrabPicturePage.vue'
 import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
-// import AddSpacePage from '@/pages/space/AddSpacePage.vue'
-import MySpacePage from '@/pages/space/SpacePage.vue'
 import SpacePage from '@/pages/space/SpacePage.vue'
 // import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 // import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
@@ -23,6 +21,8 @@ import TimelinePage from '@/pages/TimelinePage.vue'
 import SearchPicturePage from '@/pages/picture/SearchPicturePage.vue'
 import ExpandPicturePage from '@/pages/picture/ExpandPicturePage.vue'
 import FeedbackPage from '@/pages/FeedbackPage.vue'
+import BatchPictureUpload from '@/pages/picture/BatchPictureUpload.vue'
+import TeamSpacePage from '@/pages/space/TeamSpacePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +89,11 @@ const router = createRouter({
       name: 'AI 扩图',
       component: ExpandPicturePage,
     },
+    {
+      path: '/picture/batch',
+      name: '批量上传',
+      component: BatchPictureUpload,
+    },
     // 空间页面
     {
       path: '/space',
@@ -101,9 +106,10 @@ const router = createRouter({
       component: PersonSpacePage,
     },
     {
-      path: '/my_space',
-      name: '我的空间',
-      component: MySpacePage,
+      path: '/space/team/:spaceId',
+      name: '团队空间',
+      component: TeamSpacePage,
+      props: true,
     },
     // 管理页面
     {

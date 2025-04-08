@@ -122,7 +122,7 @@
             <a-image :src="record.picUrl" :width="120" />
           </template>
           <!-- 分类 -->
-          <template v-if="column.dataIndex === 'category'">
+          <template v-if="column.dataIndex === 'categoryId'">
             <a-tag v-if="record.categoryInfo" color="green">
               {{ record.categoryInfo.name }}
             </a-tag>
@@ -295,7 +295,7 @@ const pictureColumns = [
   },
   {
     title: '分类',
-    dataIndex: 'category',
+    dataIndex: 'categoryId',
     align: 'center',
     width: 100,
   },

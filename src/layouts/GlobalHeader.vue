@@ -85,6 +85,7 @@ import {
   FullscreenOutlined,
   TeamOutlined,
   BulbOutlined,
+  GatewayOutlined,
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -131,25 +132,35 @@ const headerOriginMenus = [
     type: 'page',
   },
   {
-    key: '/picture/grab',
-    icon: () => h(BugOutlined),
-    label: '爬取图片',
-    title: '爬取图片',
-    type: 'page',
-  },
-  {
-    key: '/picture/expand',
-    icon: () => h(FullscreenOutlined),
-    label: 'AI 扩图',
-    title: 'AI 扩图',
-    type: 'page',
-  },
-  {
-    key: '/groupSpace',
+    key: '/space/team',
     icon: () => h(TeamOutlined),
     label: '团队空间',
     title: '团队空间',
     type: 'page',
+    children: [],
+  },
+  {
+    key: '/extended',
+    icon: () => h(GatewayOutlined),
+    label: '图片扩展',
+    title: '图片扩展',
+    type: 'page',
+    children: [
+      {
+        key: '/picture/grab',
+        icon: () => h(BugOutlined),
+        label: '爬取图片',
+        title: '爬取图片',
+        type: 'page',
+      },
+      {
+        key: '/picture/expand',
+        icon: () => h(FullscreenOutlined),
+        label: 'AI 扩图',
+        title: 'AI 扩图',
+        type: 'page',
+      },
+    ],
   },
   {
     key: '/timeline',
@@ -176,7 +187,7 @@ const headerOriginMenus = [
 /**
  * 获取所有具有的顶部菜单, 将 menus 声明为计算属性
  */
-const topMenus = computed<string[]>(() => loginUserStore.loginUser?.topMenus || [])
+const topMenus = computed<any[]>(() => loginUserStore.loginUser?.topMenus || [])
 /**
  * 展示的菜单
  */
@@ -186,9 +197,29 @@ const showItems = computed<MenuProps['items']>(() => filterMenus(headerOriginMen
  * @param originMenus
  */
 const filterMenus = (originMenus = [] as MenuProps['items']) => {
+  // 获取 originMenus 中 key 等于 /space/team 的
+  const teamMenu = originMenus.find((menu) => menu.key === '/space/team')
+  // 获取到 loginUserStore.loginUser?.topMenus 里面的路径为 /space/team/123123 或 /space/team/14546 的路径
+  topMenus.value.forEach((menu) => {
+    if (menu.menuPath.includes('/space/team')) {
+      const teamId = menu.menuPath.split('/')[3]
+      if (teamId) {
+        teamMenu.children.push({
+          key: `/space/team/${teamId}`,
+          icon: () => h(TeamOutlined),
+          label: menu.menuName,
+          title: menu.menuName,
+          type: 'page',
+        })
+      }
+
+    }
+  })
+  const allowedKeys = topMenus.value.map((menu) => menu.menuPath)
+
   return originMenus?.filter((menu) => {
     if (
-      topMenus.value.includes(menu.key) ||
+      allowedKeys.includes(menu.key) ||
       menu.key === '/' ||
       menu.key === '/timeline' ||
       menu.key === '/feedback' ||

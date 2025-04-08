@@ -252,7 +252,7 @@ const handleScrollDebounced = debounce(handleScroll, 200)
 /* 吸顶状态 */
 .sticky-header.sticky {
   position: fixed;
-  top: 0;
+  top: 30px;
   left: 0;
   right: 0;
   z-index: 1000;

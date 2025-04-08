@@ -5,6 +5,7 @@
       :show-upload-list="false"
       :custom-request="handleUploadPicture"
       :before-upload="beforeUploadPicture"
+      accept=".jpg,.jpeg,.png,.gif,.webp"
     >
       <img v-if="picture?.picUrl" :src="picture?.picUrl" alt="avatar" />
       <div v-else>

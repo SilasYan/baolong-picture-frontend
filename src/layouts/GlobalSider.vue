@@ -137,12 +137,12 @@ const siderOriginMenus: ItemType[] = reactive([
 /**
  * 获取所有具有的顶部菜单, 将 menus 声明为计算属性
  */
-const leftMenus = computed<string[]>(() => loginUserStore.loginUser?.leftMenus || [])
+const leftMenus = computed<any[]>(() => loginUserStore.loginUser?.leftMenus || [])
 /**
  * 过滤后的菜单项
  */
 const showItems = computed(() => {
-  const allowedKeys = leftMenus.value
+  const allowedKeys = leftMenus.value.map((menu) => menu.menuPath)
 
   const filterMenu = (items: ItemType[]): ItemType[] => {
     return items.filter((item) => {

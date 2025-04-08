@@ -44,9 +44,9 @@ export const SPACE_TYPE_OPTIONS = Object.keys(SPACE_TYPE_MAP).map((key) => {
 
 // 空间角色枚举
 export const SPACE_ROLE_ENUM = {
-  VIEWER: "viewer",
-  EDITOR: "editor",
-  ADMIN: "admin",
+  VIEWER: "VIEWER",
+  EDITOR: "EDITOR",
+  CREATOR: "CREATOR",
 } as const;
 
 // 空间角色文本映射

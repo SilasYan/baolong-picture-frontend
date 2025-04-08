@@ -1,25 +1,19 @@
 <template>
   <div id="basicLayout">
     <a-layout style="min-height: 100vh">
-      <!-- 下拉触发区域 -->
-      <div class="dropdown-trigger" @mouseenter="showHeader" @mouseleave="startHideTimer">
-        <div class="dropdown-indicator">
-          <DownOutlined class="indicator-icon" :class="{ 'icon-flipped': isHeaderVisible }" />
-          <!--<span class="indicator-text">{{ isHeaderVisible ? '收起菜单' : '展开菜单' }}</span>-->
-        </div>
-      </div>
-
-      <!-- 上方触发区域 -->
-      <div class="top-trigger-area" @mouseenter="showHeader" @mouseleave="startHideTimer"></div>
-
       <!-- 顶部 -->
       <a-layout-header
         class="header"
         :style="{ transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)' }"
-        @mouseenter="cancelHideTimer"
-        @mouseleave="startHideTimer"
       >
-        <!--<GlobalHeader @dropdown-open="handleDropdownOpen" @dropdown-close="handleDropdownClose" />-->
+        <!-- 下拉触发区域 - 现在放在header内部 -->
+        <div class="dropdown-trigger" @click="toggleHeader">
+          <div class="dropdown-indicator">
+            <DownOutlined class="indicator-icon" :class="{ 'icon-flipped': isHeaderVisible }" />
+            <span class="indicator-text">{{ isHeaderVisible ? '收起菜单' : '展开菜单' }}</span>
+          </div>
+        </div>
+
         <GlobalHeader />
       </a-layout-header>
 
@@ -39,7 +33,6 @@
           :key="loginUserStore.loginUser.token"
           :style="{ top: isHeaderVisible ? '64px' : '0', transition: 'top 0.3s ease-in-out' }"
         />
-        <!-- :key="loginUserStore.loginUser.token" 作用：强制 token 变化时重新渲染 -->
 
         <!-- 右边内容 -->
         <a-layout-content
@@ -72,9 +65,9 @@
             </a>
             <span class="footer-divider">•</span>
             <span class="footer-text">
-        <span class="icon"><CalendarOutlined /></span>
-        2025
-      </span>
+              <span class="icon"><CalendarOutlined /></span>
+              2025
+            </span>
             <span class="footer-divider">•</span>
             <a href="https://www.baolong.icu" target="_blank" class="footer-link">
               <span class="icon"><UserOutlined /></span>
@@ -122,63 +115,11 @@ const loginUserStore = useLoginUserStore()
 
 // 控制顶部菜单显示状态
 const isHeaderVisible = ref(false)
-let hideTimer: number | null = null
 
-// 显示顶部菜单
-const showHeader = () => {
-  cancelHideTimer()
-  isHeaderVisible.value = true
+// 切换顶部菜单显示状态
+const toggleHeader = () => {
+  isHeaderVisible.value = !isHeaderVisible.value
 }
-
-// 开始隐藏计时器
-const startHideTimer = () => {
-  // 先取消可能存在的计时器
-  cancelHideTimer()
-  // 设置新计时器
-  hideTimer = setTimeout(() => {
-    // 检查鼠标是否在下拉菜单中
-    const dropdown = document.querySelector('.ant-dropdown:not(.ant-dropdown-hidden)')
-    const isInDropdown = dropdown?.contains(document.activeElement) || dropdown?.matches(':hover')
-
-    // 不在下拉菜单中才隐藏
-    if (!isInDropdown) {
-      isHeaderVisible.value = false
-    }
-  }, 300) // 300ms延迟
-}
-
-// 取消隐藏计时器
-const cancelHideTimer = () => {
-  if (hideTimer) {
-    clearTimeout(hideTimer)
-    hideTimer = null
-  }
-}
-
-// 点击页面任何地方时检查
-const handleClick = (e: MouseEvent) => {
-  const target = e.target as HTMLElement
-  const isHeaderClick = target.closest('.header') || target.closest('.dropdown-trigger')
-  const isDropdownItem = target.closest('.ant-dropdown-menu-item')
-
-  // 如果点击的是下拉菜单项，立即隐藏
-  if (isDropdownItem) {
-    isHeaderVisible.value = false
-  }
-  // 如果点击的是菜单区域，取消自动隐藏
-  else if (isHeaderClick) {
-    cancelHideTimer()
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClick)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClick)
-  cancelHideTimer()
-})
 
 // region 左侧菜单和右侧内容部分的动态变化
 
@@ -231,23 +172,13 @@ watch(
 </script>
 
 <style scoped>
-/* 下拉触发区域 */
+/* 下拉触发区域 - 现在位于header内部 */
 .dropdown-trigger {
-  position: fixed;
-  top: 0;
-  right: 300px; /* 位于右侧 */
+  position: absolute;
+  bottom: -32px; /* 位于header下方 */
+  /* right: 300px; !* 位于右侧 *! */
+  left: 36px;
   z-index: 1001;
-  cursor: pointer;
-}
-
-/* 上方触发区域样式 */
-.top-trigger-area {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 10px; /* 很窄的高度，足够触发鼠标事件 */
-  z-index: 1002;
   cursor: pointer;
 }
 
@@ -255,12 +186,13 @@ watch(
   background-color: #1890ff; /* 使用主题色 */
   color: white;
   border-radius: 0 0 8px 8px;
-  padding: 8px 16px;
+  padding: 0px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease-in-out;
+  line-height: 32px;
 }
 
 .dropdown-indicator:hover {

@@ -11,9 +11,11 @@
           <a-typography-paragraph v-if="spaceId && spaceId != 0" type="secondary">
             <a-typography-paragraph style="color: #666666">
               图片将上传至{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}:
-              <router-link to="/space/person">
+              <router-link
+                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team/${spaceId}`"
+              >
                 {{ spaceName }}
-                （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }} ）
+                （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}）
               </router-link>
             </a-typography-paragraph>
           </a-typography-paragraph>
@@ -31,9 +33,11 @@
           <a-typography-paragraph v-if="spaceId && spaceId != 0" type="secondary">
             <a-typography-paragraph style="color: #666666">
               当前图片属于{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}:
-              <router-link to="/space/person">
+              <router-link
+                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team/${spaceId}`"
+              >
                 {{ spaceName }}
-                （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }} ）
+                （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}）
               </router-link>
             </a-typography-paragraph>
           </a-typography-paragraph>
@@ -51,7 +55,7 @@
           <a-card :headStyle="{ 'text-align': 'center' }">
             <!-- 选择上传方式 -->
             <a-tabs v-model:activeKey="uploadType"
-              >>
+              >
               <a-tab-pane key="file" tab="文件上传">
                 <PictureUpload
                   :picture="pictureInfo"
@@ -214,17 +218,18 @@
 </template>
 
 <script lang="ts" setup>
-import PictureUpload from '@/components/picture/FilePictureUpload.vue'
+import PictureUpload from '@/components/picture/upload/FilePictureUpload.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
-import UrlPictureUpload from '@/components/picture/UrlPictureUpload.vue'
+import UrlPictureUpload from '@/components/picture/upload/UrlPictureUpload.vue'
 import ImageCropper from '@/components/picture/ImageCropper.vue'
 import { CloudUploadOutlined, EditOutlined, SendOutlined } from '@ant-design/icons-vue'
 import { decrypt, formatPictureSize, toHexColor } from '@/utils'
 import { getCategoryListAsHomeUsingGet } from '@/api/categoryController'
 import { editPictureUsingPost, getPictureDetailByIdUsingGet } from '@/api/pictureController'
 import { SPACE_TYPE_ENUM } from '@/constants/space'
+import BatchPictureUpload from '@/pages/picture/BatchPictureUpload.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -227,6 +227,21 @@ export async function pictureShareUsingPost(
   })
 }
 
+/** getPicturePageListAsTeamSpace POST /api/picture/teamSpace/page */
+export async function getPicturePageListAsTeamSpaceUsingPost(
+  body: API.PictureQueryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponsePageVOPictureVO_>('/api/picture/teamSpace/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** uploadPictureByFile POST /api/picture/upload/file */
 export async function uploadPictureByFileUsingPost(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

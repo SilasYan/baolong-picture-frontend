@@ -259,6 +259,11 @@ declare namespace API {
     userId?: number
   }
 
+  type getSpaceDetailBySpaceIdUsingGETParams = {
+    /** spaceId */
+    spaceId?: number
+  }
+
   type getUserDetailByIdUsingGETParams = {
     /** userId */
     userId?: number
@@ -274,11 +279,11 @@ declare namespace API {
     birthday?: string
     createTime?: string
     inviteUserId?: number
-    leftMenus?: string[]
-    otherMenus?: string[]
+    leftMenus?: Menu[]
+    otherMenus?: Menu[]
     shareCode?: string
     token?: string
-    topMenus?: string[]
+    topMenus?: Menu[]
     userAccount?: string
     userAvatar?: string
     userEmail?: string
@@ -290,6 +295,24 @@ declare namespace API {
     vipExpireTime?: string
     vipNumber?: number
     vipSign?: string
+  }
+
+  type Menu = {
+    createTime?: string
+    current?: number
+    editTime?: string
+    isDelete?: number
+    isDisabled?: number
+    menuId?: number
+    menuName?: string
+    menuPath?: string
+    menuPosition?: number
+    multipleSort?: boolean
+    pageSize?: number
+    parentId?: number
+    sort?: Sort
+    sorts?: Sort[]
+    updateTime?: string
   }
 
   type MenuAddRequest = {
@@ -671,6 +694,7 @@ declare namespace API {
     spaceId?: number
     spaceLevel?: number
     spaceName?: string
+    spaceRole?: string
     spaceType?: number
     updateTime?: string
     usedCount?: number
@@ -691,6 +715,7 @@ declare namespace API {
     spaceId?: number
     spaceLevel?: number
     spaceName?: string
+    spaceRole?: string
     spaceType?: number
     usedCount?: number
     usedSize?: number
@@ -770,17 +795,17 @@ declare namespace API {
     inviteUserId?: number
     isDelete?: number
     isDisabled?: number
-    leftMenus?: string[]
+    leftMenus?: Menu[]
     multipleSort?: boolean
     newPassword?: string
     originPassword?: string
-    otherMenus?: string[]
+    otherMenus?: Menu[]
     pageSize?: number
     shareCode?: string
     sort?: Sort
     sorts?: Sort[]
     token?: string
-    topMenus?: string[]
+    topMenus?: Menu[]
     updateTime?: string
     userAccount?: string
     userAvatar?: string

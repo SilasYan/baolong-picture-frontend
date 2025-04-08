@@ -134,8 +134,9 @@ const handleLogin = async () => {
       loginUserStore.setLoginUser(res.data)
       await router.push({ path: '/', replace: true })
     } else {
-      await captcha()
-      message.error('登录失败，' + res.message)
+      console.log(res.message)
+      message.error(res.message)
+      captcha()
     }
   } finally {
     loading.value = false
