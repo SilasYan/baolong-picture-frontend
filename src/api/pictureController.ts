@@ -242,6 +242,21 @@ export async function getPicturePageListAsTeamSpaceUsingPost(
   })
 }
 
+/** textGeneratePicture POST /api/picture/textGenerate */
+export async function textGeneratePictureUsingPost(
+  body: API.PictureTextGenerateRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseCreateBaiLianTaskResponse_>('/api/picture/textGenerate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** uploadPictureByFile POST /api/picture/upload/file */
 export async function uploadPictureByFileUsingPost(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

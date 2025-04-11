@@ -23,6 +23,7 @@ import ExpandPicturePage from '@/pages/picture/ExpandPicturePage.vue'
 import FeedbackPage from '@/pages/FeedbackPage.vue'
 import BatchPictureUpload from '@/pages/picture/BatchPictureUpload.vue'
 import TeamSpacePage from '@/pages/space/TeamSpacePage.vue'
+import TextGeneratePicturePage from '@/pages/picture/TextGeneratePicturePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +89,11 @@ const router = createRouter({
       path: '/picture/expand',
       name: 'AI 扩图',
       component: ExpandPicturePage,
+    },
+    {
+      path: '/picture/textGenerate',
+      name: '文本生图',
+      component: TextGeneratePicturePage,
     },
     {
       path: '/picture/batch',

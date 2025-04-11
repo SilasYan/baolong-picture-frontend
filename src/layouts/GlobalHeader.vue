@@ -85,7 +85,7 @@ import {
   FullscreenOutlined,
   TeamOutlined,
   BulbOutlined,
-  GatewayOutlined,
+  GatewayOutlined, AlertOutlined
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -158,6 +158,13 @@ const headerOriginMenus = [
         icon: () => h(FullscreenOutlined),
         label: 'AI 扩图',
         title: 'AI 扩图',
+        type: 'page',
+      },
+      {
+        key: '/picture/textGenerate',
+        icon: () => h(AlertOutlined),
+        label: '文本生图',
+        title: '文本生图',
         type: 'page',
       },
     ],

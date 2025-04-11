@@ -186,6 +186,7 @@ declare namespace API {
     message?: string
     output?: Output1
     requestId?: string
+    results?: Results
   }
 
   type DeleteRequest = {
@@ -568,6 +569,11 @@ declare namespace API {
     searchSource?: string
   }
 
+  type PictureTextGenerateRequest = {
+    pictureSize?: number
+    prompt?: string
+  }
+
   type PictureUploadRequest = {
     categoryId?: number
     expandStatus?: number
@@ -621,6 +627,12 @@ declare namespace API {
     userId?: number
     userInfo?: User
     viewQuantity?: number
+  }
+
+  type Results = {
+    actualPrompt?: string
+    origPrompt?: string
+    url?: string
   }
 
   type ScheduledTaskAddRequest = {
