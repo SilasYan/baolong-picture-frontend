@@ -12,7 +12,7 @@
             <a-typography-paragraph style="color: #666666">
               图片将上传至{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}:
               <router-link
-                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team/${spaceId}`"
+                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team?sid=${spaceId}`"
               >
                 {{ spaceName }}
                 （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}）
@@ -34,7 +34,7 @@
             <a-typography-paragraph style="color: #666666">
               当前图片属于{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}:
               <router-link
-                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team/${spaceId}`"
+                :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team?sid=${spaceId}`"
               >
                 {{ spaceName }}
                 （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}）
@@ -357,6 +357,7 @@ const handlePictureEditSubmit = async (values: any) => {
           path: `${data[0]}`,
           query: {
             pictureId: pictureId.value,
+            sid: spaceId.value,
             ed: data[1],
           },
         })
@@ -388,23 +389,6 @@ const handleImageCropper = () => {
  * @param newPicture
  */
 const cropSuccessEvent = (newPicture: API.PictureDetailVO) => {
-  pictureInfo.value = newPicture
-}
-
-//  TODO 下面的还没有实现
-
-// AI 扩图弹窗
-const imageOutPaintingModal = ref()
-
-// AI 扩图
-const doImagePainting = () => {
-  if (imageOutPaintingModal.value) {
-    imageOutPaintingModal.value.openModal()
-  }
-}
-
-// AI 扩图 编辑成功事件
-const onImageOutPaintingSuccess = (newPicture: API.PictureVO) => {
   pictureInfo.value = newPicture
 }
 </script>

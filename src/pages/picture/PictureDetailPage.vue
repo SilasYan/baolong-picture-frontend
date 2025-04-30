@@ -315,6 +315,8 @@ const router = useRouter()
  */
 const route = useRoute()
 
+const sid = computed(() => route.query?.sid)
+
 /**
  * 登录用户信息
  */
@@ -354,7 +356,11 @@ onMounted(() => {
     encryptData.value = decodeURIComponent(ed as string)
     const decryptData = decrypt(encryptData.value, 'source')
     const data = decryptData.split('=')
-    sourcePath.value = data[0]
+    if (sid.value) {
+      sourcePath.value = data[0] + '?sid=' + sid.value
+    } else {
+      sourcePath.value = data[0]
+    }
     sourceName.value = data[1]
   }
   pictureDetailLoading.value = false

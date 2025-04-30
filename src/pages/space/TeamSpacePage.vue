@@ -7,6 +7,18 @@
         <a-typography-title :level="3" class="title-text">
           <TeamOutlined class="title-icon" />
           团队空间：{{ spaceDetail.spaceName }}
+          <a-dropdown>
+            <template #overlay>
+              <a-menu @click="handleMenuClick">
+                <a-menu-item v-for="(item, index) in teamSpaceList" :key="item.spaceId">
+                  {{ item.spaceName }}
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button type="text">
+              <SwapOutlined />
+            </a-button>
+          </a-dropdown>
         </a-typography-title>
         <!-- 操作 -->
         <a-space v-if="spaceDetail.spaceRole !== SPACE_ROLE_ENUM.VIEWER" size="large">
@@ -193,6 +205,10 @@
                 </a-card-meta>
                 <!-- 操作 -->
                 <template #actions>
+                  <div @click="(e) => doSyncEditPicture(picture.pictureId, e)">
+                    <MacCommandOutlined />
+                    协同编辑
+                  </div>
                   <div @click="(e) => doEditPicture(picture.pictureId, e)">
                     <EditOutlined />
                     编辑
@@ -230,6 +246,7 @@
 <script lang="ts" setup>
 import {
   TeamOutlined,
+  MacCommandOutlined,
   DeleteOutlined,
   EditOutlined,
   CloudUploadOutlined,
@@ -238,8 +255,9 @@ import {
   SyncOutlined,
   CaretDownOutlined,
   FolderOpenOutlined,
+  SwapOutlined,
 } from '@ant-design/icons-vue'
-import { h, onMounted, reactive, ref, watch } from 'vue'
+import { computed, h, onMounted, reactive, ref, watch } from 'vue'
 import { PIC_FORMAT_STATUS_OPTIONS } from '@/constants/picture'
 import dayjs from 'dayjs'
 import { message, Modal } from 'ant-design-vue'
@@ -249,7 +267,10 @@ import {
   getPicturePageListAsTeamSpaceUsingPost,
   pictureShareUsingPost,
 } from '@/api/pictureController'
-import { getSpaceDetailBySpaceIdUsingGet } from '@/api/spaceController'
+import {
+  getSpaceDetailBySpaceIdUsingGet,
+  getTeamSpacesByLoginUserUsingGet,
+} from '@/api/spaceController'
 import { useRoute, useRouter } from 'vue-router'
 import { decrypt, encrypt } from '@/utils'
 import ShareModal from '@/components/ShareModal.vue'
@@ -264,14 +285,12 @@ const router = useRouter()
  */
 const route = useRoute()
 
-/**
- * 使用 defineProps 声明 props 并指定类型
- */
-const props = defineProps<{ spaceId: string | number }>()
+const sid = computed(() => route.query?.sid)
 
-// 监听 props 变化
+const spaceId = ref()
+
 watch(
-  () => props.spaceId,
+  () => spaceId.value,
   () => {
     getSpaceDetailData()
     getPictureListData()
@@ -279,13 +298,29 @@ watch(
   },
 )
 
+const handleMenuClick = (e) => {
+  spaceId.value = e.key
+  router.push({
+    path: `/space/team`,
+    query: {
+      sid: e.key,
+    },
+  })
+}
+
 /**
  * 初始化页面
  */
 onMounted(() => {
-  getSpaceDetailData()
-  getPictureListData()
-  getCategoryListData()
+  getTeamSpacesList()
+  if (sid.value) {
+    spaceId.value = sid.value
+  } else {
+    spaceId.value = 100000
+  }
+  // getSpaceDetailData()
+  // getPictureListData()
+  // getCategoryListData()
 })
 
 // 辅助函数：获取进度条颜色
@@ -304,6 +339,7 @@ const doClickPicture = (picture) => {
     path: `/picture/detail/${picture.pictureId}`,
     query: {
       pId: picture.pictureId,
+      sid: spaceId.value,
       ed: encodeURIComponent(encrypt(route.path + '=' + spaceDetail.value.spaceName, 'source')),
     },
   })
@@ -312,7 +348,7 @@ const doClickPicture = (picture) => {
 /**
  * 空间使用情况选中的 KEY
  */
-const useActiveKey = ref(['1'])
+const useActiveKey = ref([])
 
 /**
  * 初始化图片搜索参数
@@ -409,6 +445,17 @@ const doPictureSearch = () => {
   getPictureListData()
 }
 
+const teamSpaceList = ref<API.SpaceDetailVO>([])
+
+const getTeamSpacesList = async () => {
+  const res = await getTeamSpacesByLoginUserUsingGet()
+  if (res.code === 0 && res.data) {
+    teamSpaceList.value = res.data
+  } else {
+    message.error('获取空间列表失败!')
+  }
+}
+
 /**
  * 空间详情
  */
@@ -423,7 +470,7 @@ const spaceDetail = ref<API.SpaceDetailVO>({
  */
 const getSpaceDetailData = async () => {
   const res = await getSpaceDetailBySpaceIdUsingGet({
-    spaceId: props.spaceId,
+    spaceId: spaceId.value,
   })
   if (res.code === 0 && res.data) {
     spaceDetail.value = res.data
@@ -446,7 +493,7 @@ const pictureListLoading = ref<boolean>(true)
 const getPictureListData = async () => {
   pictureListLoading.value = true
   const res = await getPicturePageListAsTeamSpaceUsingPost({
-    spaceId: props.spaceId,
+    spaceId: spaceId.value,
     ...pictureSearchParams,
   })
   if (res.code === 0 && res.data) {
@@ -505,6 +552,31 @@ const openBatchAddPicture = () => {
       t: spaceDetail.value.spaceType,
       n: spaceDetail.value.spaceName,
       ed: encodeURIComponent(encrypt(route.path, 'source')),
+    },
+  })
+}
+
+/**
+ * 协同编辑图片
+ */
+const doSyncEditPicture = (pictureId: number, e: Event) => {
+  e.stopPropagation()
+  if (!pictureId) {
+    return
+  }
+  // router.push({
+  //   path: '/picture/sync',
+  //   query: {
+  //     pictureId: pictureId,
+  //   },
+  // })
+
+  router.push({
+    path: `/picture/sync`,
+    query: {
+      pId: pictureId,
+      sid: spaceId.value,
+      ed: encodeURIComponent(encrypt(route.path + '=' + spaceDetail.value.spaceName, 'source')),
     },
   })
 }

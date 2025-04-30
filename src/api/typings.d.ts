@@ -2,6 +2,7 @@ declare namespace API {
   type BaiLianTaskResponse = {
     output?: Output
     requestId?: string
+    results?: Results
     usage?: Output
   }
 
@@ -44,6 +45,12 @@ declare namespace API {
   type BaseResponseListSearchPictureResult_ = {
     code?: number
     data?: SearchPictureResult[]
+    message?: string
+  }
+
+  type BaseResponseListSpaceDetailVO_ = {
+    code?: number
+    data?: SpaceDetailVO[]
     message?: string
   }
 
@@ -186,7 +193,6 @@ declare namespace API {
     message?: string
     output?: Output1
     requestId?: string
-    results?: Results
   }
 
   type DeleteRequest = {

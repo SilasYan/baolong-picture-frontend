@@ -70,6 +70,22 @@ export async function getSpaceDetailByLoginUserUsingGet(options?: { [key: string
   })
 }
 
+/** getTeamSpaceByUserId GET /api/space/loginUser/teamSpace */
+export async function getTeamSpaceByUserIdUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseSpaceDetailVO_>('/api/space/loginUser/teamSpace', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
+/** getTeamSpacesByLoginUser GET /api/space/loginUser/teamSpaces */
+export async function getTeamSpacesByLoginUserUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseListSpaceDetailVO_>('/api/space/loginUser/teamSpaces', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** getSpacePageListAsManage POST /api/space/manage/page */
 export async function getSpacePageListAsManageUsingPost(
   body: API.SpaceQueryRequest,

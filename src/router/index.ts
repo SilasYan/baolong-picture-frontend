@@ -24,6 +24,7 @@ import FeedbackPage from '@/pages/FeedbackPage.vue'
 import BatchPictureUpload from '@/pages/picture/BatchPictureUpload.vue'
 import TeamSpacePage from '@/pages/space/TeamSpacePage.vue'
 import TextGeneratePicturePage from '@/pages/picture/TextGeneratePicturePage.vue'
+import SyncEditPicturePage from '@/pages/picture/SyncEditPicturePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -100,6 +101,11 @@ const router = createRouter({
       name: '批量上传',
       component: BatchPictureUpload,
     },
+    {
+      path: '/picture/sync',
+      name: '协同编辑',
+      component: SyncEditPicturePage,
+    },
     // 空间页面
     {
       path: '/space',
@@ -112,7 +118,7 @@ const router = createRouter({
       component: PersonSpacePage,
     },
     {
-      path: '/space/team/:spaceId',
+      path: '/space/team',
       name: '团队空间',
       component: TeamSpacePage,
       props: true,
@@ -148,17 +154,6 @@ const router = createRouter({
       name: '定时任务',
       component: ScheduledTaskManagePage,
     },
-    // {
-    //   path: '/space/:id',
-    //   name: '空间详情',
-    //   component: SpaceDetailPage,
-    //   props: true,
-    // },
-    // {
-    //   path: '/search_picture',
-    //   name: '图片搜索',
-    //   component: SearchPicturePage,
-    // },
     // {
     //   path: '/space_analyze',
     //   name: '空间分析',

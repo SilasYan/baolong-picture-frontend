@@ -19,7 +19,7 @@
         <a-typography-paragraph style="color: #666666">
           图片将上传至{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}:
           <router-link
-            :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team/${spaceId}`"
+            :to="Number(spaceType) === SPACE_TYPE_ENUM.PRIVATE ? '/space/person' : `/space/team?sid=${spaceId}`"
           >
             {{ spaceName }}
             （点击回到{{ spaceType == SPACE_TYPE_ENUM.PRIVATE ? '个人空间' : '团队空间' }}）

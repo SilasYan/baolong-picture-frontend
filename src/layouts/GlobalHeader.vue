@@ -48,6 +48,12 @@
                     </router-link>
                   </a-menu-item>
                   <a-menu-item>
+                    <router-link to="/space?type=1">
+                      <TeamOutlined />
+                      我的团队空间
+                    </router-link>
+                  </a-menu-item>
+                  <a-menu-item>
                     <router-link to="/user/profile">
                       <UserOutlined />
                       个人信息
@@ -137,7 +143,6 @@ const headerOriginMenus = [
     label: '团队空间',
     title: '团队空间',
     type: 'page',
-    children: [],
   },
   {
     key: '/extended',
@@ -204,24 +209,6 @@ const showItems = computed<MenuProps['items']>(() => filterMenus(headerOriginMen
  * @param originMenus
  */
 const filterMenus = (originMenus = [] as MenuProps['items']) => {
-  // 获取 originMenus 中 key 等于 /space/team 的
-  const teamMenu = originMenus.find((menu) => menu.key === '/space/team')
-  // 获取到 loginUserStore.loginUser?.topMenus 里面的路径为 /space/team/123123 或 /space/team/14546 的路径
-  topMenus.value.forEach((menu) => {
-    if (menu.menuPath.includes('/space/team')) {
-      const teamId = menu.menuPath.split('/')[3]
-      if (teamId) {
-        teamMenu.children.push({
-          key: `/space/team/${teamId}`,
-          icon: () => h(TeamOutlined),
-          label: menu.menuName,
-          title: menu.menuName,
-          type: 'page',
-        })
-      }
-
-    }
-  })
   const allowedKeys = topMenus.value.map((menu) => menu.menuPath)
 
   return originMenus?.filter((menu) => {

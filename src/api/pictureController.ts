@@ -247,7 +247,7 @@ export async function textGeneratePictureUsingPost(
   body: API.PictureTextGenerateRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponseCreateBaiLianTaskResponse_>('/api/picture/textGenerate', {
+  return request<API.BaseResponseBaiLianTaskResponse_>('/api/picture/textGenerate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

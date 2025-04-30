@@ -24,6 +24,11 @@
             <CloudUploadOutlined />
             批量上传图片
           </a-button>
+
+          <a-button type="dashed"  size="large" danger>
+            <KeyOutlined />
+            空间升级
+          </a-button>
         </a-space>
       </a-flex>
     </div>
@@ -236,7 +241,7 @@ import {
   CloudUploadOutlined,
   SearchOutlined,
   ShareAltOutlined,
-  SyncOutlined, CaretDownOutlined, FolderOpenOutlined, SendOutlined
+  SyncOutlined, CaretDownOutlined, FolderOpenOutlined, KeyOutlined
 } from '@ant-design/icons-vue'
 import { h, onMounted, reactive, ref } from 'vue'
 import {
@@ -299,7 +304,7 @@ const doClickPicture = (picture) => {
 /**
  * 空间使用情况选中的 KEY
  */
-const useActiveKey = ref(['1'])
+const useActiveKey = ref([])
 
 /**
  * 初始化图片搜索参数
