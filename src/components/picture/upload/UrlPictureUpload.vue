@@ -66,14 +66,14 @@ const handleUploadPicture = async () => {
 </script>
 
 <style scoped>
-.picture-upload :deep(.ant-upload) {
+.url-picture-upload :deep(.ant-upload) {
   width: 100% !important;
   height: 100% !important;
   min-height: 152px;
   min-width: 152px;
 }
 
-.picture-upload img {
+.url-picture-upload img {
   max-width: 100%;
   max-height: 480px;
 }
