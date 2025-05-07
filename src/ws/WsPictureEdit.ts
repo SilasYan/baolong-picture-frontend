@@ -1,6 +1,6 @@
 const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL
 
-export default class PictureEditWebSocket {
+export default class WsPictureEdit {
   private pictureId: number
   private socket: WebSocket | null
   private eventHandlers: any
@@ -14,8 +14,8 @@ export default class PictureEditWebSocket {
   /**
    * 初始化 WebSocket 连接
    */
-  connect() {
-    const url = `${WS_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
+  connect(token) {
+    const url = `${WS_BASE_URL}/api/ws/picture/edit?token=Bearer ${token}&pictureId=${this.pictureId}`
     this.socket = new WebSocket(url)
 
     // 设置携带 cookie
@@ -23,14 +23,14 @@ export default class PictureEditWebSocket {
 
     // 监听连接成功事件
     this.socket.onopen = () => {
-      // console.log('WebSocket 连接已建立')
+      // console.log('建立连接...')
       this.triggerEvent('open')
     }
 
     // 监听消息事件
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      // console.log('收到消息:', message)
+      // console.log('收到消息...', message)
 
       // 根据消息类型触发对应事件
       const type = message.type
@@ -39,13 +39,13 @@ export default class PictureEditWebSocket {
 
     // 监听连接关闭事件
     this.socket.onclose = (event) => {
-      // console.log('WebSocket 连接已关闭:', event)
+      // console.log('连接关闭...', event)
       this.triggerEvent('close', event)
     }
 
     // 监听错误事件
     this.socket.onerror = (error) => {
-      // console.error('WebSocket 发生错误:', error)
+      // console.error('发生错误...', error)
       this.triggerEvent('error', error)
     }
   }
@@ -55,8 +55,8 @@ export default class PictureEditWebSocket {
    */
   disconnect() {
     if (this.socket) {
+      // console.log('手动关闭连接...')
       this.socket.close()
-      // console.log('WebSocket 连接已手动关闭')
     }
   }
 
@@ -66,10 +66,10 @@ export default class PictureEditWebSocket {
    */
   sendMessage(message: object) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      // console.log('发送消息...', message)
       this.socket.send(JSON.stringify(message))
-      // console.log('消息已发送:', message)
     } else {
-      // console.error('WebSocket 未连接，无法发送消息:', message)
+      console.error('未连接，无法发送消息...', message)
     }
   }
 
