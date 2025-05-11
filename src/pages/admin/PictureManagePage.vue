@@ -232,10 +232,10 @@
     </div>
   </div>
 
-  <a-modal v-model:open="rejectDialog" title="审核拒绝" @ok="handleReview">
+  <a-modal v-model:open="rejectDialog" :title="`审核${reviewFormData.reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS ? '通过' : '拒绝'}`" @ok="handleReview">
     <a-form layout="vertical" :model="reviewFormData">
-      <a-form-item label="拒绝理由" name="reviewMessage">
-        <a-input v-model:value="reviewFormData.reviewMessage" placeholder="请输入拒绝理由" />
+      <a-form-item label="审核理由" name="reviewMessage">
+        <a-input v-model:value="reviewFormData.reviewMessage" placeholder="请输入审核理由, 可以不填" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -601,7 +601,7 @@ const handleReview = async () => {
       }
     },
     onCancel: () => {
-      message.info(`取消${flag ? '启用' : '禁用'}该用户！`)
+      message.info(`取消审核！`)
     },
   })
 }

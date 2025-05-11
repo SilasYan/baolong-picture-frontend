@@ -17,12 +17,42 @@ export async function activateSpaceUsingPost(
   })
 }
 
+/** addSpaceUser POST /api/space/addSpaceUser */
+export async function addSpaceUserUsingPost(
+  body: API.SpaceUserAddRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/space/addSpaceUser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** deleteSpace POST /api/space/delete */
 export async function deleteSpaceUsingPost(
   body: API.DeleteRequest,
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponseBoolean_>('/api/space/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** deleteSpaceUser POST /api/space/deleteSpaceUser */
+export async function deleteSpaceUserUsingPost(
+  body: API.DeleteRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/space/deleteSpaceUser', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -101,12 +131,42 @@ export async function getSpacePageListAsManageUsingPost(
   })
 }
 
+/** getSpaceUserList GET /api/space/spaceUserList */
+export async function getSpaceUserListUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getSpaceUserListUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListSpaceUserVO_>('/api/space/spaceUserList', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
 /** updateSpace POST /api/space/update */
 export async function updateSpaceUsingPost(
   body: API.SpaceUpdateRequest,
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponseBoolean_>('/api/space/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** updateSpaceUserRole POST /api/space/updateSpaceUserRole */
+export async function updateSpaceUserRoleUsingPost(
+  body: API.SpaceUserEditRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseBoolean_>('/api/space/updateSpaceUserRole', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

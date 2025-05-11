@@ -11,6 +11,7 @@ const whiteList = [
   '/timeline',
   '/feedback',
   '/about',
+  '/spaceUser/*',
 ]
 
 /**

@@ -31,6 +31,11 @@
             <CloudUploadOutlined />
             批量上传图片
           </a-button>
+
+          <a-button type="primary" size="large" :href="`/spaceUser/${spaceDetail.spaceId}`">
+            <TeamOutlined />
+            空间成员管理
+          </a-button>
         </a-space>
       </a-flex>
     </div>

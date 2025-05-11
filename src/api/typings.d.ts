@@ -54,6 +54,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListSpaceUserVO_ = {
+    code?: number
+    data?: SpaceUserVO[]
+    message?: string
+  }
+
   type BaseResponseLoginUserVO_ = {
     code?: number
     data?: LoginUserVO
@@ -269,6 +275,20 @@ declare namespace API {
   type getSpaceDetailBySpaceIdUsingGETParams = {
     /** spaceId */
     spaceId?: number
+  }
+
+  type getSpaceUserListUsingGETParams = {
+    current?: number
+    multipleSort?: boolean
+    pageSize?: number
+    'sort.asc'?: boolean
+    'sort.field'?: string
+    'sorts[0].asc'?: boolean
+    'sorts[0].field'?: string
+    spaceId?: number
+    spaceRole?: string
+    spaceUserId?: number
+    userId?: number
   }
 
   type getUserDetailByIdUsingGETParams = {
@@ -723,6 +743,7 @@ declare namespace API {
 
   type SpaceActivateRequest = {
     spaceName?: string
+    spaceType?: number
   }
 
   type SpaceDetailVO = {
@@ -766,6 +787,28 @@ declare namespace API {
     spaceLevel?: number
     spaceName?: string
     spaceType?: number
+  }
+
+  type SpaceUserAddRequest = {
+    spaceId?: number
+    spaceRole?: string
+    userId?: number
+  }
+
+  type SpaceUserEditRequest = {
+    spaceId?: number
+    spaceRole?: string
+    spaceUserId?: number
+    userId?: number
+  }
+
+  type SpaceUserVO = {
+    createTime?: string
+    spaceId?: number
+    spaceRole?: string
+    spaceUserId?: number
+    user?: User
+    userId?: number
   }
 
   type SpaceVO = {

@@ -25,6 +25,7 @@ import BatchPictureUpload from '@/pages/picture/BatchPictureUpload.vue'
 import TeamSpacePage from '@/pages/space/TeamSpacePage.vue'
 import TextGeneratePicturePage from '@/pages/picture/TextGeneratePicturePage.vue'
 import SyncEditPicturePage from '@/pages/picture/SyncEditPicturePage.vue'
+import SpaceUserManagePage from '@/pages/space/SpaceUserManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -121,6 +122,12 @@ const router = createRouter({
       path: '/space/team',
       name: '团队空间',
       component: TeamSpacePage,
+      props: true,
+    },
+    {
+      path: '/spaceUser/:spaceId',
+      name: '空间成员管理',
+      component: SpaceUserManagePage,
       props: true,
     },
     // 管理页面
